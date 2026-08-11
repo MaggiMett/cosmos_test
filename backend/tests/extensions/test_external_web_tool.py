@@ -80,6 +80,7 @@ def test_hedgedoc_reference_extension_is_discovered_as_real_external_web_tool(tm
     }
 
     workspace = runtime.workspaces.open("cosmos.workspace.creation", "cosmos.room.main", context)
+    assert "cosmos.hedgedoc" in workspace["resolvedToolIds"]
     instance = runtime.tools.open_workspace_tool("cosmos.hedgedoc", str(workspace["objectId"]), context)
 
     assert instance.definition_object_id == "cosmos.hedgedoc"

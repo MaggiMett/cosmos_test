@@ -70,7 +70,7 @@ WORKSPACES = (
                 REVIEW_TOOL_ID,
                 JOURNEYMAN_TOOL_ID,
             ],
-            "tool_requirements": [],
+            "tool_requirements": [{"capabilities": ["markdown", "collaboration", "web"]}],
             "theme_override": "",
             "source_project_id": "cosmos.project.system.creation",
         },
@@ -291,12 +291,14 @@ class BaseService:
         if existing is not None:
             if "Workspace" in seed.system_tags and (
                 existing.properties.get("assigned_tool_ids") != seed.properties["assigned_tool_ids"]
+                or existing.properties.get("tool_requirements") != seed.properties["tool_requirements"]
                 or existing.properties.get("source_project_id") != seed.properties["source_project_id"]
             ):
                 return self._objects.update_properties(
                     seed.object_id,
                     {
                         "assigned_tool_ids": seed.properties["assigned_tool_ids"],
+                        "tool_requirements": seed.properties["tool_requirements"],
                         "source_project_id": seed.properties["source_project_id"],
                     },
                     context,
