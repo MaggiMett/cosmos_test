@@ -29,6 +29,48 @@ def test_manifest_parses_supported_extension_category() -> None:
     assert manifest.permissions == frozenset({"providers.execute"})
 
 
+@pytest.mark.parametrize(
+    ("runtime_kind", "entry_point"),
+    [
+        ("native", "@example/runtime:tool"),
+        ("web", "https://tools.example.test/app"),
+        ("service", "service:search"),
+        ("desktop", "desktop:photos"),
+        ("command", "command:reindex"),
+    ],
+)
+def test_tool_manifest_accepts_v1_runtime_entry_point_pairs(runtime_kind: str, entry_point: str) -> None:
+    manifest = ExtensionManifest.from_mapping(
+        {
+            "id": "cosmos.tool.example",
+            "display_name": "Example",
+            "version": "1.0.0",
+            "category": "user-tool",
+            "runtime_api_version": "1",
+            "runtime_kind": runtime_kind,
+            "entry_points": {"tool": entry_point},
+        }
+    )
+
+    assert manifest.runtime_kind is ExtensionRuntimeKind(runtime_kind)
+    assert manifest.entry_points["tool"] == entry_point
+
+
+def test_tool_manifest_rejects_runtime_entry_point_mismatch() -> None:
+    with pytest.raises(ManifestValidationError, match="command:<name>"):
+        ExtensionManifest.from_mapping(
+            {
+                "id": "cosmos.tool.example",
+                "display_name": "Example",
+                "version": "1.0.0",
+                "category": "user-tool",
+                "runtime_api_version": "1",
+                "runtime_kind": "command",
+                "entry_points": {"tool": "service:reindex"},
+            }
+        )
+
+
 def test_manifest_rejects_unsupported_runtime_kind() -> None:
     with pytest.raises(ManifestValidationError, match="runtime kind"):
         ExtensionManifest.from_mapping(

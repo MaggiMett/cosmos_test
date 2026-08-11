@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any
 
+from cosmos.runtime.tool_adapters import ToolRuntimeKind, tool_entry_point_error
+
 
 class ManifestValidationError(ValueError):
     pass
@@ -75,6 +77,16 @@ class ExtensionManifest:
             )
         except ValueError as error:
             raise ManifestValidationError(f"Unsupported Extension runtime kind: {runtime_kind_value}") from error
+
+        if category in {ExtensionCategory.USER_TOOL, ExtensionCategory.SYSTEM_TOOL}:
+            if runtime_kind is None:
+                raise ManifestValidationError("Tool Extensions require a runtime_kind.")
+            tool_entry_point = entry_points.get("tool")
+            if not isinstance(tool_entry_point, str):
+                raise ManifestValidationError("Tool Extensions require entry_points.tool.")
+            error = tool_entry_point_error(ToolRuntimeKind(runtime_kind.value), tool_entry_point)
+            if error is not None:
+                raise ManifestValidationError(error)
 
         return cls(
             extension_id=extension_id,

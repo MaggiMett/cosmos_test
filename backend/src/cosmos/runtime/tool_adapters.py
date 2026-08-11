@@ -41,7 +41,7 @@ class NativeToolAdapter:
     runtime_kind = ToolRuntimeKind.NATIVE
 
     def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
-        return None
+        return tool_entry_point_error(self.runtime_kind, definition.entry_point)
 
     def open(self, context: ToolAdapterContext) -> None:
         pass
@@ -57,12 +57,7 @@ class DesktopToolAdapter:
     runtime_kind = ToolRuntimeKind.DESKTOP
 
     def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
-        entry_point = definition.entry_point.strip()
-        if not entry_point:
-            return "Desktop Tool entry point is required."
-        if not entry_point.startswith("desktop:") or not entry_point.removeprefix("desktop:").strip():
-            return "Desktop Tool entry point must use the desktop:<application> namespace."
-        return None
+        return tool_entry_point_error(self.runtime_kind, definition.entry_point)
 
     def open(self, context: ToolAdapterContext) -> None:
         pass
@@ -78,12 +73,7 @@ class CommandToolAdapter:
     runtime_kind = ToolRuntimeKind.COMMAND
 
     def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
-        entry_point = definition.entry_point.strip()
-        if not entry_point:
-            return "Command Tool entry point is required."
-        if not entry_point.startswith("command:") or not entry_point.removeprefix("command:").strip():
-            return "Command Tool entry point must use the command:<name> namespace."
-        return None
+        return tool_entry_point_error(self.runtime_kind, definition.entry_point)
 
     def open(self, context: ToolAdapterContext) -> None:
         pass
@@ -99,12 +89,7 @@ class ServiceToolAdapter:
     runtime_kind = ToolRuntimeKind.SERVICE
 
     def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
-        entry_point = definition.entry_point.strip()
-        if not entry_point:
-            return "Service Tool entry point is required."
-        if ":" not in entry_point or entry_point.startswith(("http:", "https:")):
-            return "Service Tool entry point must use a registered service namespace (for example service:action)."
-        return None
+        return tool_entry_point_error(self.runtime_kind, definition.entry_point)
 
     def open(self, context: ToolAdapterContext) -> None:
         pass
@@ -120,13 +105,7 @@ class WebToolAdapter:
     runtime_kind = ToolRuntimeKind.WEB
 
     def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
-        entry_point = definition.entry_point.strip()
-        if not entry_point:
-            return "Web Tool entry point is required."
-        parsed = urlparse(entry_point)
-        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
-            return "Web Tool entry point must be an absolute HTTP(S) URL."
-        return None
+        return tool_entry_point_error(self.runtime_kind, definition.entry_point)
 
     def open(self, context: ToolAdapterContext) -> None:
         pass
@@ -136,6 +115,25 @@ class WebToolAdapter:
 
     def close(self, context: ToolAdapterContext) -> None:
         pass
+
+
+def tool_entry_point_error(runtime_kind: ToolRuntimeKind | str, entry_point: str) -> str | None:
+    kind = ToolRuntimeKind(runtime_kind)
+    value = entry_point.strip()
+    if kind is ToolRuntimeKind.NATIVE:
+        return None if value else "Native Tool entry point is required."
+    if kind is ToolRuntimeKind.WEB:
+        if not value:
+            return "Web Tool entry point is required."
+        parsed = urlparse(value)
+        return None if parsed.scheme in {"http", "https"} and parsed.netloc else "Web Tool entry point must be an absolute HTTP(S) URL."
+    namespace = {
+        ToolRuntimeKind.SERVICE: ("service:", "Service Tool entry point must use the service:<action> namespace."),
+        ToolRuntimeKind.COMMAND: ("command:", "Command Tool entry point must use the command:<name> namespace."),
+        ToolRuntimeKind.DESKTOP: ("desktop:", "Desktop Tool entry point must use the desktop:<application> namespace."),
+    }
+    prefix, error = namespace[kind]
+    return None if value.startswith(prefix) and value.removeprefix(prefix).strip() else error
 
 
 class ToolAdapterRegistry:
