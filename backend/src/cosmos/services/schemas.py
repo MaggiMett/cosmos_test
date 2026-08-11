@@ -153,6 +153,7 @@ def create_version_one_object_contract() -> ObjectContract:
                 PropertyDefinition("version", PropertyKind.STRING, "1.0.0"),
                 PropertyDefinition("entry_point", PropertyKind.STRING, ""),
                 PropertyDefinition("runtime_kind", PropertyKind.STRING, "native"),
+                PropertyDefinition("runtime_configuration", PropertyKind.OBJECT, {}),
                 PropertyDefinition("icon", PropertyKind.STRING, "Tool"),
                 PropertyDefinition("capabilities", PropertyKind.ARRAY, []),
                 PropertyDefinition("permissions", PropertyKind.ARRAY, []),

@@ -45,6 +45,7 @@ class ExtensionManifest:
     category: ExtensionCategory
     runtime_api_version: str
     runtime_kind: ExtensionRuntimeKind | None
+    runtime_configuration: Mapping[str, Any]
     permissions: frozenset[str]
     capabilities: frozenset[str]
     dependencies: tuple[str, ...]
@@ -69,6 +70,9 @@ class ExtensionManifest:
         entry_points = value.get("entry_points", {})
         if not isinstance(entry_points, Mapping):
             raise ManifestValidationError("entry_points must be an object.")
+        runtime_configuration = value.get("runtime_configuration", {})
+        if not isinstance(runtime_configuration, Mapping):
+            raise ManifestValidationError("runtime_configuration must be an object.")
 
         runtime_kind_value = value.get("runtime_kind")
         try:
@@ -95,6 +99,7 @@ class ExtensionManifest:
             category=category,
             runtime_api_version=str(value["runtime_api_version"]),
             runtime_kind=runtime_kind,
+            runtime_configuration={str(key): item for key, item in runtime_configuration.items()},
             permissions=frozenset(str(item) for item in value.get("permissions", [])),
             capabilities=frozenset(str(item) for item in value.get("capabilities", [])),
             dependencies=tuple(str(item) for item in value.get("dependencies", [])),

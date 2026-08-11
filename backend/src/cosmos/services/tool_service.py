@@ -185,6 +185,7 @@ class ToolService:
             "category": properties["category"],
             "componentKey": properties["component_id"],
             "runtimeKind": properties["runtime_kind"],
+            "runtimeConfiguration": properties.get("runtime_configuration", {}),
             "entryPoint": properties["entry_point"],
             "icon": properties["icon"],
             "capabilities": properties["capabilities"],

@@ -36,6 +36,7 @@ def test_repository_web_extension_loads_through_complete_external_tool_pipeline(
     assert [definition["objectId"] for definition in definitions] == ["cosmos.example.web-tool"]
     definition = definitions[0]
     assert definition["runtimeKind"] == "web"
+    assert definition["runtimeConfiguration"] == {"reference": "external-web-tool"}
     assert definition["entryPoint"] == "https://example.com/"
 
     workspace = runtime.workspaces.open("cosmos.workspace.creation", "cosmos.room.main", context)

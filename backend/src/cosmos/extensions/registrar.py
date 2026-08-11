@@ -105,6 +105,7 @@ class ExtensionRegistrar:
                     "version": manifest.version,
                     "entry_point": entry_point,
                     "runtime_kind": manifest.runtime_kind.value,
+                    "runtime_configuration": dict(manifest.runtime_configuration),
                     "icon": "Extension",
                     "capabilities": sorted(manifest.capabilities),
                     "permissions": sorted(manifest.permissions),

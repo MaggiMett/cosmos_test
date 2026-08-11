@@ -53,6 +53,7 @@ def test_tool_manifest_accepts_v1_runtime_entry_point_pairs(runtime_kind: str, e
     )
 
     assert manifest.runtime_kind is ExtensionRuntimeKind(runtime_kind)
+    assert manifest.runtime_configuration == {}
     assert manifest.entry_points["tool"] == entry_point
 
 

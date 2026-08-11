@@ -14,6 +14,7 @@ export interface ToolDefinition {
   minimumSize: Readonly<{ width: number; height: number }>;
   componentKey: string;
   runtimeKind: ToolRuntimeKind;
+  runtimeConfiguration: Record<string, unknown>;
   entryPoint: string;
   category?: string;
   capabilities?: string[];

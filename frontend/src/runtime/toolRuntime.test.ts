@@ -95,6 +95,7 @@ function definition(objectId: string, displayName: string) {
     minimumSize: { width: 320, height: 240 },
     componentKey: objectId,
     runtimeKind: "native" as const,
+    runtimeConfiguration: {},
     entryPoint: `@cosmos/frontend-runtime:${objectId}`,
   };
 }

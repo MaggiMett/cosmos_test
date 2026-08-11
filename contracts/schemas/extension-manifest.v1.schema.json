@@ -31,6 +31,10 @@
       "type": "string",
       "enum": ["native", "web", "service", "desktop", "command"]
     },
+    "runtime_configuration": {
+      "type": "object",
+      "default": {}
+    },
     "permissions": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 },
