@@ -74,7 +74,7 @@ def test_hedgedoc_reference_extension_is_discovered_as_real_external_web_tool(tm
     definition = definitions[0]
     assert definition["displayName"] == "HedgeDoc"
     assert definition["runtimeKind"] == "web"
-    assert definition["entryPoint"] == "http://192.168.50.164:3000/"
+    assert definition["entryPoint"] == "https://hedgedoc.mettflix.eu/"
     assert definition["runtimeConfiguration"] == {
         "sandbox": ["forms", "modals", "popups", "same-origin", "scripts"]
     }

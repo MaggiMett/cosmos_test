@@ -9,7 +9,7 @@
     "sandbox": ["forms", "modals", "popups", "same-origin", "scripts"]
   },
   "entry_points": {
-    "tool": "http://192.168.50.164:3000/"
+    "tool": "https://hedgedoc.mettflix.eu/"
   },
   "capabilities": [
     "notes",
