@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from enum import StrEnum
 
 from cosmos.config import RuntimeSettings
-from cosmos.extensions import ExtensionRegistrar
+from cosmos.extensions import ExtensionDiscovery, ExtensionLoader, ExtensionRegistrar, ExtensionValidator
 from cosmos.persistence import (
     AssetCatalogRepository,
     CaptureDraftRepository,
@@ -249,6 +249,11 @@ class CosmosRuntime:
             )
             self.projects.ensure_version_one_system_projects(system_context)
             self.core_tools.ensure_version_one(system_context)
+            ExtensionLoader(
+                ExtensionDiscovery(self.settings.extensions_path),
+                ExtensionValidator(self.registry),
+                self.extensions,
+            ).load(system_context)
             self.companion.ensure_default(system_context)
             self.base.ensure_default(system_context)
             self.jobs.initialize()

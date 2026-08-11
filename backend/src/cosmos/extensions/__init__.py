@@ -1,4 +1,5 @@
 from cosmos.extensions.discovery import ExtensionDiscovery, ExtensionPackageCandidate
+from cosmos.extensions.loader import ExtensionLoadFailure, ExtensionLoader, ExtensionLoadReport
 from cosmos.extensions.manifests import (
     ExtensionCategory,
     ExtensionManifest,
@@ -12,6 +13,9 @@ __all__ = [
     "ExtensionCategory",
     "ExtensionDiscovery",
     "ExtensionPackageCandidate",
+    "ExtensionLoadFailure",
+    "ExtensionLoader",
+    "ExtensionLoadReport",
     "ExtensionManifest",
     "ExtensionRegistrar",
     "ExtensionRuntimeKind",

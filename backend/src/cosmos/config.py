@@ -18,6 +18,7 @@ class RuntimeSettings:
     port: int = 8000
     runtime_path: Path = field(default_factory=default_runtime_path)
     database_path: Path | None = None
+    extensions_path: Path | None = None
     cors_origins: tuple[str, ...] = ()
     log_level: str = "info"
 
@@ -35,8 +36,15 @@ class RuntimeSettings:
         if not self.host.strip():
             raise ValueError("COSMOS_HOST must not be empty.")
 
+        extensions_path = (
+            Path(self.extensions_path).expanduser()
+            if self.extensions_path is not None
+            else runtime_path / "Extensions"
+        )
+
         object.__setattr__(self, "runtime_path", runtime_path)
         object.__setattr__(self, "database_path", database_path)
+        object.__setattr__(self, "extensions_path", extensions_path)
         object.__setattr__(self, "cors_origins", tuple(origin.rstrip("/") for origin in self.cors_origins))
 
     @classmethod
@@ -55,6 +63,7 @@ class RuntimeSettings:
             port=port,
             runtime_path=runtime_path,
             database_path=_optional_path(values.get("COSMOS_DATABASE_PATH")),
+            extensions_path=_optional_path(values.get("COSMOS_EXTENSIONS_PATH")),
             cors_origins=_csv(values.get("COSMOS_CORS_ORIGINS")),
             log_level=values.get("COSMOS_LOG_LEVEL", "info"),
         )
