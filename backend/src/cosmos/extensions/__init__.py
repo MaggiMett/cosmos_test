@@ -4,5 +4,12 @@ from cosmos.extensions.manifests import (
     ExtensionRuntimeKind,
     ManifestValidationError,
 )
+from cosmos.extensions.registrar import ExtensionRegistrar
 
-__all__ = ["ExtensionCategory", "ExtensionManifest", "ExtensionRuntimeKind", "ManifestValidationError"]
+__all__ = [
+    "ExtensionCategory",
+    "ExtensionManifest",
+    "ExtensionRegistrar",
+    "ExtensionRuntimeKind",
+    "ManifestValidationError",
+]
