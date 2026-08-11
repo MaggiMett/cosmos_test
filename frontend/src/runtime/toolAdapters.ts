@@ -5,6 +5,7 @@ import CaptureTool from "../components/tools/CaptureTool.vue";
 import FilesTool from "../components/tools/FilesTool.vue";
 import JourneymanTool from "../components/tools/JourneymanTool.vue";
 import ReviewTool from "../components/tools/ReviewTool.vue";
+import WebToolHost from "../components/tools/WebToolHost.vue";
 import type { ToolDefinition, ToolRuntimeKind } from "./toolRuntime";
 
 export interface ToolRendererAdapter {
@@ -28,6 +29,14 @@ export class NativeToolRendererAdapter implements ToolRendererAdapter {
   }
 }
 
+export class WebToolRendererAdapter implements ToolRendererAdapter {
+  readonly runtimeKind = "web" as const;
+
+  resolve(): Component {
+    return WebToolHost;
+  }
+}
+
 export class ToolRendererRegistry {
   private readonly adapters = new Map<ToolRuntimeKind, ToolRendererAdapter>();
 
@@ -46,5 +55,6 @@ export class ToolRendererRegistry {
 export function createDefaultToolRendererRegistry(): ToolRendererRegistry {
   const registry = new ToolRendererRegistry();
   registry.register(new NativeToolRendererAdapter());
+  registry.register(new WebToolRendererAdapter());
   return registry;
 }

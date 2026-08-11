@@ -10,6 +10,7 @@ from cosmos.runtime import (
     ToolAdapterRegistry,
     ToolRuntime,
     ToolRuntimeKind,
+    WebToolAdapter,
 )
 from cosmos.services import create_version_one_object_contract
 
@@ -35,7 +36,7 @@ class StubAdapter:
         self.closed = context
 
 
-def definition() -> RegistryEntry:
+def definition(entry_point: str = "tests:test-tool") -> RegistryEntry:
     return RegistryEntry(
         component_id="cosmos.tool.test",
         display_name="Test Tool",
@@ -43,7 +44,7 @@ def definition() -> RegistryEntry:
         version="1.0.0",
         runtime_api_version="1",
         source_extension_id="cosmos.tests",
-        entry_point="tests:test-tool",
+        entry_point=entry_point,
         object_id="cosmos.tool.test",
     )
 
@@ -53,6 +54,14 @@ def test_native_tool_adapter_is_available_and_keeps_lifecycle_external() -> None
 
     assert adapter.runtime_kind is ToolRuntimeKind.NATIVE
     assert adapter.availability_error(definition(), RuntimeContext()) is None
+
+
+def test_web_tool_adapter_requires_an_absolute_http_entry_point() -> None:
+    adapter = WebToolAdapter()
+
+    assert adapter.availability_error(definition(entry_point="https://tools.example.test/app"), RuntimeContext()) is None
+    assert "HTTP(S)" in str(adapter.availability_error(definition(entry_point="./app"), RuntimeContext()))
+    assert "required" in str(adapter.availability_error(definition(entry_point=""), RuntimeContext()))
 
 
 def test_tool_adapter_registry_dispatches_by_runtime_kind() -> None:

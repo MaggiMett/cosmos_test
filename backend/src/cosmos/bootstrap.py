@@ -24,6 +24,7 @@ from cosmos.runtime import (
     RuntimeContext,
     ToolAdapterRegistry,
     ToolRuntime,
+    WebToolAdapter,
 )
 from cosmos.services import (
     BaseService,
@@ -137,6 +138,7 @@ class CosmosRuntime:
         theme_builder = ThemeBuilderService(objects, resources)
         tool_adapters = ToolAdapterRegistry()
         tool_adapters.register(NativeToolAdapter())
+        tool_adapters.register(WebToolAdapter())
         tools = ToolService(objects, ToolRuntime(objects.contract), events, registry, tool_adapters)
         workspaces = WorkspaceService(objects, runtime_state, tools, events)
         jobs = JobService(JobRepository(persistence), events)

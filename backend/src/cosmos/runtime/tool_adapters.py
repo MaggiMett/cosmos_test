@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Protocol
+from urllib.parse import urlparse
 
 from cosmos.runtime.context import RuntimeContext
 from cosmos.runtime.registry import RegistryEntry
@@ -40,6 +41,28 @@ class NativeToolAdapter:
     runtime_kind = ToolRuntimeKind.NATIVE
 
     def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
+        return None
+
+    def open(self, context: ToolAdapterContext) -> None:
+        pass
+
+    def update(self, context: ToolAdapterContext) -> None:
+        pass
+
+    def close(self, context: ToolAdapterContext) -> None:
+        pass
+
+
+class WebToolAdapter:
+    runtime_kind = ToolRuntimeKind.WEB
+
+    def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
+        entry_point = definition.entry_point.strip()
+        if not entry_point:
+            return "Web Tool entry point is required."
+        parsed = urlparse(entry_point)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            return "Web Tool entry point must be an absolute HTTP(S) URL."
         return None
 
     def open(self, context: ToolAdapterContext) -> None:

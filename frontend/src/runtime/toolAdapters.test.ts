@@ -15,6 +15,13 @@ describe("Tool renderer adapters", () => {
     expect(adapterSource).toContain("definition.entryPoint");
   });
 
+  it("registers web rendering through the same renderer registry", () => {
+    expect(adapterSource).toContain("class WebToolRendererAdapter");
+    expect(adapterSource).toContain('readonly runtimeKind = "web"');
+    expect(adapterSource).toContain("return WebToolHost");
+    expect(adapterSource).toContain("registry.register(new WebToolRendererAdapter())");
+  });
+
   it("keeps WorkspaceView independent of concrete core tool components", () => {
     expect(workspaceSource).toContain("runtime.toolRenderers.resolve(instance.definition)");
     expect(workspaceSource).not.toContain("ArchiveTool");

@@ -16,6 +16,7 @@ from cosmos.runtime.tool_adapters import (
     ToolAdapterContext,
     ToolAdapterRegistry,
     ToolRuntimeKind,
+    WebToolAdapter,
 )
 from cosmos.runtime.tools import ToolInstance, ToolLifecycleState, ToolRuntime
 
@@ -46,4 +47,5 @@ __all__ = [
     "ToolLifecycleState",
     "ToolRuntime",
     "ToolRuntimeKind",
+    "WebToolAdapter",
 ]
