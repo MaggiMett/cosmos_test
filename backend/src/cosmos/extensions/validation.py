@@ -66,6 +66,29 @@ class ExtensionValidator:
         unknown_permissions = manifest.permissions - KNOWN_PERMISSIONS
         if unknown_permissions:
             errors.append("Unknown Extension permissions: " + ", ".join(sorted(unknown_permissions)))
+        if manifest.runtime_kind is not None and manifest.runtime_kind.value == "web":
+            allowed_web_configuration = {"sandbox"}
+            unknown_configuration = set(manifest.runtime_configuration) - allowed_web_configuration
+            if unknown_configuration:
+                errors.append(
+                    "Unknown Web runtime configuration: " + ", ".join(sorted(unknown_configuration))
+                )
+            sandbox = manifest.runtime_configuration.get("sandbox", [])
+            allowed_sandbox = {
+                "forms",
+                "modals",
+                "popups",
+                "same-origin",
+                "scripts",
+            }
+            if not isinstance(sandbox, list) or not all(isinstance(item, str) for item in sandbox):
+                errors.append("Web runtime sandbox must be an array of capability names.")
+            else:
+                unknown_sandbox = set(sandbox) - allowed_sandbox
+                if unknown_sandbox:
+                    errors.append(
+                        "Unknown Web sandbox capabilities: " + ", ".join(sorted(unknown_sandbox))
+                    )
         if manifest.extension_id in manifest.dependencies:
             errors.append("Extension must not depend on itself.")
         try:

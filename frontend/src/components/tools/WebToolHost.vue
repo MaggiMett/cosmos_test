@@ -3,16 +3,23 @@
     class="web-tool-host"
     :src="entryPoint"
     :title="title"
-    sandbox="allow-forms allow-modals allow-popups allow-scripts allow-same-origin"
+    :sandbox="sandbox"
     referrerpolicy="no-referrer"
   />
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from "vue";
+
+import { resolveWebSandbox } from "../../runtime/webHostPolicy";
+
+const props = defineProps<{
   entryPoint: string;
+  runtimeConfiguration: Record<string, unknown>;
   title: string;
 }>();
+
+const sandbox = computed(() => resolveWebSandbox(props.runtimeConfiguration));
 </script>
 
 <style scoped>

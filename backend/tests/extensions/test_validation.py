@@ -63,6 +63,22 @@ def test_validator_checks_runtime_api_permissions_and_self_dependency(tmp_path: 
     assert any("depend on itself" in error for error in result.errors)
 
 
+def test_validator_rejects_unknown_web_host_policy(tmp_path: Path) -> None:
+    result = ExtensionValidator(Registry()).validate(
+        candidate(
+            tmp_path,
+            {
+                "runtime_kind": "web",
+                "entry_points": {"tool": "https://example.test/"},
+                "runtime_configuration": {"sandbox": ["scripts", "top-navigation"]},
+            },
+        )
+    )
+
+    assert not result.valid
+    assert any("top-navigation" in error for error in result.errors)
+
+
 def test_validator_detects_registry_component_conflict(tmp_path: Path) -> None:
     registry = Registry()
     registry.register(

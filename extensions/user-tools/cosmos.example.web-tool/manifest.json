@@ -6,7 +6,7 @@
   "runtime_api_version": "1",
   "runtime_kind": "web",
   "runtime_configuration": {
-    "reference": "external-web-tool"
+    "sandbox": ["forms", "modals", "popups", "same-origin", "scripts"]
   },
   "entry_points": {
     "tool": "https://example.com/"

@@ -71,6 +71,7 @@
             :workspace-session-id="instance.workspaceSessionId"
             :tool-instance-id="instance.instanceId"
             :entry-point="instance.definition.entryPoint"
+            :runtime-configuration="instance.definition.runtimeConfiguration"
             :title="instance.definition.displayName"
           />
         </ToolWindow>
