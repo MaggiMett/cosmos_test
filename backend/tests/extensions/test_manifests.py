@@ -3,7 +3,12 @@ from pathlib import Path
 
 import pytest
 
-from cosmos.extensions import ExtensionCategory, ExtensionManifest, ManifestValidationError
+from cosmos.extensions import (
+    ExtensionCategory,
+    ExtensionManifest,
+    ExtensionRuntimeKind,
+    ManifestValidationError,
+)
 
 
 def test_manifest_parses_supported_extension_category() -> None:
@@ -14,12 +19,28 @@ def test_manifest_parses_supported_extension_category() -> None:
             "version": "1.0.0",
             "category": "provider",
             "runtime_api_version": "1",
+            "runtime_kind": "service",
             "permissions": ["providers.execute"],
         }
     )
 
     assert manifest.category is ExtensionCategory.PROVIDER
+    assert manifest.runtime_kind is ExtensionRuntimeKind.SERVICE
     assert manifest.permissions == frozenset({"providers.execute"})
+
+
+def test_manifest_rejects_unsupported_runtime_kind() -> None:
+    with pytest.raises(ManifestValidationError, match="runtime kind"):
+        ExtensionManifest.from_mapping(
+            {
+                "id": "cosmos.tool.example",
+                "display_name": "Example",
+                "version": "1.0.0",
+                "category": "user-tool",
+                "runtime_api_version": "1",
+                "runtime_kind": "container",
+            }
+        )
 
 
 def test_manifest_rejects_non_extension_architectural_category() -> None:
@@ -40,3 +61,6 @@ def test_python_categories_match_shared_manifest_schema() -> None:
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
 
     assert set(schema["properties"]["category"]["enum"]) == {category.value for category in ExtensionCategory}
+    assert set(schema["properties"]["runtime_kind"]["enum"]) == {
+        runtime_kind.value for runtime_kind in ExtensionRuntimeKind
+    }

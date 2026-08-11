@@ -10,6 +10,13 @@ from cosmos.runtime.providers import (
     RuntimeResult,
 )
 from cosmos.runtime.registry import Registry, RegistryEntry, RegistryStatus
+from cosmos.runtime.tool_adapters import (
+    NativeToolAdapter,
+    ToolAdapter,
+    ToolAdapterContext,
+    ToolAdapterRegistry,
+    ToolRuntimeKind,
+)
 from cosmos.runtime.tools import ToolInstance, ToolLifecycleState, ToolRuntime
 
 __all__ = [
@@ -20,6 +27,7 @@ __all__ = [
     "JobRequest",
     "JobStatus",
     "PermissionDecision",
+    "NativeToolAdapter",
     "PermissionRequest",
     "ProviderDefinition",
     "ProviderInvocation",
@@ -31,7 +39,11 @@ __all__ = [
     "RuntimeContext",
     "RuntimeEvent",
     "RuntimeResult",
+    "ToolAdapter",
+    "ToolAdapterContext",
+    "ToolAdapterRegistry",
     "ToolInstance",
     "ToolLifecycleState",
     "ToolRuntime",
+    "ToolRuntimeKind",
 ]

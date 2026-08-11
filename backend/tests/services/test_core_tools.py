@@ -4,7 +4,7 @@ import pytest
 
 from cosmos.bootstrap import CosmosRuntime
 from cosmos.config import RuntimeSettings
-from cosmos.runtime import RuntimeContext
+from cosmos.runtime import RegistryStatus, RuntimeContext
 from cosmos.services import RuntimeServiceError
 
 
@@ -69,7 +69,49 @@ def test_core_tool_catalog_and_workspace_assignments(active_runtime: CosmosRunti
         "review",
     }
     assert "cosmos.tool.journeyman" in creation["assignedToolIds"]
+    assert all(item["runtimeKind"] == "native" for item in definitions)
+    assert all(item["entryPoint"].startswith("@cosmos/frontend-runtime:") for item in definitions)
     assert all(item["minimumSize"]["width"] > 0 for item in definitions)
+
+    registry_entries = active_runtime.registry.query(category="tool", status=RegistryStatus.ACTIVE)
+    assert {entry.component_id for entry in registry_entries} == {
+        "cosmos.tool.archive",
+        "cosmos.tool.capture",
+        "cosmos.tool.files",
+        "cosmos.tool.journeyman",
+        "cosmos.tool.review",
+    }
+    assert all(entry.object_id == entry.component_id for entry in registry_entries)
+    assert all(entry.source_extension_id == "cosmos.core" for entry in registry_entries)
+
+
+def test_tool_definitions_support_capability_set_selection(active_runtime: CosmosRuntime) -> None:
+    definitions = active_runtime.tools.definitions(
+        owner_context(), required_capabilities=frozenset({"search", "preview"})
+    )
+    assert [item["objectId"] for item in definitions] == ["cosmos.tool.files"]
+
+    assert active_runtime.tools.definitions(
+        owner_context(), required_capabilities=frozenset({"search", "validation"})
+    ) == []
+
+
+def test_disabled_tools_are_excluded_from_definition_selection(active_runtime: CosmosRuntime) -> None:
+    active_runtime.registry.disable("cosmos.tool.files")
+
+    assert "cosmos.tool.files" not in {
+        item["objectId"] for item in active_runtime.tools.definitions(owner_context())
+    }
+
+
+def test_tool_activation_requires_an_active_registry_entry(active_runtime: CosmosRuntime) -> None:
+    owner = owner_context()
+    session = active_runtime.workspaces.open("cosmos.workspace.creation", "cosmos.room.main", owner)
+    session_id = str(session["objectId"])
+    active_runtime.registry.disable("cosmos.tool.files")
+
+    with pytest.raises(RuntimeServiceError, match="not active"):
+        active_runtime.tools.open_workspace_tool("cosmos.tool.files", session_id, owner)
 
 
 def test_files_are_project_scoped_and_conflict_safe(active_runtime: CosmosRuntime) -> None:

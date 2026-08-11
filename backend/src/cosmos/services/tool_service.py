@@ -10,8 +10,12 @@ from cosmos.domain.objects import JSONValue
 from cosmos.runtime import (
     ContextSnapshot,
     EventDispatcher,
+    Registry,
+    RegistryStatus,
     RuntimeContext,
     RuntimeEvent,
+    ToolAdapterContext,
+    ToolAdapterRegistry,
     ToolInstance,
     ToolRuntime,
 )
@@ -23,10 +27,19 @@ from cosmos.services.serialization import object_payload
 class ToolService:
     """Authoritative activation boundary around the Tool Runtime lifecycle."""
 
-    def __init__(self, objects: ObjectService, runtime: ToolRuntime, events: EventDispatcher) -> None:
+    def __init__(
+        self,
+        objects: ObjectService,
+        runtime: ToolRuntime,
+        events: EventDispatcher,
+        registry: Registry,
+        adapters: ToolAdapterRegistry,
+    ) -> None:
         self._objects = objects
         self._runtime = runtime
         self._events = events
+        self._registry = registry
+        self._adapters = adapters
 
     def open_workspace_tool(
         self,
@@ -41,6 +54,26 @@ class ToolService:
         definition = self._objects.get(definition_object_id, context)
         if "Tool" not in definition.system_tags:
             raise RuntimeServiceError("validation_failed", "The requested Object is not a Tool definition.")
+        try:
+            registry_entry = self._registry.resolve(definition_object_id)
+        except KeyError as error:
+            raise RuntimeServiceError(
+                "tool_not_registered", "The requested Tool definition is not registered."
+            ) from error
+        if registry_entry.status is not RegistryStatus.ACTIVE:
+            raise RuntimeServiceError("tool_not_active", "The requested Tool definition is not active.")
+        if registry_entry.object_id != definition_object_id:
+            raise RuntimeServiceError(
+                "tool_registry_mismatch", "The Tool Registry entry does not match its definition Object."
+            )
+        runtime_kind = str(definition.properties["runtime_kind"])
+        try:
+            adapter = self._adapters.resolve(runtime_kind)
+        except (LookupError, ValueError) as error:
+            raise RuntimeServiceError("tool_adapter_unavailable", str(error)) from error
+        availability_error = adapter.availability_error(registry_entry, context)
+        if availability_error is not None:
+            raise RuntimeServiceError("tool_unavailable", availability_error)
         object_id = instance_id or f"cosmos.tool-instance.{uuid4()}"
         tool_context = replace(
             context,
@@ -55,12 +88,33 @@ class ToolService:
             runtime_state=runtime_state,
             display_name=f"{definition.identity.display_name} Instance",
         )
+        adapter.open(ToolAdapterContext(registry_entry, instance, tool_context))
         self._publish("ToolOpened", instance, tool_context)
         return instance
 
-    def definitions(self, context: RuntimeContext) -> list[dict[str, JSONValue]]:
+    def definitions(
+        self,
+        context: RuntimeContext,
+        *,
+        required_capabilities: frozenset[str] = frozenset(),
+    ) -> list[dict[str, JSONValue]]:
         require_permission(context.permissions, "tools.read")
-        return [self._definition_payload(value) for value in self._objects.list(context, system_tag="Tool")]
+        entries = self._registry.query(
+            category="tool",
+            capabilities=required_capabilities or None,
+            status=RegistryStatus.ACTIVE,
+        )
+        definitions: list[dict[str, JSONValue]] = []
+        for entry in entries:
+            if entry.object_id is None:
+                continue
+            try:
+                definition = self._objects.get(entry.object_id, context)
+            except RuntimeServiceError:
+                continue
+            if "Tool" in definition.system_tags:
+                definitions.append(self._definition_payload(definition))
+        return definitions
 
     def focus(self, object_id: str, context: RuntimeContext) -> ToolInstance:
         require_permission(context.permissions, "tools.write")
@@ -123,6 +177,8 @@ class ToolService:
             **payload,
             "category": properties["category"],
             "componentKey": properties["component_id"],
+            "runtimeKind": properties["runtime_kind"],
+            "entryPoint": properties["entry_point"],
             "icon": properties["icon"],
             "capabilities": properties["capabilities"],
             "permissions": properties["permissions"],

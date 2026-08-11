@@ -38,6 +38,35 @@ describe("ToolRuntime", () => {
     });
   });
 
+  it("discovers Tools by capabilities through the authoritative backend selection", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(json([definition("cosmos.tool.files", "Files")]));
+    vi.stubGlobal("fetch", fetchMock);
+    const runtime = new ToolRuntime(new WindowRuntime(), new CosmosApiClient("http://cosmos.test"));
+
+    const discovered = await runtime.discover(["search", "preview"]);
+
+    expect(discovered.map((item) => item.objectId)).toEqual(["cosmos.tool.files"]);
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://cosmos.test/tools?capability=search&capability=preview",
+      expect.objectContaining({ method: "GET" }),
+    );
+  });
+
+  it("keeps explicit assigned Tool ids as a compatibility filter", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        json([definition("cosmos.tool.files", "Files"), definition("cosmos.tool.archive", "Archive")]),
+      ),
+    );
+    const runtime = new ToolRuntime(new WindowRuntime(), new CosmosApiClient("http://cosmos.test"));
+    await runtime.loadDefinitions();
+
+    expect(runtime.available(["cosmos.tool.archive"]).map((item) => item.objectId)).toEqual([
+      "cosmos.tool.archive",
+    ]);
+  });
+
   it("isolates unavailable restored Tool definitions without failing the Workspace", () => {
     const windows = new WindowRuntime();
     windows.open({
@@ -65,6 +94,8 @@ function definition(objectId: string, displayName: string) {
     icon: displayName,
     minimumSize: { width: 320, height: 240 },
     componentKey: objectId,
+    runtimeKind: "native" as const,
+    entryPoint: `@cosmos/frontend-runtime:${objectId}`,
   };
 }
 

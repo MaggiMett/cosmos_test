@@ -97,7 +97,7 @@ describe("Asset Library development rendering", () => {
     expect(script).not.toContain("VisualObjectDefinition");
     expect(script).not.toContain("InteractionZone");
     expect(script).not.toContain("FunctionBinding");
-    expect(appSource).toContain('v-if="route.meta.developmentPreview"');
+    expect(appSource).toContain('v-if="route.meta.developmentPreview || route.meta.standaloneExperience"');
     expect(appSource).not.toContain("AssetLibraryView");
   });
 });

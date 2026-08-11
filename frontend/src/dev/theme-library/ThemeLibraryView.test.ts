@@ -49,7 +49,7 @@ describe("Cosmos Theme Library vertical slice", () => {
     expect(header).toContain("@travel=\"$emit('travel', $event)\"");
     expect(sourceFor("./ThemeLibraryView.vue")).toContain('@travel="travelFromLibrary"');
     expect(appSource.match(/<ApplicationShell/g)).toHaveLength(1);
-    expect(appSource).toContain('v-if="route.meta.developmentPreview"');
+    expect(appSource).toContain('v-if="route.meta.developmentPreview || route.meta.standaloneExperience"');
     expect(combined).not.toContain("ThemeBuilderShell");
     expect(combined).not.toContain("StudioRail");
     expect(combined).not.toContain("BuilderTopNavigation");

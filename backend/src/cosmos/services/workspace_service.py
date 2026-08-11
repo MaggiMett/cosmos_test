@@ -26,6 +26,7 @@ class ActiveWorkspaceSession:
     state: str
     restorable_state: dict[str, JSONValue]
     tool_windows: dict[str, CosmosObject]
+    resolved_tool_ids: tuple[str, ...]
 
     @property
     def object_id(self) -> str:
@@ -57,6 +58,7 @@ class WorkspaceService:
         require_permission(context.permissions, "workspaces.write")
         definition = self._workspace_definition(object_id, context)
         self._validate_room(room_id, context)
+        resolved_tool_ids = self._resolve_tool_ids(definition, context)
         for session in self._sessions.values():
             if session.state == "active":
                 self._set_session_state(session, "background")
@@ -64,6 +66,9 @@ class WorkspaceService:
         session_id = f"cosmos.workspace-session.{uuid4()}"
         workspace_context = _workspace_context(definition, context, room_id, session_id)
         state = self._load_state(definition.identity.object_id, context)
+        has_restored_state = state != _empty_state()
+        if not has_restored_state:
+            state = self._materialize_default_layout(definition, resolved_tool_ids)
         session_object = self._objects.contract.build(
             ObjectIdentity(
                 object_id=session_id,
@@ -107,6 +112,7 @@ class WorkspaceService:
             state="active",
             restorable_state=state,
             tool_windows={},
+            resolved_tool_ids=resolved_tool_ids,
         )
         self._sessions[session_id] = session
         try:
@@ -268,6 +274,73 @@ class WorkspaceService:
             return _empty_state()
         return _validate_restorable_state(value)
 
+    def _resolve_tool_ids(self, definition: CosmosObject, context: RuntimeContext) -> tuple[str, ...]:
+        active_ids = {
+            str(item["objectId"])
+            for item in self._tools.definitions(context)
+        }
+        resolved: list[str] = []
+        assigned = definition.properties["assigned_tool_ids"]
+        if isinstance(assigned, list):
+            resolved.extend(str(tool_id) for tool_id in assigned if str(tool_id) in active_ids)
+
+        requirements = definition.properties["tool_requirements"]
+        if not isinstance(requirements, list):
+            raise RuntimeServiceError("validation_failed", "Workspace Tool requirements must be an array.")
+        for requirement in requirements:
+            if not isinstance(requirement, Mapping):
+                raise RuntimeServiceError("validation_failed", "Workspace Tool requirements must be objects.")
+            raw_capabilities = requirement.get("capabilities", [])
+            if not isinstance(raw_capabilities, list) or not all(
+                isinstance(capability, str) and capability.strip() for capability in raw_capabilities
+            ):
+                raise RuntimeServiceError(
+                    "validation_failed", "Workspace Tool requirement capabilities must be strings."
+                )
+            matches = self._tools.definitions(
+                context,
+                required_capabilities=frozenset(raw_capabilities),
+            )
+            if matches:
+                resolved.append(str(matches[0]["objectId"]))
+
+        return tuple(dict.fromkeys(resolved))
+
+    def _materialize_default_layout(
+        self, definition: CosmosObject, resolved_tool_ids: tuple[str, ...]
+    ) -> dict[str, JSONValue]:
+        state = _empty_state()
+        layout = definition.properties["default_layout"]
+        if not isinstance(layout, Mapping):
+            raise RuntimeServiceError("validation_failed", "Workspace default layout must be an object.")
+        raw_tools = layout.get("tools", [])
+        if not isinstance(raw_tools, list):
+            raise RuntimeServiceError("validation_failed", "Workspace default layout tools must be an array.")
+        tools: list[dict[str, JSONValue]] = []
+        for focus_order, raw in enumerate(raw_tools, start=1):
+            if not isinstance(raw, Mapping):
+                raise RuntimeServiceError("validation_failed", "Workspace default Tool layout must be an object.")
+            tool_id = raw.get("toolId")
+            bounds = raw.get("bounds")
+            if not isinstance(tool_id, str) or tool_id not in resolved_tool_ids:
+                continue
+            if not isinstance(bounds, Mapping):
+                raise RuntimeServiceError("validation_failed", "Workspace default Tool bounds must be an object.")
+            instance_id = f"cosmos.tool-instance.{uuid4()}"
+            tools.append(
+                {
+                    "instanceId": instance_id,
+                    "definitionObjectId": tool_id,
+                    "windowObjectId": f"cosmos.window.tool.{instance_id.rsplit('.', 1)[-1]}",
+                    "bounds": _validate_bounds(bounds),
+                    "focusOrder": focus_order,
+                    "state": "active" if raw.get("state") == "active" else "background",
+                    "runtimeState": {},
+                }
+            )
+        state["tools"] = tools
+        return state
+
     def _workspace_definition(self, object_id: str, context: RuntimeContext) -> CosmosObject:
         definition = self._objects.get(object_id, context)
         if "Workspace" not in definition.system_tags:
@@ -330,6 +403,7 @@ class WorkspaceService:
             "defaultLayout": definition.properties["default_layout"],
             "contextConfiguration": definition.properties["context_configuration"],
             "assignedToolIds": definition.properties["assigned_tool_ids"],
+            "toolRequirements": definition.properties["tool_requirements"],
             "themeOverride": definition.properties["theme_override"],
             "sourceProjectId": definition.properties["source_project_id"],
         }
@@ -349,6 +423,7 @@ class WorkspaceService:
                 "workspaceSessionId": session.object_id,
             },
             "state": session.state,
+            "resolvedToolIds": list(session.resolved_tool_ids),
             "restorableState": session.restorable_state,
         }
 

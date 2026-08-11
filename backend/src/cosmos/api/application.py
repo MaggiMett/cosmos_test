@@ -415,7 +415,16 @@ async def workspace_tool(request: Request) -> JSONResponse:
 
 async def tool_definitions(request: Request) -> JSONResponse:
     try:
-        return JSONResponse(request.app.state.runtime.tools.definitions(_local_owner_context()))
+        required_capabilities = frozenset(
+            value.strip()
+            for value in request.query_params.getlist("capability")
+            if value.strip()
+        )
+        return JSONResponse(
+            request.app.state.runtime.tools.definitions(
+                _local_owner_context(), required_capabilities=required_capabilities
+            )
+        )
     except RuntimeServiceError as error:
         return _service_error(error)
 

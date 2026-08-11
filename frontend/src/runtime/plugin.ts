@@ -17,6 +17,7 @@ import {
 } from "./themePackageRegistry";
 import { ThemeRuntime } from "./themeRuntime";
 import { ApiThemeActivationPersistence } from "./themeRuntimePersistence";
+import { createDefaultToolRendererRegistry, type ToolRendererRegistry } from "./toolAdapters";
 import { ToolRuntime } from "./toolRuntime";
 import { TransitionRuntime } from "./transitionRuntime";
 import { WindowRuntime } from "./windowRuntime";
@@ -33,6 +34,7 @@ export interface CosmosFrontendRuntime {
   themes: ThemeRuntime;
   themePackages: ThemePackageStartupLoader & ThemePackagePresentationSource;
   tools: ToolRuntime;
+  toolRenderers: ToolRendererRegistry;
   transitions: TransitionRuntime;
   windows: WindowRuntime;
   workspaces: WorkspaceRuntime;
@@ -79,6 +81,7 @@ export function createCosmosFrontendRuntime(apiBaseUrl?: string): CosmosFrontend
     themes,
     themePackages,
     tools,
+    toolRenderers: createDefaultToolRendererRegistry(),
     transitions,
     windows,
     workspaces: new WorkspaceRuntime(windows, api, tools),

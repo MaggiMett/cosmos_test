@@ -71,6 +71,7 @@ class Registry:
         *,
         category: str | None = None,
         capability: str | None = None,
+        capabilities: frozenset[str] | None = None,
         status: RegistryStatus | None = None,
     ) -> tuple[RegistryEntry, ...]:
         entries = self._entries.values()
@@ -79,6 +80,7 @@ class Registry:
             for entry in entries
             if (category is None or entry.category == category)
             and (capability is None or capability in entry.capabilities)
+            and (capabilities is None or capabilities.issubset(entry.capabilities))
             and (status is None or entry.status is status)
         )
         return tuple(sorted(result, key=lambda entry: entry.component_id))

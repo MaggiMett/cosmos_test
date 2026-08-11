@@ -27,6 +27,10 @@
       ]
     },
     "runtime_api_version": { "type": "string", "minLength": 1 },
+    "runtime_kind": {
+      "type": "string",
+      "enum": ["native", "web", "service", "desktop", "command"]
+    },
     "permissions": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 },

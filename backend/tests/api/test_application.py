@@ -157,11 +157,17 @@ def test_core_tool_api_is_session_scoped_and_journeyman_is_its_own_tool(tmp_path
             f"/workspace-sessions/{session_id}/journeyman/tasks",
             json={"objective": "Plan a verified change"},
         )
+        capability_tools = client.get(
+            "/tools", params=[("capability", "search"), ("capability", "preview")]
+        )
 
     definitions = {item["componentKey"]: item for item in tools.json()}
     assert tools.status_code == 200
     assert definitions["journeyman"]["objectId"] == "cosmos.tool.journeyman"
     assert definitions["journeyman"]["category"] == "SystemTool"
+    assert definitions["journeyman"]["runtimeKind"] == "native"
+    assert definitions["journeyman"]["entryPoint"] == "@cosmos/frontend-runtime:journeyman"
+    assert [item["objectId"] for item in capability_tools.json()] == ["cosmos.tool.files"]
     assert created.status_code == 201
     assert read.json()["content"] == "Sprint 5"
     assert capture.status_code == 201

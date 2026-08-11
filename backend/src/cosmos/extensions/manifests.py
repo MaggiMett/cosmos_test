@@ -24,6 +24,14 @@ class ExtensionCategory(StrEnum):
     INTEGRATION = "integration"
 
 
+class ExtensionRuntimeKind(StrEnum):
+    NATIVE = "native"
+    WEB = "web"
+    SERVICE = "service"
+    DESKTOP = "desktop"
+    COMMAND = "command"
+
+
 _ID_PATTERN = re.compile(r"^[a-z0-9]+(?:[.-][a-z0-9]+)+$")
 
 
@@ -34,6 +42,7 @@ class ExtensionManifest:
     version: str
     category: ExtensionCategory
     runtime_api_version: str
+    runtime_kind: ExtensionRuntimeKind | None
     permissions: frozenset[str]
     capabilities: frozenset[str]
     dependencies: tuple[str, ...]
@@ -59,12 +68,21 @@ class ExtensionManifest:
         if not isinstance(entry_points, Mapping):
             raise ManifestValidationError("entry_points must be an object.")
 
+        runtime_kind_value = value.get("runtime_kind")
+        try:
+            runtime_kind = (
+                ExtensionRuntimeKind(str(runtime_kind_value)) if runtime_kind_value is not None else None
+            )
+        except ValueError as error:
+            raise ManifestValidationError(f"Unsupported Extension runtime kind: {runtime_kind_value}") from error
+
         return cls(
             extension_id=extension_id,
             display_name=str(value["display_name"]),
             version=str(value["version"]),
             category=category,
             runtime_api_version=str(value["runtime_api_version"]),
+            runtime_kind=runtime_kind,
             permissions=frozenset(str(item) for item in value.get("permissions", [])),
             capabilities=frozenset(str(item) for item in value.get("capabilities", [])),
             dependencies=tuple(str(item) for item in value.get("dependencies", [])),

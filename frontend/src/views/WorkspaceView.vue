@@ -66,8 +66,8 @@
           @resize="resizeTool(instance.instanceId, $event)"
         >
           <component
-            :is="toolComponents[instance.definition.componentKey]"
-            v-if="toolComponents[instance.definition.componentKey]"
+            :is="runtime.toolRenderers.resolve(instance.definition)"
+            v-if="runtime.toolRenderers.resolve(instance.definition)"
             :workspace-session-id="instance.workspaceSessionId"
             :tool-instance-id="instance.instanceId"
           />
@@ -85,16 +85,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, type Component } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import ToolWindow from "../components/windows/ToolWindow.vue";
 import ObjectInteractionHost from "../components/windows/ObjectInteractionHost.vue";
-import ArchiveTool from "../components/tools/ArchiveTool.vue";
-import CaptureTool from "../components/tools/CaptureTool.vue";
-import FilesTool from "../components/tools/FilesTool.vue";
-import JourneymanTool from "../components/tools/JourneymanTool.vue";
-import ReviewTool from "../components/tools/ReviewTool.vue";
 import type { WorkspaceSession } from "../runtime/workspaceRuntime";
 import { useCosmosRuntime } from "../runtime/plugin";
 
@@ -106,13 +101,6 @@ const phase = ref<"idle" | "opening" | "ready" | "closing">("idle");
 const error = ref<string | null>(null);
 const environmentBounds = ref(workspaceBounds());
 const objectInteractionHost = ref<InstanceType<typeof ObjectInteractionHost> | null>(null);
-const toolComponents: Record<string, Component> = {
-  archive: ArchiveTool,
-  capture: CaptureTool,
-  files: FilesTool,
-  journeyman: JourneymanTool,
-  review: ReviewTool,
-};
 
 const environmentStyle = computed(() => ({
   left: `${environmentBounds.value.x}px`,
@@ -121,7 +109,7 @@ const environmentStyle = computed(() => ({
   height: `${environmentBounds.value.height}px`,
 }));
 const availableTools = computed(() => {
-  const assigned = session.value?.definition.assignedToolIds ?? [];
+  const assigned = session.value?.resolvedToolIds ?? [];
   return runtime.tools.available(assigned.length ? assigned : undefined);
 });
 const toolInstances = computed(() =>

@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 
 from cosmos.domain import CosmosObject, ObjectIdentity
 from cosmos.domain.objects import JSONValue
-from cosmos.runtime import RuntimeContext
+from cosmos.runtime import Registry, RegistryEntry, RegistryStatus, RuntimeContext
 from cosmos.services.object_service import CreateObjectCommand, ObjectService
 
 FILES_TOOL_ID = "cosmos.tool.files"
@@ -90,11 +90,37 @@ CORE_TOOLS = (
 
 
 class CoreToolCatalog:
-    def __init__(self, objects: ObjectService) -> None:
+    def __init__(self, objects: ObjectService, registry: Registry) -> None:
         self._objects = objects
+        self._registry = registry
 
     def ensure_version_one(self, context: RuntimeContext) -> tuple[CosmosObject, ...]:
-        return tuple(self._ensure(definition, context) for definition in CORE_TOOLS)
+        tools = tuple(self._ensure(definition, context) for definition in CORE_TOOLS)
+        for definition, tool in zip(CORE_TOOLS, tools, strict=True):
+            self._ensure_registry_entry(definition, tool)
+        return tools
+
+    def _ensure_registry_entry(self, definition: CoreToolDefinition, tool: CosmosObject) -> None:
+        try:
+            entry = self._registry.resolve(definition.object_id)
+        except KeyError:
+            entry = self._registry.register(
+                RegistryEntry(
+                    component_id=definition.object_id,
+                    display_name=definition.display_name,
+                    category="tool",
+                    version="1.0.0",
+                    runtime_api_version="1",
+                    source_extension_id="cosmos.core",
+                    capabilities=frozenset(definition.capabilities),
+                    permissions=frozenset(definition.permissions),
+                    entry_point=f"@cosmos/frontend-runtime:{definition.component_id}",
+                    object_id=tool.identity.object_id,
+                )
+            )
+        if entry.status is RegistryStatus.REGISTERED:
+            self._registry.activate(entry.component_id)
+
 
     def _ensure(self, definition: CoreToolDefinition, context: RuntimeContext) -> CosmosObject:
         properties: dict[str, JSONValue] = {
@@ -102,6 +128,7 @@ class CoreToolCatalog:
             "component_id": definition.component_id,
             "version": "1.0.0",
             "entry_point": f"@cosmos/frontend-runtime:{definition.component_id}",
+            "runtime_kind": "native",
             "icon": definition.icon,
             "capabilities": list(definition.capabilities),
             "permissions": list(definition.permissions),

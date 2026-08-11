@@ -16,6 +16,7 @@ const session: WorkspaceSession = {
     defaultLayout: {},
     contextConfiguration: { projectScopeIds: ["project.alpha"] },
     assignedToolIds: [],
+    toolRequirements: [{ capabilities: ["search", "preview"] }],
     themeOverride: "",
     sourceProjectId: "cosmos.project.system.knowledge",
   },
@@ -31,6 +32,7 @@ const session: WorkspaceSession = {
     workspaceSessionId: "cosmos.workspace-session.a",
   },
   state: "active",
+  resolvedToolIds: ["cosmos.tool.files"],
   restorableState: {
     tools: [],
     selectedObjectId: null,

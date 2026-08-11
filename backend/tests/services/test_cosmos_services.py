@@ -4,7 +4,7 @@ from pathlib import Path
 from cosmos.bootstrap import CosmosRuntime
 from cosmos.config import RuntimeSettings
 from cosmos.domain import ObjectIdentity
-from cosmos.runtime import RuntimeContext
+from cosmos.runtime import RegistryEntry, RuntimeContext
 from cosmos.services import (
     PREPARED_AREAS,
     CreateNotificationCommand,
@@ -159,6 +159,51 @@ def test_base_uses_tagged_rooms_slots_workspaces_cockpit_companion_and_pet(tmp_p
     assert snapshot["pet"]["systemTags"] == ["Entity", "Pet", "System"]
 
 
+def test_workspace_open_resolves_capability_tools_and_materializes_default_layout(tmp_path: Path) -> None:
+    runtime = CosmosRuntime.build(RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0))
+    runtime.initialize()
+    context = owner_context()
+    runtime.objects.create(
+        CreateObjectCommand(
+            identity=ObjectIdentity(
+                object_id="cosmos.workspace.declarative-test",
+                display_name="Declarative Test Workspace",
+                description="Test-only declarative Workspace.",
+                creator="cosmos.tests",
+                lifecycle_state="active",
+                created_at=datetime.now(UTC),
+            ),
+            system_tags=frozenset({"Workspace"}),
+            properties={
+                "icon": "Test",
+                "overlay": "",
+                "default_layout": {
+                    "tools": [
+                        {
+                            "toolId": "cosmos.tool.files",
+                            "bounds": {"x": 20, "y": 30, "width": 500, "height": 400},
+                            "state": "active",
+                        }
+                    ]
+                },
+                "context_configuration": {},
+                "assigned_tool_ids": ["cosmos.tool.archive"],
+                "tool_requirements": [{"capabilities": ["search", "preview"]}],
+                "theme_override": "",
+                "source_project_id": "cosmos.project.system.knowledge",
+            },
+        ),
+        context,
+    )
+
+    opened = runtime.workspaces.open("cosmos.workspace.declarative-test", "cosmos.room.main", context)
+
+    assert opened["resolvedToolIds"] == ["cosmos.tool.archive", "cosmos.tool.files"]
+    default_tool = opened["restorableState"]["tools"][0]
+    assert default_tool["definitionObjectId"] == "cosmos.tool.files"
+    assert default_tool["bounds"] == {"x": 20.0, "y": 30.0, "width": 500.0, "height": 400.0}
+
+
 def test_workspace_sessions_restore_contained_tool_instances_and_layout(tmp_path: Path) -> None:
     runtime = CosmosRuntime.build(RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0))
     runtime.initialize()
@@ -187,6 +232,19 @@ def test_workspace_sessions_restore_contained_tool_instances_and_layout(tmp_path
         ),
         context,
     )
+    runtime.registry.register(
+        RegistryEntry(
+            component_id=tool.identity.object_id,
+            display_name=tool.identity.display_name,
+            category="tool",
+            version="1.0.0",
+            runtime_api_version="1",
+            source_extension_id="cosmos.tests",
+            entry_point="tests:tool",
+            object_id=tool.identity.object_id,
+        )
+    )
+    runtime.registry.activate(tool.identity.object_id)
 
     opened = runtime.workspaces.open("cosmos.workspace.knowledge", "cosmos.room.main", context)
     record = runtime.workspaces.open_tool(

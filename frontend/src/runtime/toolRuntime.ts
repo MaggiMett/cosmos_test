@@ -4,6 +4,8 @@ import type { CosmosApiClient } from "./apiClient";
 import type { WindowBounds, WindowInstance } from "./windowRuntime";
 import { WindowRuntime } from "./windowRuntime";
 
+export type ToolRuntimeKind = "native" | "web" | "service" | "desktop" | "command";
+
 export interface ToolDefinition {
   objectId: string;
   displayName: string;
@@ -11,6 +13,8 @@ export interface ToolDefinition {
   icon: string;
   minimumSize: Readonly<{ width: number; height: number }>;
   componentKey: string;
+  runtimeKind: ToolRuntimeKind;
+  entryPoint: string;
   category?: string;
   capabilities?: string[];
   permissions?: string[];
@@ -67,11 +71,19 @@ export class ToolRuntime {
   }
 
   async loadDefinitions(): Promise<void> {
-    const result = await this.api.get<ToolDefinition[]>("/tools");
+    await this.discover();
+  }
+
+  async discover(requiredCapabilities: readonly string[] = []): Promise<readonly Readonly<ToolDefinition>[]> {
+    const query = requiredCapabilities.map((capability) => `capability=${encodeURIComponent(capability)}`).join("&");
+    const result = await this.api.get<ToolDefinition[]>(query ? `/tools?${query}` : "/tools");
     if (!result.ok) throw new Error(result.error.message);
-    this.definitions.clear();
-    for (const definition of result.data) this.register(definition);
-    this.mutableState.unavailableDefinitionIds = [];
+    if (requiredCapabilities.length === 0) {
+      this.definitions.clear();
+      for (const definition of result.data) this.register(definition);
+      this.mutableState.unavailableDefinitionIds = [];
+    }
+    return [...result.data].sort((left, right) => left.displayName.localeCompare(right.displayName));
   }
 
   available(assignedToolIds?: readonly string[]): readonly Readonly<ToolDefinition>[] {

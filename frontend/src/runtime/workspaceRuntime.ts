@@ -23,6 +23,7 @@ export interface WorkspaceDefinitionReference {
   defaultLayout: Record<string, unknown>;
   contextConfiguration: Record<string, unknown>;
   assignedToolIds: string[];
+  toolRequirements: Array<{ capabilities: string[] }>;
   themeOverride: string;
   sourceProjectId: string;
 }
@@ -47,6 +48,7 @@ export interface WorkspaceSession {
   environmentWindow: WorkspaceEnvironmentWindow;
   context: WorkspaceContext;
   state: WorkspaceSessionState;
+  resolvedToolIds: string[];
   restorableState: WorkspaceRestorableState;
 }
 
@@ -221,11 +223,15 @@ function copySession(session: WorkspaceSession): WorkspaceSession {
     definition: {
       ...session.definition,
       assignedToolIds: [...session.definition.assignedToolIds],
+      toolRequirements: session.definition.toolRequirements.map((requirement) => ({
+        capabilities: [...requirement.capabilities],
+      })),
       defaultLayout: { ...session.definition.defaultLayout },
       contextConfiguration: { ...session.definition.contextConfiguration },
     },
     environmentWindow: { ...session.environmentWindow },
     context: { ...session.context, projectScopeIds: [...session.context.projectScopeIds] },
+    resolvedToolIds: [...session.resolvedToolIds],
     restorableState: copyRestorableState(session.restorableState),
   };
 }

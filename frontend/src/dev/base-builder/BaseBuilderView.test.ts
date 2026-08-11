@@ -41,7 +41,7 @@ describe("Base Builder development view boundaries", () => {
   });
 
   it("bypasses ApplicationShell only for explicitly marked development routes", () => {
-    expect(appSource).toContain('v-if="route.meta.developmentPreview"');
+    expect(appSource).toContain('v-if="route.meta.developmentPreview || route.meta.standaloneExperience"');
     expect(appSource).toContain("<ApplicationShell v-else");
     expect(appSource).not.toContain("BaseBuilderView");
   });

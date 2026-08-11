@@ -16,7 +16,15 @@ from cosmos.persistence import (
     SQLitePersistence,
     ThemePackageRepository,
 )
-from cosmos.runtime import EventDispatcher, ProviderRuntime, Registry, RuntimeContext, ToolRuntime
+from cosmos.runtime import (
+    EventDispatcher,
+    NativeToolAdapter,
+    ProviderRuntime,
+    Registry,
+    RuntimeContext,
+    ToolAdapterRegistry,
+    ToolRuntime,
+)
 from cosmos.services import (
     BaseService,
     CompanionService,
@@ -127,7 +135,9 @@ class CosmosRuntime:
             settings.runtime_path,
         )
         theme_builder = ThemeBuilderService(objects, resources)
-        tools = ToolService(objects, ToolRuntime(objects.contract), events)
+        tool_adapters = ToolAdapterRegistry()
+        tool_adapters.register(NativeToolAdapter())
+        tools = ToolService(objects, ToolRuntime(objects.contract), events, registry, tool_adapters)
         workspaces = WorkspaceService(objects, runtime_state, tools, events)
         jobs = JobService(JobRepository(persistence), events)
         knowledge = KnowledgeService(
@@ -163,7 +173,7 @@ class CosmosRuntime:
                 runtime_state,
                 companion,
             ),
-            core_tools=CoreToolCatalog(objects),
+            core_tools=CoreToolCatalog(objects, registry),
             jobs=jobs,
             resources=resources,
             knowledge=knowledge,
