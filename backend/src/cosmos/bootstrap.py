@@ -22,6 +22,7 @@ from cosmos.runtime import (
     ProviderRuntime,
     Registry,
     RuntimeContext,
+    ServiceToolAdapter,
     ToolAdapterRegistry,
     ToolRuntime,
     WebToolAdapter,
@@ -139,6 +140,7 @@ class CosmosRuntime:
         tool_adapters = ToolAdapterRegistry()
         tool_adapters.register(NativeToolAdapter())
         tool_adapters.register(WebToolAdapter())
+        tool_adapters.register(ServiceToolAdapter())
         tools = ToolService(objects, ToolRuntime(objects.contract), events, registry, tool_adapters)
         workspaces = WorkspaceService(objects, runtime_state, tools, events)
         jobs = JobService(JobRepository(persistence), events)

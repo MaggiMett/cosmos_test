@@ -6,6 +6,7 @@ from cosmos.runtime import (
     NativeToolAdapter,
     RegistryEntry,
     RuntimeContext,
+    ServiceToolAdapter,
     ToolAdapterContext,
     ToolAdapterRegistry,
     ToolRuntime,
@@ -54,6 +55,16 @@ def test_native_tool_adapter_is_available_and_keeps_lifecycle_external() -> None
 
     assert adapter.runtime_kind is ToolRuntimeKind.NATIVE
     assert adapter.availability_error(definition(), RuntimeContext()) is None
+
+
+def test_service_tool_adapter_requires_a_namespaced_entry_point() -> None:
+    adapter = ServiceToolAdapter()
+
+    assert adapter.availability_error(definition(entry_point="service:search"), RuntimeContext()) is None
+    assert "namespace" in str(adapter.availability_error(definition(entry_point="search"), RuntimeContext()))
+    assert "namespace" in str(
+        adapter.availability_error(definition(entry_point="https://services.example.test/search"), RuntimeContext())
+    )
 
 
 def test_web_tool_adapter_requires_an_absolute_http_entry_point() -> None:

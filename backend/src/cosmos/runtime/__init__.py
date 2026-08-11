@@ -12,6 +12,7 @@ from cosmos.runtime.providers import (
 from cosmos.runtime.registry import Registry, RegistryEntry, RegistryStatus
 from cosmos.runtime.tool_adapters import (
     NativeToolAdapter,
+    ServiceToolAdapter,
     ToolAdapter,
     ToolAdapterContext,
     ToolAdapterRegistry,
@@ -40,6 +41,7 @@ __all__ = [
     "RuntimeContext",
     "RuntimeEvent",
     "RuntimeResult",
+    "ServiceToolAdapter",
     "ToolAdapter",
     "ToolAdapterContext",
     "ToolAdapterRegistry",

@@ -53,6 +53,27 @@ class NativeToolAdapter:
         pass
 
 
+class ServiceToolAdapter:
+    runtime_kind = ToolRuntimeKind.SERVICE
+
+    def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
+        entry_point = definition.entry_point.strip()
+        if not entry_point:
+            return "Service Tool entry point is required."
+        if ":" not in entry_point or entry_point.startswith(("http:", "https:")):
+            return "Service Tool entry point must use a registered service namespace (for example service:action)."
+        return None
+
+    def open(self, context: ToolAdapterContext) -> None:
+        pass
+
+    def update(self, context: ToolAdapterContext) -> None:
+        pass
+
+    def close(self, context: ToolAdapterContext) -> None:
+        pass
+
+
 class WebToolAdapter:
     runtime_kind = ToolRuntimeKind.WEB
 
