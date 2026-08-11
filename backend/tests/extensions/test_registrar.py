@@ -42,9 +42,9 @@ def tool_manifest() -> ExtensionManifest:
 def test_registrar_materializes_tool_manifest_into_object_and_active_registry(tmp_path: Path) -> None:
     runtime = CosmosRuntime.build(RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0))
     runtime.initialize()
-    registrar = ExtensionRegistrar(runtime.objects, runtime.registry)
+    assert isinstance(runtime.extensions, ExtensionRegistrar)
 
-    entry = registrar.register_tool(tool_manifest(), owner_context())
+    entry = runtime.extensions.register_tool(tool_manifest(), owner_context())
     tool = runtime.objects.get("example.extension.search", owner_context())
 
     assert entry.status is RegistryStatus.ACTIVE

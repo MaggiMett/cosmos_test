@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 from enum import StrEnum
 
 from cosmos.config import RuntimeSettings
+from cosmos.extensions import ExtensionRegistrar
 from cosmos.persistence import (
     AssetCatalogRepository,
     CaptureDraftRepository,
@@ -76,6 +77,7 @@ class CosmosRuntime:
     settings: RuntimeSettings
     persistence: SQLitePersistence
     registry: Registry
+    extensions: ExtensionRegistrar
     events: EventDispatcher
     providers: ProviderRuntime
     objects: ObjectService
@@ -112,6 +114,7 @@ class CosmosRuntime:
             ObjectRepository(persistence),
             events,
         )
+        extensions = ExtensionRegistrar(objects, registry)
         projects = ProjectService(settings.runtime_path, persistence, objects, events)
         relationships = RelationshipService(RelationshipRepository(persistence), objects, events)
         tags = TagService(objects, events)
@@ -159,6 +162,7 @@ class CosmosRuntime:
             settings=settings,
             persistence=persistence,
             registry=registry,
+            extensions=extensions,
             events=events,
             providers=providers,
             objects=objects,
