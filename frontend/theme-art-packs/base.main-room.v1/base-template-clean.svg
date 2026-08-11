@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="document-title">
+  <title id="document-title">Base template clean technical contours</title>
+  <rect id="base.canvas" width="1600" height="900" fill="#f7f7f4"/>
+  <rect id="base.slot.background" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="12 8" data-slot-id="base.slot.background" data-surface-id="base.surface.background" x="0" y="0" width="1600" height="900"/>
+  <rect id="base.slot.ceiling" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="12 8" data-slot-id="base.slot.ceiling" data-surface-id="base.surface.ceiling" x="320" y="0" width="960" height="120"/>
+  <rect id="base.slot.floor" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="12 8" data-slot-id="base.slot.floor" data-surface-id="base.surface.floor" x="320" y="720" width="960" height="180"/>
+  <rect id="base.slot.left-wall" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="12 8" data-slot-id="base.slot.left-wall" data-surface-id="base.surface.left-wall" x="0" y="120" width="320" height="600"/>
+  <rect id="base.slot.rear-wall" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="12 8" data-slot-id="base.slot.rear-wall" data-surface-id="base.surface.rear-wall" x="320" y="120" width="960" height="600"/>
+  <rect id="base.slot.right-wall" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="12 8" data-slot-id="base.slot.right-wall" data-surface-id="base.surface.right-wall" x="1280" y="120" width="320" height="600"/>
+  <rect id="base.slot.ambient" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="12 8" data-slot-id="base.slot.ambient" data-surface-id="base.surface.ambient" x="0" y="0" width="1600" height="900"/>
+  <rect id="base.slot.foreground" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="12 8" data-slot-id="base.slot.foreground" data-surface-id="base.surface.foreground" x="0" y="0" width="1600" height="900"/>
+  <rect id="base.slot.left-door" fill="none" stroke="#252525" stroke-width="4" data-slot-id="base.slot.left-door" data-zone-id="base.zone.left-door" x="100" y="240" width="260" height="460"/>
+  <rect id="base.slot.right-door" fill="none" stroke="#252525" stroke-width="4" data-slot-id="base.slot.right-door" data-zone-id="base.zone.right-door" x="1240" y="240" width="260" height="460"/>
+  <rect id="base.slot.left-workspace" fill="none" stroke="#252525" stroke-width="4" data-slot-id="base.slot.left-workspace" data-zone-id="base.zone.left-workspace" x="400" y="410" width="300" height="280"/>
+  <rect id="base.slot.right-workspace" fill="none" stroke="#252525" stroke-width="4" data-slot-id="base.slot.right-workspace" data-zone-id="base.zone.right-workspace" x="900" y="410" width="300" height="280"/>
+  <rect id="base.slot.companion" fill="none" stroke="#252525" stroke-width="4" data-slot-id="base.slot.companion" data-zone-id="base.zone.companion" x="710" y="490" width="180" height="240"/>
+  <rect id="base.zone.exit" fill="none" stroke="#252525" stroke-width="4" data-zone-id="base.zone.exit" x="20" y="20" width="120" height="56"/>
+  <rect id="base.canvas.boundary" fill="none" stroke="#252525" stroke-width="4" data-template-id="base.main-room.v1" x="2" y="2" width="1596" height="896"/>
+</svg>

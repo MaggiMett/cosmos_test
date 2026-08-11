@@ -1,0 +1,1472 @@
+{
+  "anchors": [
+    {
+      "anchorId": "base.zone.companion.interaction",
+      "mutableBy": "composition",
+      "owner": "interaction",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.companion.label",
+      "mutableBy": "composition",
+      "owner": "label",
+      "x": 0.5,
+      "y": 1
+    },
+    {
+      "anchorId": "base.zone.companion.visual",
+      "mutableBy": "composition",
+      "owner": "visual",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.exit.interaction",
+      "mutableBy": "core",
+      "owner": "interaction",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.exit.label",
+      "mutableBy": "core",
+      "owner": "label",
+      "x": 0.5,
+      "y": 1
+    },
+    {
+      "anchorId": "base.zone.exit.visual",
+      "mutableBy": "core",
+      "owner": "visual",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.left-door.interaction",
+      "mutableBy": "composition",
+      "owner": "interaction",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.left-door.label",
+      "mutableBy": "composition",
+      "owner": "label",
+      "x": 0.5,
+      "y": 1
+    },
+    {
+      "anchorId": "base.zone.left-door.visual",
+      "mutableBy": "composition",
+      "owner": "visual",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.left-workspace.interaction",
+      "mutableBy": "composition",
+      "owner": "interaction",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.left-workspace.label",
+      "mutableBy": "composition",
+      "owner": "label",
+      "x": 0.5,
+      "y": 1
+    },
+    {
+      "anchorId": "base.zone.left-workspace.visual",
+      "mutableBy": "composition",
+      "owner": "visual",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.right-door.interaction",
+      "mutableBy": "composition",
+      "owner": "interaction",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.right-door.label",
+      "mutableBy": "composition",
+      "owner": "label",
+      "x": 0.5,
+      "y": 1
+    },
+    {
+      "anchorId": "base.zone.right-door.visual",
+      "mutableBy": "composition",
+      "owner": "visual",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.right-workspace.interaction",
+      "mutableBy": "composition",
+      "owner": "interaction",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "anchorId": "base.zone.right-workspace.label",
+      "mutableBy": "composition",
+      "owner": "label",
+      "x": 0.5,
+      "y": 1
+    },
+    {
+      "anchorId": "base.zone.right-workspace.visual",
+      "mutableBy": "composition",
+      "owner": "visual",
+      "x": 0.5,
+      "y": 0.5
+    }
+  ],
+  "artistExport": {
+    "artistTemplate": "artist/base-template-artist.png",
+    "binaryMask": true,
+    "directory": "artist",
+    "labels": false,
+    "mask": "artist/base-template-mask.png",
+    "monochrome": true,
+    "outline": "artist/base-template-outline.svg",
+    "prompt": "artist/prompt.md",
+    "technicalIds": false,
+    "transparentArtistCanvas": true
+  },
+  "canvas": {
+    "height": 900,
+    "origin": "top-left",
+    "unit": "du",
+    "width": 1600
+  },
+  "exportMetadata": {
+    "canonicalSource": "base-template-clean.svg",
+    "coordinateSpace": "template-reference-viewport",
+    "executableContent": false,
+    "externalNetworkContent": false,
+    "generatedAt": null
+  },
+  "exporter": {
+    "deterministic": true,
+    "fingerprintAlgorithm": "sha256",
+    "id": "cosmos.environment-art-pack-exporter",
+    "inputFingerprint": "aa302a8379757fa6f61016ffa9f5cff6649dfa25d67ff1692a4368320f705b68",
+    "version": "1.0.0"
+  },
+  "files": [
+    "base-template-clean.svg",
+    "base-template-clean.png",
+    "base-template-zones.png",
+    "base-template-hitboxes.png",
+    "base-template-safe-areas.png",
+    "base-template-depth.png",
+    "base-template-spec.json",
+    "base-template-brief.md",
+    "artist/base-template-artist.png",
+    "artist/base-template-outline.svg",
+    "artist/base-template-mask.png",
+    "artist/prompt.md"
+  ],
+  "functionalObjects": [
+    {
+      "actionRole": "companion.open",
+      "anchorIds": [
+        "base.zone.companion.interaction",
+        "base.zone.companion.label",
+        "base.zone.companion.visual"
+      ],
+      "bounds": {
+        "effect": {
+          "height": 310,
+          "type": "rect",
+          "width": 250,
+          "x": 675,
+          "y": 455
+        },
+        "interaction": {
+          "height": 160,
+          "type": "rect",
+          "width": 110,
+          "x": 745,
+          "y": 535
+        },
+        "label": {
+          "height": 44,
+          "type": "rect",
+          "width": 200,
+          "x": 700,
+          "y": 740
+        },
+        "layout": {
+          "height": 270,
+          "type": "rect",
+          "width": 210,
+          "x": 695,
+          "y": 475
+        },
+        "visual": {
+          "height": 240,
+          "type": "rect",
+          "width": 180,
+          "x": 710,
+          "y": 490
+        }
+      },
+      "functionBinding": {
+        "bindingId": "core.function.base.companion",
+        "descriptorRole": "companion.open",
+        "functionalZoneId": "base.zone.companion",
+        "source": "core-contract"
+      },
+      "layer": {
+        "bandId": "scene",
+        "localOrder": 50
+      },
+      "nodeId": "core.scene.base.companion",
+      "role": "companion.anchor",
+      "stableId": "base.zone.companion",
+      "states": [
+        "active",
+        "default",
+        "disabled",
+        "focus-visible",
+        "hover",
+        "unavailable"
+      ]
+    },
+    {
+      "actionRole": "base.close",
+      "anchorIds": [
+        "base.zone.exit.interaction",
+        "base.zone.exit.label",
+        "base.zone.exit.visual"
+      ],
+      "bounds": {
+        "effect": {
+          "height": 64,
+          "type": "rect",
+          "width": 128,
+          "x": 16,
+          "y": 16
+        },
+        "interaction": {
+          "height": 56,
+          "type": "rect",
+          "width": 120,
+          "x": 20,
+          "y": 20
+        },
+        "label": {
+          "height": 36,
+          "type": "rect",
+          "width": 120,
+          "x": 20,
+          "y": 80
+        },
+        "layout": {
+          "height": 56,
+          "type": "rect",
+          "width": 120,
+          "x": 20,
+          "y": 20
+        },
+        "visual": {
+          "height": 56,
+          "type": "rect",
+          "width": 120,
+          "x": 20,
+          "y": 20
+        }
+      },
+      "functionBinding": {
+        "bindingId": "core.function.base.exit",
+        "descriptorRole": "base.close",
+        "functionalZoneId": "base.zone.exit",
+        "source": "core-contract"
+      },
+      "layer": {
+        "bandId": "navigation",
+        "localOrder": 0
+      },
+      "nodeId": "core.scene.base.exit",
+      "role": "base.exit",
+      "stableId": "base.zone.exit",
+      "states": [
+        "active",
+        "default",
+        "disabled",
+        "focus-visible",
+        "hover",
+        "unavailable"
+      ]
+    },
+    {
+      "actionRole": "base.open",
+      "anchorIds": [
+        "base.zone.left-door.interaction",
+        "base.zone.left-door.label",
+        "base.zone.left-door.visual"
+      ],
+      "bounds": {
+        "effect": {
+          "height": 520,
+          "type": "rect",
+          "width": 320,
+          "x": 70,
+          "y": 210
+        },
+        "interaction": {
+          "height": 340,
+          "type": "rect",
+          "width": 170,
+          "x": 145,
+          "y": 300
+        },
+        "label": {
+          "height": 44,
+          "type": "rect",
+          "width": 260,
+          "x": 100,
+          "y": 705
+        },
+        "layout": {
+          "height": 480,
+          "type": "rect",
+          "width": 280,
+          "x": 90,
+          "y": 230
+        },
+        "visual": {
+          "height": 460,
+          "type": "rect",
+          "width": 260,
+          "x": 100,
+          "y": 240
+        }
+      },
+      "functionBinding": {
+        "bindingId": "core.function.base.left-door",
+        "descriptorRole": "base.open",
+        "functionalZoneId": "base.zone.left-door",
+        "source": "core-contract"
+      },
+      "layer": {
+        "bandId": "scene",
+        "localOrder": 10
+      },
+      "nodeId": "core.scene.base.left-door",
+      "role": "door",
+      "stableId": "base.zone.left-door",
+      "states": [
+        "active",
+        "default",
+        "disabled",
+        "focus-visible",
+        "hover",
+        "unavailable"
+      ]
+    },
+    {
+      "actionRole": "workspace.open",
+      "anchorIds": [
+        "base.zone.left-workspace.interaction",
+        "base.zone.left-workspace.label",
+        "base.zone.left-workspace.visual"
+      ],
+      "bounds": {
+        "effect": {
+          "height": 350,
+          "type": "rect",
+          "width": 370,
+          "x": 365,
+          "y": 375
+        },
+        "interaction": {
+          "height": 190,
+          "type": "rect",
+          "width": 220,
+          "x": 440,
+          "y": 455
+        },
+        "label": {
+          "height": 44,
+          "type": "rect",
+          "width": 300,
+          "x": 400,
+          "y": 700
+        },
+        "layout": {
+          "height": 310,
+          "type": "rect",
+          "width": 330,
+          "x": 385,
+          "y": 395
+        },
+        "visual": {
+          "height": 280,
+          "type": "rect",
+          "width": 300,
+          "x": 400,
+          "y": 410
+        }
+      },
+      "functionBinding": {
+        "bindingId": "core.function.base.left-workspace",
+        "descriptorRole": "workspace.open",
+        "functionalZoneId": "base.zone.left-workspace",
+        "source": "core-contract"
+      },
+      "layer": {
+        "bandId": "scene",
+        "localOrder": 30
+      },
+      "nodeId": "core.scene.base.left-workspace",
+      "role": "workspace.entry",
+      "stableId": "base.zone.left-workspace",
+      "states": [
+        "active",
+        "default",
+        "disabled",
+        "focus-visible",
+        "hover",
+        "unavailable"
+      ]
+    },
+    {
+      "actionRole": "base.open",
+      "anchorIds": [
+        "base.zone.right-door.interaction",
+        "base.zone.right-door.label",
+        "base.zone.right-door.visual"
+      ],
+      "bounds": {
+        "effect": {
+          "height": 520,
+          "type": "rect",
+          "width": 320,
+          "x": 1210,
+          "y": 210
+        },
+        "interaction": {
+          "height": 340,
+          "type": "rect",
+          "width": 170,
+          "x": 1285,
+          "y": 300
+        },
+        "label": {
+          "height": 44,
+          "type": "rect",
+          "width": 260,
+          "x": 1240,
+          "y": 705
+        },
+        "layout": {
+          "height": 480,
+          "type": "rect",
+          "width": 280,
+          "x": 1230,
+          "y": 230
+        },
+        "visual": {
+          "height": 460,
+          "type": "rect",
+          "width": 260,
+          "x": 1240,
+          "y": 240
+        }
+      },
+      "functionBinding": {
+        "bindingId": "core.function.base.right-door",
+        "descriptorRole": "base.open",
+        "functionalZoneId": "base.zone.right-door",
+        "source": "core-contract"
+      },
+      "layer": {
+        "bandId": "scene",
+        "localOrder": 20
+      },
+      "nodeId": "core.scene.base.right-door",
+      "role": "door",
+      "stableId": "base.zone.right-door",
+      "states": [
+        "active",
+        "default",
+        "disabled",
+        "focus-visible",
+        "hover",
+        "unavailable"
+      ]
+    },
+    {
+      "actionRole": "workspace.open",
+      "anchorIds": [
+        "base.zone.right-workspace.interaction",
+        "base.zone.right-workspace.label",
+        "base.zone.right-workspace.visual"
+      ],
+      "bounds": {
+        "effect": {
+          "height": 350,
+          "type": "rect",
+          "width": 370,
+          "x": 865,
+          "y": 375
+        },
+        "interaction": {
+          "height": 190,
+          "type": "rect",
+          "width": 220,
+          "x": 940,
+          "y": 455
+        },
+        "label": {
+          "height": 44,
+          "type": "rect",
+          "width": 300,
+          "x": 900,
+          "y": 700
+        },
+        "layout": {
+          "height": 310,
+          "type": "rect",
+          "width": 330,
+          "x": 885,
+          "y": 395
+        },
+        "visual": {
+          "height": 280,
+          "type": "rect",
+          "width": 300,
+          "x": 900,
+          "y": 410
+        }
+      },
+      "functionBinding": {
+        "bindingId": "core.function.base.right-workspace",
+        "descriptorRole": "workspace.open",
+        "functionalZoneId": "base.zone.right-workspace",
+        "source": "core-contract"
+      },
+      "layer": {
+        "bandId": "scene",
+        "localOrder": 40
+      },
+      "nodeId": "core.scene.base.right-workspace",
+      "role": "workspace.entry",
+      "stableId": "base.zone.right-workspace",
+      "states": [
+        "active",
+        "default",
+        "disabled",
+        "focus-visible",
+        "hover",
+        "unavailable"
+      ]
+    }
+  ],
+  "functionalZones": [
+    {
+      "actionRoles": [
+        "companion.open"
+      ],
+      "critical": false,
+      "interactionAnchorId": "base.zone.companion.interaction",
+      "labelAnchorId": "base.zone.companion.label",
+      "layerBandId": "scene",
+      "minimumTarget": {
+        "height": 44,
+        "width": 44
+      },
+      "mutableBy": "composition",
+      "required": true,
+      "role": "companion.anchor",
+      "shape": {
+        "height": 220,
+        "type": "rect",
+        "width": 180,
+        "x": 710,
+        "y": 500
+      },
+      "visualAnchorId": "base.zone.companion.visual",
+      "zoneId": "base.zone.companion"
+    },
+    {
+      "actionRoles": [
+        "base.close"
+      ],
+      "critical": true,
+      "interactionAnchorId": "base.zone.exit.interaction",
+      "labelAnchorId": "base.zone.exit.label",
+      "layerBandId": "navigation",
+      "minimumTarget": {
+        "height": 44,
+        "width": 44
+      },
+      "mutableBy": "core",
+      "required": true,
+      "role": "base.exit",
+      "shape": {
+        "height": 56,
+        "type": "rect",
+        "width": 120,
+        "x": 20,
+        "y": 20
+      },
+      "visualAnchorId": "base.zone.exit.visual",
+      "zoneId": "base.zone.exit"
+    },
+    {
+      "actionRoles": [
+        "base.open",
+        "room.transition"
+      ],
+      "critical": false,
+      "interactionAnchorId": "base.zone.left-door.interaction",
+      "labelAnchorId": "base.zone.left-door.label",
+      "layerBandId": "scene",
+      "minimumTarget": {
+        "height": 44,
+        "width": 44
+      },
+      "mutableBy": "composition",
+      "required": true,
+      "role": "door",
+      "shape": {
+        "height": 430,
+        "type": "rect",
+        "width": 260,
+        "x": 100,
+        "y": 260
+      },
+      "visualAnchorId": "base.zone.left-door.visual",
+      "zoneId": "base.zone.left-door"
+    },
+    {
+      "actionRoles": [
+        "workspace.open"
+      ],
+      "critical": false,
+      "interactionAnchorId": "base.zone.left-workspace.interaction",
+      "labelAnchorId": "base.zone.left-workspace.label",
+      "layerBandId": "scene",
+      "minimumTarget": {
+        "height": 44,
+        "width": 44
+      },
+      "mutableBy": "composition",
+      "required": true,
+      "role": "workspace.entry",
+      "shape": {
+        "height": 260,
+        "type": "rect",
+        "width": 300,
+        "x": 400,
+        "y": 420
+      },
+      "visualAnchorId": "base.zone.left-workspace.visual",
+      "zoneId": "base.zone.left-workspace"
+    },
+    {
+      "actionRoles": [
+        "base.open",
+        "room.transition"
+      ],
+      "critical": false,
+      "interactionAnchorId": "base.zone.right-door.interaction",
+      "labelAnchorId": "base.zone.right-door.label",
+      "layerBandId": "scene",
+      "minimumTarget": {
+        "height": 44,
+        "width": 44
+      },
+      "mutableBy": "composition",
+      "required": true,
+      "role": "door",
+      "shape": {
+        "height": 430,
+        "type": "rect",
+        "width": 260,
+        "x": 1240,
+        "y": 260
+      },
+      "visualAnchorId": "base.zone.right-door.visual",
+      "zoneId": "base.zone.right-door"
+    },
+    {
+      "actionRoles": [
+        "workspace.open"
+      ],
+      "critical": false,
+      "interactionAnchorId": "base.zone.right-workspace.interaction",
+      "labelAnchorId": "base.zone.right-workspace.label",
+      "layerBandId": "scene",
+      "minimumTarget": {
+        "height": 44,
+        "width": 44
+      },
+      "mutableBy": "composition",
+      "required": true,
+      "role": "workspace.entry",
+      "shape": {
+        "height": 260,
+        "type": "rect",
+        "width": 300,
+        "x": 900,
+        "y": 420
+      },
+      "visualAnchorId": "base.zone.right-workspace.visual",
+      "zoneId": "base.zone.right-workspace"
+    }
+  ],
+  "layers": [
+    {
+      "bandId": "background",
+      "maximum": -801,
+      "minimum": -1000,
+      "owner": "environment"
+    },
+    {
+      "bandId": "architecture-rear",
+      "maximum": -601,
+      "minimum": -800,
+      "owner": "environment"
+    },
+    {
+      "bandId": "ambient-rear",
+      "maximum": -501,
+      "minimum": -600,
+      "owner": "environment"
+    },
+    {
+      "bandId": "scene",
+      "maximum": 199,
+      "minimum": -200,
+      "owner": "objects"
+    },
+    {
+      "bandId": "ambient-front",
+      "maximum": 699,
+      "minimum": 500,
+      "owner": "environment"
+    },
+    {
+      "bandId": "foreground",
+      "maximum": 799,
+      "minimum": 700,
+      "owner": "environment"
+    },
+    {
+      "bandId": "navigation",
+      "maximum": 899,
+      "minimum": 850,
+      "owner": "objects"
+    },
+    {
+      "bandId": "window",
+      "maximum": 939,
+      "minimum": 900,
+      "owner": "windows"
+    },
+    {
+      "bandId": "surface",
+      "maximum": 969,
+      "minimum": 940,
+      "owner": "surface"
+    },
+    {
+      "bandId": "modal",
+      "maximum": 999,
+      "minimum": 970,
+      "owner": "modal"
+    },
+    {
+      "bandId": "emergency",
+      "maximum": 1000,
+      "minimum": 1000,
+      "owner": "emergency"
+    }
+  ],
+  "safeAreas": [
+    {
+      "critical": false,
+      "mutableBy": "template",
+      "purpose": "art-documentation",
+      "safeAreaId": "base.safe-area.art-documentation",
+      "shape": {
+        "height": 700,
+        "type": "rect",
+        "width": 1520,
+        "x": 40,
+        "y": 120
+      }
+    },
+    {
+      "critical": true,
+      "mutableBy": "template",
+      "purpose": "functional-content",
+      "safeAreaId": "base.safe-area.functional",
+      "shape": {
+        "height": 840,
+        "type": "rect",
+        "width": 1560,
+        "x": 20,
+        "y": 20
+      }
+    },
+    {
+      "critical": true,
+      "mutableBy": "core",
+      "purpose": "window-recovery",
+      "safeAreaId": "base.safe-area.window-recovery",
+      "shape": {
+        "height": 900,
+        "type": "rect",
+        "width": 1600,
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "slots": [
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg",
+        "webm",
+        "mp4"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector",
+        "video"
+      ],
+      "bounds": {
+        "height": 900,
+        "type": "rect",
+        "width": 1600,
+        "x": 0,
+        "y": 0
+      },
+      "fallbackPolicy": "core-emergency",
+      "layer": "ambient-front",
+      "purpose": "Ambient surface",
+      "required": true,
+      "slotId": "base.slot.ambient",
+      "stableId": "base.slot.ambient",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ],
+      "surfaceId": "base.surface.ambient"
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg",
+        "webm",
+        "mp4"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector",
+        "video"
+      ],
+      "bounds": {
+        "height": 900,
+        "type": "rect",
+        "width": 1600,
+        "x": 0,
+        "y": 0
+      },
+      "fallbackPolicy": "core-emergency",
+      "layer": "background",
+      "purpose": "Full Base background",
+      "required": true,
+      "slotId": "base.slot.background",
+      "stableId": "base.slot.background",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ],
+      "surfaceId": "base.surface.background"
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 120,
+        "type": "rect",
+        "width": 960,
+        "x": 320,
+        "y": 0
+      },
+      "fallbackPolicy": "core-emergency",
+      "layer": "architecture-rear",
+      "purpose": "Ceiling surface",
+      "required": true,
+      "slotId": "base.slot.ceiling",
+      "stableId": "base.slot.ceiling",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ],
+      "surfaceId": "base.surface.ceiling"
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 240,
+        "type": "rect",
+        "width": 180,
+        "x": 710,
+        "y": 490
+      },
+      "fallbackPolicy": "core-emergency",
+      "functionalZoneId": "base.zone.companion",
+      "purpose": "Companion visual",
+      "required": true,
+      "slotId": "base.slot.companion",
+      "stableId": "base.slot.companion",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ]
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 180,
+        "type": "rect",
+        "width": 960,
+        "x": 320,
+        "y": 720
+      },
+      "fallbackPolicy": "core-emergency",
+      "layer": "architecture-rear",
+      "purpose": "Floor surface",
+      "required": true,
+      "slotId": "base.slot.floor",
+      "stableId": "base.slot.floor",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ],
+      "surfaceId": "base.surface.floor"
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg",
+        "webm",
+        "mp4"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector",
+        "video"
+      ],
+      "bounds": {
+        "height": 900,
+        "type": "rect",
+        "width": 1600,
+        "x": 0,
+        "y": 0
+      },
+      "fallbackPolicy": "core-emergency",
+      "layer": "foreground",
+      "purpose": "Foreground surface",
+      "required": true,
+      "slotId": "base.slot.foreground",
+      "stableId": "base.slot.foreground",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ],
+      "surfaceId": "base.surface.foreground"
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 460,
+        "type": "rect",
+        "width": 260,
+        "x": 100,
+        "y": 240
+      },
+      "fallbackPolicy": "core-emergency",
+      "functionalZoneId": "base.zone.left-door",
+      "purpose": "Left Door visual",
+      "required": true,
+      "slotId": "base.slot.left-door",
+      "stableId": "base.slot.left-door",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ]
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 600,
+        "type": "rect",
+        "width": 320,
+        "x": 0,
+        "y": 120
+      },
+      "fallbackPolicy": "core-emergency",
+      "layer": "architecture-rear",
+      "purpose": "Left wall surface",
+      "required": true,
+      "slotId": "base.slot.left-wall",
+      "stableId": "base.slot.left-wall",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ],
+      "surfaceId": "base.surface.left-wall"
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 280,
+        "type": "rect",
+        "width": 300,
+        "x": 400,
+        "y": 410
+      },
+      "fallbackPolicy": "core-emergency",
+      "functionalZoneId": "base.zone.left-workspace",
+      "purpose": "Left Workspace visual",
+      "required": true,
+      "slotId": "base.slot.left-workspace",
+      "stableId": "base.slot.left-workspace",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ]
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 600,
+        "type": "rect",
+        "width": 960,
+        "x": 320,
+        "y": 120
+      },
+      "fallbackPolicy": "core-emergency",
+      "layer": "architecture-rear",
+      "purpose": "Rear wall surface",
+      "required": true,
+      "slotId": "base.slot.rear-wall",
+      "stableId": "base.slot.rear-wall",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ],
+      "surfaceId": "base.surface.rear-wall"
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 460,
+        "type": "rect",
+        "width": 260,
+        "x": 1240,
+        "y": 240
+      },
+      "fallbackPolicy": "core-emergency",
+      "functionalZoneId": "base.zone.right-door",
+      "purpose": "Right Door visual",
+      "required": true,
+      "slotId": "base.slot.right-door",
+      "stableId": "base.slot.right-door",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ]
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 600,
+        "type": "rect",
+        "width": 320,
+        "x": 1280,
+        "y": 120
+      },
+      "fallbackPolicy": "core-emergency",
+      "layer": "architecture-rear",
+      "purpose": "Right wall surface",
+      "required": true,
+      "slotId": "base.slot.right-wall",
+      "stableId": "base.slot.right-wall",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ],
+      "surfaceId": "base.surface.right-wall"
+    },
+    {
+      "acceptedFormats": [
+        "png",
+        "webp",
+        "svg"
+      ],
+      "acceptedKinds": [
+        "image",
+        "vector"
+      ],
+      "bounds": {
+        "height": 280,
+        "type": "rect",
+        "width": 300,
+        "x": 900,
+        "y": 410
+      },
+      "fallbackPolicy": "core-emergency",
+      "functionalZoneId": "base.zone.right-workspace",
+      "purpose": "Right Workspace visual",
+      "required": true,
+      "slotId": "base.slot.right-workspace",
+      "stableId": "base.slot.right-workspace",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "unavailable"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "fallbackStateId": "default",
+      "source": "core",
+      "stateId": "active"
+    },
+    {
+      "fallbackStateId": "default",
+      "source": "core",
+      "stateId": "default"
+    },
+    {
+      "fallbackStateId": "default",
+      "source": "core",
+      "stateId": "disabled"
+    },
+    {
+      "fallbackStateId": "default",
+      "source": "core",
+      "stateId": "focus-visible"
+    },
+    {
+      "fallbackStateId": "default",
+      "source": "core",
+      "stateId": "hover"
+    },
+    {
+      "fallbackStateId": "default",
+      "source": "core",
+      "stateId": "unavailable"
+    }
+  ],
+  "surfaces": [
+    {
+      "allowedFit": [
+        "contain",
+        "cover",
+        "stretch"
+      ],
+      "assetSlotId": "base.slot.ambient",
+      "layerBandId": "ambient-front",
+      "pointerPolicy": "passive",
+      "required": true,
+      "shape": {
+        "height": 900,
+        "type": "rect",
+        "width": 1600,
+        "x": 0,
+        "y": 0
+      },
+      "surfaceId": "base.surface.ambient",
+      "surfaceRole": "ambient"
+    },
+    {
+      "allowedFit": [
+        "contain",
+        "cover",
+        "stretch"
+      ],
+      "assetSlotId": "base.slot.background",
+      "layerBandId": "background",
+      "pointerPolicy": "passive",
+      "required": true,
+      "shape": {
+        "height": 900,
+        "type": "rect",
+        "width": 1600,
+        "x": 0,
+        "y": 0
+      },
+      "surfaceId": "base.surface.background",
+      "surfaceRole": "background"
+    },
+    {
+      "allowedFit": [
+        "contain",
+        "cover",
+        "stretch"
+      ],
+      "assetSlotId": "base.slot.ceiling",
+      "layerBandId": "architecture-rear",
+      "pointerPolicy": "passive",
+      "required": true,
+      "shape": {
+        "height": 120,
+        "type": "rect",
+        "width": 960,
+        "x": 320,
+        "y": 0
+      },
+      "surfaceId": "base.surface.ceiling",
+      "surfaceRole": "ceiling"
+    },
+    {
+      "allowedFit": [
+        "contain",
+        "cover",
+        "stretch"
+      ],
+      "assetSlotId": "base.slot.floor",
+      "layerBandId": "architecture-rear",
+      "pointerPolicy": "passive",
+      "required": true,
+      "shape": {
+        "height": 180,
+        "type": "rect",
+        "width": 960,
+        "x": 320,
+        "y": 720
+      },
+      "surfaceId": "base.surface.floor",
+      "surfaceRole": "floor"
+    },
+    {
+      "allowedFit": [
+        "contain",
+        "cover",
+        "stretch"
+      ],
+      "assetSlotId": "base.slot.foreground",
+      "layerBandId": "foreground",
+      "pointerPolicy": "passive",
+      "required": true,
+      "shape": {
+        "height": 900,
+        "type": "rect",
+        "width": 1600,
+        "x": 0,
+        "y": 0
+      },
+      "surfaceId": "base.surface.foreground",
+      "surfaceRole": "foreground"
+    },
+    {
+      "allowedFit": [
+        "contain",
+        "cover",
+        "stretch"
+      ],
+      "assetSlotId": "base.slot.left-wall",
+      "layerBandId": "architecture-rear",
+      "pointerPolicy": "passive",
+      "required": true,
+      "shape": {
+        "height": 600,
+        "type": "rect",
+        "width": 320,
+        "x": 0,
+        "y": 120
+      },
+      "surfaceId": "base.surface.left-wall",
+      "surfaceRole": "left"
+    },
+    {
+      "allowedFit": [
+        "contain",
+        "cover",
+        "stretch"
+      ],
+      "assetSlotId": "base.slot.rear-wall",
+      "layerBandId": "architecture-rear",
+      "pointerPolicy": "passive",
+      "required": true,
+      "shape": {
+        "height": 600,
+        "type": "rect",
+        "width": 960,
+        "x": 320,
+        "y": 120
+      },
+      "surfaceId": "base.surface.rear-wall",
+      "surfaceRole": "rear"
+    },
+    {
+      "allowedFit": [
+        "contain",
+        "cover",
+        "stretch"
+      ],
+      "assetSlotId": "base.slot.right-wall",
+      "layerBandId": "architecture-rear",
+      "pointerPolicy": "passive",
+      "required": true,
+      "shape": {
+        "height": 600,
+        "type": "rect",
+        "width": 320,
+        "x": 1280,
+        "y": 120
+      },
+      "surfaceId": "base.surface.right-wall",
+      "surfaceRole": "right"
+    }
+  ],
+  "template": {
+    "environmentKind": "base-interior",
+    "templateId": "base.main-room.v1",
+    "version": "1.0.0"
+  }
+}

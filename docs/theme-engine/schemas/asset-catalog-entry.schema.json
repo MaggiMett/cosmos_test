@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:asset-catalog-entry:1",
+  "title": "Cosmos Asset Catalog Entry",
+  "description": "Versioned discovery metadata for one Visual Asset. It defines no Visual Object, placement, Interaction Zone or Function Binding.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "visualAssetRef",
+    "displayName",
+    "description",
+    "category",
+    "scope",
+    "origin",
+    "systemTags",
+    "userTags",
+    "perspective",
+    "orientation",
+    "scaleClass",
+    "creator",
+    "provenance",
+    "license",
+    "compatibleTemplates",
+    "compatibleSurfaceTypes",
+    "compatibleVisualObjectTypes",
+    "deprecated"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "$ref": "#/$defs/namespacedId"
+    },
+    "version": {
+      "$ref": "#/$defs/semver"
+    },
+    "visualAssetRef": {
+      "$ref": "#/$defs/exactVersionedRef"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "category": {
+      "$ref": "#/$defs/namespacedId"
+    },
+    "subCategory": {
+      "$ref": "#/$defs/namespacedId"
+    },
+    "scope": {
+      "enum": [
+        "core",
+        "theme",
+        "personal"
+      ]
+    },
+    "origin": {
+      "enum": [
+        "built-in",
+        "imported",
+        "generated"
+      ]
+    },
+    "systemTags": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/namespacedId"
+      }
+    },
+    "userTags": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      }
+    },
+    "perspective": {
+      "$ref": "#/$defs/symbol"
+    },
+    "orientation": {
+      "$ref": "#/$defs/symbol"
+    },
+    "scaleClass": {
+      "$ref": "#/$defs/symbol"
+    },
+    "theme": {
+      "$ref": "#/$defs/namespacedId"
+    },
+    "creator": {
+      "$ref": "#/$defs/creator"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "license": {
+      "$ref": "#/$defs/license"
+    },
+    "thumbnailRef": {
+      "$ref": "#/$defs/exactVersionedRef"
+    },
+    "previewRef": {
+      "$ref": "#/$defs/exactVersionedRef"
+    },
+    "layerPreviewRef": {
+      "$ref": "#/$defs/exactVersionedRef"
+    },
+    "compatibleTemplates": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/versionedRef"
+      }
+    },
+    "compatibleSurfaceTypes": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/symbol"
+      }
+    },
+    "compatibleVisualObjectTypes": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/symbol"
+      }
+    },
+    "deprecated": {
+      "type": "boolean"
+    },
+    "replacement": {
+      "$ref": "#/$defs/exactVersionedRef"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "deprecated": {
+            "const": false
+          }
+        },
+        "required": [
+          "deprecated"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "replacement"
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "namespacedId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)+$",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "symbol": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "versionRange": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "exactVersionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/namespacedId"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        }
+      }
+    },
+    "versionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "versionRange"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/namespacedId"
+        },
+        "versionRange": {
+          "$ref": "#/$defs/versionRange"
+        }
+      }
+    },
+    "creator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/namespacedId"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "original",
+            "generated",
+            "imported",
+            "derived",
+            "unknown"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expression"
+      ],
+      "properties": {
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "attribution": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  }
+}

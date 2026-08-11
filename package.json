@@ -1,0 +1,13 @@
+{
+  "name": "cosmos-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --dir frontend build",
+    "build:runtime": "pnpm --dir frontend build:runtime",
+    "dev": "pnpm --dir frontend dev",
+    "test": "pnpm --dir frontend test",
+    "typecheck": "pnpm --dir frontend typecheck"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

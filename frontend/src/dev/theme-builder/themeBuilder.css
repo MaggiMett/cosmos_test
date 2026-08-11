@@ -1,0 +1,58 @@
+.theme-builder-surface {
+  --builder-bg: #080c10;
+  --builder-bg-deep: #06090c;
+  --builder-surface: #0d1217;
+  --builder-surface-raised: #12181e;
+  --builder-border: rgba(212, 220, 225, 0.11);
+  --builder-border-strong: rgba(212, 220, 225, 0.2);
+  --builder-text: #e8e3da;
+  --builder-muted: #96938e;
+  --builder-faint: #5f6367;
+  --builder-accent: #7895b1;
+  --builder-accent-soft: rgba(120, 149, 177, 0.14);
+  --builder-radius-control: 8px;
+  --builder-radius-card: 12px;
+  --builder-radius-panel: 16px;
+  --builder-radius-hero: 20px;
+  --builder-control-transition: 160ms ease;
+  --builder-panel-transition: 220ms ease;
+  color: var(--builder-text);
+  color-scheme: dark;
+  font-family:
+    "Segoe UI Variable", "Aptos", "Inter", "Segoe UI", ui-sans-serif, system-ui,
+    sans-serif;
+}
+
+.theme-builder-surface button {
+  font: inherit;
+}
+
+.theme-builder-surface button:focus-visible,
+.theme-builder-surface [tabindex]:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--builder-accent) 78%, white);
+  outline-offset: 3px;
+}
+
+.builder-serif {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino,
+    Georgia, serif;
+  font-weight: 400;
+}
+
+.builder-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-builder-surface *,
+  .theme-builder-surface *::before,
+  .theme-builder-surface *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

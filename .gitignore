@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest-tmp/
+.ruff_cache/
+.venv/
+*.egg-info/
+build/
+dist/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Runtime data and local configuration
+.env
+.runtime/
+*.db
+*.db-shm
+*.db-wal
+
+# Tooling
+.coverage
+coverage.xml
+.artifacts/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

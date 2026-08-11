@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:room-composition:1",
+  "title": "Cosmos Room Composition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "roomId",
+    "version",
+    "shellRef",
+    "objectInstances",
+    "functionContainers",
+    "revision"
+  ],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri" },
+    "schemaVersion": { "const": 1 },
+    "roomId": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" },
+    "version": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/semver" },
+    "shellRef": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/versionedRef" },
+    "presetOrigin": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/presetVersionReference" },
+    "objectInstances": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/objectInstance" }
+    },
+    "functionContainers": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/functionContainerInstance" }
+    },
+    "decorations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" }
+    },
+    "surfaceMaterials": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/surfaceMaterialBinding" }
+    },
+    "connections": {
+      "type": "array",
+      "maxItems": 1024,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/roomConnection" }
+    },
+    "deletedPresetItemIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" }
+    },
+    "revision": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/revision" }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:visual-asset:1",
+  "title": "Cosmos Visual Asset",
+  "description": "A versioned, safe media resource without placement, interaction, function or runtime meaning.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "kind",
+    "format",
+    "mimeType",
+    "path",
+    "sha256",
+    "byteSize",
+    "width",
+    "height"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "$ref": "#/$defs/namespacedId"
+    },
+    "version": {
+      "$ref": "#/$defs/semver"
+    },
+    "kind": {
+      "enum": [
+        "image",
+        "vector",
+        "video"
+      ]
+    },
+    "format": {
+      "enum": [
+        "png",
+        "webp",
+        "svg",
+        "webm",
+        "mp4"
+      ]
+    },
+    "mimeType": {
+      "enum": [
+        "image/png",
+        "image/webp",
+        "image/svg+xml",
+        "video/webm",
+        "video/mp4"
+      ]
+    },
+    "path": {
+      "$ref": "#/$defs/relativePath"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "byteSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 67108864
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8192
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8192
+    },
+    "colorSpace": {
+      "enum": [
+        "srgb",
+        "display-p3",
+        "unknown"
+      ]
+    },
+    "alpha": {
+      "type": "boolean"
+    },
+    "density": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 8
+    },
+    "accessibilityDescription": {
+      "type": "string",
+      "maxLength": 500
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "image",
+              "vector"
+            ]
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "byteSize": {
+            "maximum": 16777216
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "format": {
+            "const": "png"
+          }
+        },
+        "required": [
+          "format"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "image"
+          },
+          "mimeType": {
+            "const": "image/png"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "format": {
+            "const": "webp"
+          }
+        },
+        "required": [
+          "format"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "image"
+          },
+          "mimeType": {
+            "const": "image/webp"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "format": {
+            "const": "svg"
+          }
+        },
+        "required": [
+          "format"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "vector"
+          },
+          "mimeType": {
+            "const": "image/svg+xml"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "format": {
+            "const": "webm"
+          }
+        },
+        "required": [
+          "format"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "video"
+          },
+          "mimeType": {
+            "const": "video/webm"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "format": {
+            "const": "mp4"
+          }
+        },
+        "required": [
+          "format"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "video"
+          },
+          "mimeType": {
+            "const": "video/mp4"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "namespacedId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)+$",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "relativePath": {
+      "type": "string",
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.(?:/|$))(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*://)(?!.*[?#\\\\])[^/]+(?:/[^/]+)*$",
+      "maxLength": 500
+    }
+  }
+}

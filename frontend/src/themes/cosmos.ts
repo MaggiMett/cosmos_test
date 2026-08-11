@@ -1,0 +1,36 @@
+import type { ThemeDefinition } from "../runtime/themeRegistry";
+
+export const cosmosTheme: ThemeDefinition = {
+  objectId: "cosmos.theme.cosmos",
+  displayName: "Cosmos",
+  version: "1.0.0",
+  provenance: {
+    kind: "code-native",
+    provenance: "Bundled Cosmos Core Theme",
+  },
+  tokens: {
+    "--cosmos-color-background": "#02040a",
+    "--cosmos-color-surface": "rgba(7, 13, 22, 0.9)",
+    "--cosmos-color-surface-raised": "rgba(11, 19, 30, 0.94)",
+    "--cosmos-color-surface-muted": "rgba(18, 28, 40, 0.68)",
+    "--cosmos-color-metal": "#17232e",
+    "--cosmos-color-border": "rgba(181, 211, 225, 0.14)",
+    "--cosmos-color-border-strong": "rgba(190, 224, 238, 0.28)",
+    "--cosmos-color-text": "#e5edf2",
+    "--cosmos-color-muted": "#83949f",
+    "--cosmos-color-faint": "#52636e",
+    "--cosmos-color-accent": "#62c8ea",
+    "--cosmos-color-violet": "#a88ce7",
+    "--cosmos-color-green": "#75cfa9",
+    "--cosmos-color-amber": "#d9a765",
+    "--cosmos-color-danger": "#c97b7b",
+    "--cosmos-glow-cyan": "0 0 24px rgba(74, 184, 224, 0.14)",
+    "--cosmos-glow-amber": "0 0 24px rgba(217, 167, 101, 0.12)",
+    "--cosmos-window-shadow": "0 28px 90px rgba(0, 0, 0, 0.58)",
+    "--cosmos-window-shadow-active": "0 34px 110px rgba(0, 0, 0, 0.68)",
+    "--cosmos-surface-blur": "18px",
+    "--cosmos-radius-window": "10px",
+    "--cosmos-radius-control": "5px",
+    "--cosmos-transition-duration": "180ms",
+  },
+};

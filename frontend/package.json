@@ -1,0 +1,29 @@
+{
+  "name": "@cosmos/frontend-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build --config vite.app.config.ts --configLoader runner",
+    "build:runtime": "vite build --config vite.build.config.ts --configLoader runner",
+    "dev": "vite --host 127.0.0.1 --config vite.app.config.ts --configLoader runner",
+    "preview": "vite preview --host 127.0.0.1 --config vite.app.config.ts --configLoader runner",
+    "test": "vitest run --environment node",
+    "theme:export-base-template": "node node_modules/tsx/dist/cli.mjs scripts/export-base-template.ts",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "vue": "^3.5.22",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.6",
+    "vue-tsc": "^2.2.12"
+  }
+}

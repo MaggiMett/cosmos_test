@@ -1,0 +1,167 @@
+:root {
+  color: var(--cosmos-color-text, #e5edf2);
+  background: var(--cosmos-color-background, #02040a);
+  font-family:
+    "Aptos", "Inter", "Segoe UI Variable", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  min-width: 1024px;
+  height: 100%;
+  min-height: 720px;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: var(--cosmos-color-background, #02040a);
+  color-scheme: dark;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+}
+
+button,
+input,
+textarea {
+  accent-color: var(--cosmos-color-accent, #62c8ea);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--cosmos-color-accent) 72%, white);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--cosmos-color-accent) 32%, transparent);
+  color: #fff;
+}
+
+.core-tool {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(5, 10, 17, 0.72), rgba(4, 8, 14, 0.52));
+  color: var(--cosmos-color-text, #e5edf2);
+  font-size: 0.71rem;
+}
+
+.core-tool button,
+.core-tool input,
+.core-tool textarea,
+.core-tool .core-tool__button {
+  border: 1px solid var(--cosmos-color-border, rgba(181, 211, 225, 0.14));
+  border-radius: var(--cosmos-radius-control, 5px);
+  background: rgba(204, 232, 241, 0.035);
+  color: inherit;
+}
+
+.core-tool button,
+.core-tool .core-tool__button { padding: 6px 9px; cursor: pointer; }
+.core-tool button:hover,
+.core-tool button:focus-visible,
+.core-tool .core-tool__button:hover {
+  border-color: color-mix(in srgb, var(--cosmos-color-accent) 48%, transparent);
+  background: color-mix(in srgb, var(--cosmos-color-accent) 7%, transparent);
+  outline: none;
+}
+.core-tool button:disabled { opacity: 0.45; cursor: default; }
+.core-tool button.danger { color: #f0a8a8; }
+.core-tool input,
+.core-tool textarea { width: 100%; padding: 8px; outline: none; }
+.core-tool textarea { resize: vertical; }
+.core-tool label { display: flex; flex-direction: column; gap: 5px; color: var(--cosmos-color-muted); }
+.core-tool small { color: var(--cosmos-color-faint); font-weight: 400; }
+
+.core-tool__toolbar {
+  display: flex;
+  min-height: 44px;
+  padding: 7px 10px;
+  align-items: center;
+  border-bottom: 1px solid rgba(181, 211, 225, 0.09);
+  gap: 8px;
+}
+.core-tool__toolbar > input { min-width: 120px; flex: 1; }
+.core-tool__toolbar > span { display: grid; gap: 2px; }
+.core-tool__toolbar > small { margin-left: auto; }
+.core-tool__error { margin: 0; padding: 7px 12px; background: rgba(132, 44, 51, 0.3); color: #f2b7bb; }
+.core-tool__rail { overflow: auto; padding: 7px; border-right: 1px solid rgba(181, 211, 225, 0.09); }
+.core-tool__rail > button { display: grid; width: 100%; margin-bottom: 4px; padding: 8px; text-align: left; gap: 3px; }
+.core-tool__rail > button.selected { border-color: rgba(117, 207, 169, 0.4); background: rgba(117, 207, 169, 0.08); }
+.core-tool__content { display: flex; min-width: 0; min-height: 0; flex: 1; flex-direction: column; overflow: auto; padding: 12px; gap: 10px; }
+.core-tool__section-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.core-tool__section-title > span { display: grid; gap: 3px; }
+.core-tool__section-title > span:last-child { display: flex; }
+.core-tool__form { display: flex; flex-direction: column; gap: 10px; }
+.core-tool__empty { margin: auto; align-items: center; justify-content: center; color: var(--cosmos-color-faint); text-align: center; }
+
+.application-shell,
+.environment-view {
+  width: 100%;
+  height: 100%;
+}
+
+.application-shell {
+  position: relative;
+  isolation: isolate;
+  background: var(--cosmos-color-background, #02040a);
+  transition: background-color var(--cosmos-transition-duration, 180ms) ease;
+}
+
+.environment-view {
+  position: absolute;
+  inset: 0;
+}
+
+.startup-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(32rem, calc(100% - 4rem));
+  margin: 0;
+  padding: 1.5rem;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--cosmos-color-border, rgba(226, 232, 240, 0.16));
+  border-radius: var(--cosmos-radius-window, 10px);
+  background: var(--cosmos-color-surface, rgba(7, 13, 22, 0.9));
+  box-shadow: var(--cosmos-window-shadow, 0 24px 80px rgba(0, 0, 0, 0.36));
+  backdrop-filter: blur(var(--cosmos-surface-blur, 18px));
+  text-align: center;
+}
+
+.startup-state h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+}
+
+.startup-state p {
+  color: var(--cosmos-color-muted, #83949f);
+}
+
+.startup-state button {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--cosmos-color-border, rgba(226, 232, 240, 0.16));
+  border-radius: var(--cosmos-radius-control, 5px);
+  background: transparent;
+  cursor: pointer;
+}
+
+.startup-state button:focus-visible {
+  outline: 1px solid var(--cosmos-color-accent, #62c8ea);
+  outline-offset: 3px;
+}

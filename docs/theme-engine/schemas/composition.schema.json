@@ -1,0 +1,706 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:composition:1",
+  "title": "Cosmos User Composition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "compositionId",
+    "version",
+    "resolverVersion",
+    "displayName",
+    "activeThemeRef",
+    "packRefs",
+    "parentCompositionRefs",
+    "scopes",
+    "overrides",
+    "environmentScenes",
+    "portability"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "compositionId": { "$ref": "#/$defs/namespacedId" },
+    "version": { "$ref": "#/$defs/semver" },
+    "resolverVersion": { "$ref": "#/$defs/semver" },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "activeThemeRef": { "$ref": "#/$defs/versionedRef" },
+    "packRefs": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/versionedRef" }
+    },
+    "parentCompositionRefs": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/versionedRef" }
+    },
+    "scopes": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": { "$ref": "#/$defs/scopeAlias" }
+    },
+    "overrides": {
+      "type": "array",
+      "maxItems": 16384,
+      "items": { "$ref": "#/$defs/override" }
+    },
+    "environmentScenes": {
+      "type": "array",
+      "maxItems": 1024,
+      "items": { "$ref": "#/$defs/environmentScene" }
+    },
+    "portability": {
+      "enum": [ "distributable", "installation-local" ]
+    },
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "revisionId", "updatedAt" ],
+      "properties": {
+        "revisionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "portability": { "const": "distributable" }
+        },
+        "required": [ "portability" ]
+      },
+      "then": {
+        "properties": {
+          "overrides": {
+            "items": {
+              "not": {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "level": {
+                        "enum": [ "instance", "cluster", "project", "room" ]
+                      }
+                    },
+                    "required": [ "level" ]
+                  }
+                },
+                "required": [ "scope" ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "namespacedId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)+$",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "symbol": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "versionRange": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "versionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "versionRange" ],
+      "properties": {
+        "id": { "$ref": "#/$defs/namespacedId" },
+        "versionRange": { "$ref": "#/$defs/versionRange" }
+      }
+    },
+    "scopeAlias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "aliasId", "kind", "targetId" ],
+      "properties": {
+        "aliasId": { "$ref": "#/$defs/namespacedId" },
+        "kind": {
+          "enum": [ "cluster", "project", "room", "environment" ]
+        },
+        "targetId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assignmentId",
+        "enabled",
+        "scope",
+        "target",
+        "value",
+        "priority"
+      ],
+      "properties": {
+        "assignmentId": { "$ref": "#/$defs/namespacedId" },
+        "enabled": { "type": "boolean" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "selector": { "$ref": "#/$defs/selector" },
+        "target": { "$ref": "#/$defs/presentationTarget" },
+        "value": { "$ref": "#/$defs/overrideValue" },
+        "priority": {
+          "type": "integer",
+          "minimum": -1000,
+          "maximum": 1000
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "scope": {
+                "properties": { "level": { "const": "rule" } },
+                "required": [ "level" ]
+              }
+            },
+            "required": [ "scope" ]
+          },
+          "then": {
+            "required": [ "selector" ]
+          },
+          "else": {
+            "not": { "required": [ "selector" ] }
+          }
+        }
+      ]
+    },
+    "scope": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "level", "objectId" ],
+          "properties": {
+            "level": { "const": "instance" },
+            "objectId": { "type": "string", "minLength": 1, "maxLength": 300 },
+            "objectKind": { "$ref": "#/$defs/namespacedId" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "level" ],
+          "properties": {
+            "level": { "const": "rule" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "level", "scopeId" ],
+          "properties": {
+            "level": {
+              "enum": [ "cluster", "project", "room", "environment" ]
+            },
+            "scopeId": { "type": "string", "minLength": 1, "maxLength": 300 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "level" ],
+          "properties": {
+            "level": { "const": "composition-global" }
+          }
+        }
+      ]
+    },
+    "selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "all" ],
+      "properties": {
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/predicate" }
+        },
+        "any": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/predicate" }
+        },
+        "not": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/predicate" }
+        }
+      }
+    },
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "field", "operator", "value" ],
+      "properties": {
+        "field": {
+          "enum": [
+            "objectId",
+            "objectKind",
+            "templateRole",
+            "hierarchyLevel",
+            "tagId",
+            "tagNamespace",
+            "state",
+            "environmentId",
+            "roomId",
+            "projectId",
+            "clusterId",
+            "presentationTrait"
+          ]
+        },
+        "operator": {
+          "enum": [ "equals", "in", "range", "has" ]
+        },
+        "value": {
+          "oneOf": [
+            { "type": "string", "minLength": 1, "maxLength": 300 },
+            { "type": "number" },
+            { "type": "boolean" },
+            {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 64,
+              "uniqueItems": true,
+              "items": {
+                "oneOf": [
+                  { "type": "string", "minLength": 1, "maxLength": 300 },
+                  { "type": "number" },
+                  { "type": "boolean" }
+                ]
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [ "minimum", "maximum" ],
+              "properties": {
+                "minimum": { "type": "number" },
+                "maximum": { "type": "number" }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "presentationTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "presentationGroup" ],
+      "properties": {
+        "presentationGroup": {
+          "enum": [
+            "world", "map", "base-entry", "base-interior", "room",
+            "workspace", "window", "companion", "icon", "node",
+            "connection", "label", "status", "ambient"
+          ]
+        },
+        "role": { "$ref": "#/$defs/namespacedId" },
+        "slotId": { "$ref": "#/$defs/namespacedId" },
+        "channelId": { "$ref": "#/$defs/namespacedId" },
+        "tokenId": { "$ref": "#/$defs/namespacedId" }
+      }
+    },
+    "overrideValue": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind", "ref" ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "skin-ref", "template-ref", "asset-ref", "renderer-ref"
+              ]
+            },
+            "ref": { "$ref": "#/$defs/versionedRef" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind", "values" ],
+          "properties": {
+            "kind": { "const": "token-values" },
+            "values": {
+              "type": "object",
+              "minProperties": 1,
+              "maxProperties": 256,
+              "propertyNames": { "$ref": "#/$defs/namespacedId" },
+              "additionalProperties": { "$ref": "#/$defs/typedToken" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind", "channelId", "parameters" ],
+          "properties": {
+            "kind": { "const": "material-values" },
+            "channelId": { "$ref": "#/$defs/namespacedId" },
+            "parameters": {
+              "type": "object",
+              "maxProperties": 128,
+              "propertyNames": { "$ref": "#/$defs/namespacedId" },
+              "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind" ],
+          "properties": {
+            "kind": { "const": "disabled" }
+          }
+        }
+      ]
+    },
+    "typedToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "type", "value" ],
+      "properties": {
+        "type": {
+          "enum": [
+            "color", "length", "number", "duration", "shadow",
+            "font-family", "opacity", "string", "boolean"
+          ]
+        },
+        "value": {
+          "oneOf": [
+            { "type": "string", "maxLength": 1000 },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        }
+      }
+    },
+    "environmentScene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sceneId",
+        "environmentTemplateRef",
+        "scope",
+        "nodes"
+      ],
+      "properties": {
+        "sceneId": { "$ref": "#/$defs/namespacedId" },
+        "environmentTemplateRef": { "$ref": "#/$defs/versionedRef" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4096,
+          "items": { "$ref": "#/$defs/sceneNode" }
+        }
+      }
+    },
+    "sceneNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "kind",
+        "anchorId",
+        "localOrder",
+        "layerBand",
+        "transform",
+        "payload"
+      ],
+      "properties": {
+        "nodeId": { "$ref": "#/$defs/namespacedId" },
+        "kind": {
+          "enum": [
+            "group", "surface", "asset", "functional-object",
+            "renderer", "label", "ambient"
+          ]
+        },
+        "parentNodeId": { "$ref": "#/$defs/namespacedId" },
+        "anchorId": { "$ref": "#/$defs/namespacedId" },
+        "localOrder": {
+          "type": "integer",
+          "minimum": -100,
+          "maximum": 100
+        },
+        "layerBand": { "$ref": "#/$defs/symbol" },
+        "transform": { "$ref": "#/$defs/transform" },
+        "visibleWhen": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/symbol" }
+        },
+        "payload": { "$ref": "#/$defs/scenePayload" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "group" } }, "required": [ "kind" ] },
+          "then": { "properties": { "payload": { "properties": { "kind": { "const": "group" } }, "required": [ "kind" ] } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "surface" } }, "required": [ "kind" ] },
+          "then": { "properties": { "payload": { "properties": { "kind": { "const": "surface" } }, "required": [ "kind" ] } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "asset" } }, "required": [ "kind" ] },
+          "then": { "properties": { "payload": { "properties": { "kind": { "const": "asset" } }, "required": [ "kind" ] } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "functional-object" } }, "required": [ "kind" ] },
+          "then": { "properties": { "payload": { "properties": { "kind": { "const": "functional-object" } }, "required": [ "kind" ] } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "renderer" } }, "required": [ "kind" ] },
+          "then": { "properties": { "payload": { "properties": { "kind": { "const": "renderer" } }, "required": [ "kind" ] } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "label" } }, "required": [ "kind" ] },
+          "then": { "properties": { "payload": { "properties": { "kind": { "const": "label" } }, "required": [ "kind" ] } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "ambient" } }, "required": [ "kind" ] },
+          "then": { "properties": { "payload": { "properties": { "kind": { "const": "ambient" } }, "required": [ "kind" ] } } }
+        }
+      ]
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "x", "y", "rotation", "scaleX", "scaleY", "pivotX", "pivotY" ],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "rotation": { "type": "number", "minimum": -360, "maximum": 360 },
+        "scaleX": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "scaleY": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "pivotX": { "type": "number" },
+        "pivotY": { "type": "number" }
+      }
+    },
+    "scenePayload": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind" ],
+          "properties": {
+            "kind": { "const": "group" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind", "surfaceId" ],
+          "properties": {
+            "kind": { "const": "surface" },
+            "surfaceId": { "$ref": "#/$defs/namespacedId" },
+            "assetRef": { "$ref": "#/$defs/versionedRef" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind", "assetRef", "visualBounds" ],
+          "properties": {
+            "kind": { "const": "asset" },
+            "assetRef": { "$ref": "#/$defs/versionedRef" },
+            "visualBounds": { "$ref": "#/$defs/shape" },
+            "effectBounds": { "$ref": "#/$defs/shape" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind", "functionalZoneId", "actionRole", "descriptorBinding",
+            "visualBounds", "interactionBounds", "layoutBounds",
+            "effectBounds", "anchorIds"
+          ],
+          "properties": {
+            "kind": { "const": "functional-object" },
+            "functionalZoneId": { "$ref": "#/$defs/namespacedId" },
+            "actionRole": { "$ref": "#/$defs/namespacedId" },
+            "descriptorBinding": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [ "source", "descriptorRole" ],
+              "properties": {
+                "source": { "const": "runtime-context" },
+                "descriptorRole": { "$ref": "#/$defs/namespacedId" }
+              }
+            },
+            "visualBounds": { "$ref": "#/$defs/shape" },
+            "interactionBounds": { "$ref": "#/$defs/shape" },
+            "layoutBounds": { "$ref": "#/$defs/shape" },
+            "effectBounds": { "$ref": "#/$defs/shape" },
+            "labelBounds": { "$ref": "#/$defs/shape" },
+            "anchorIds": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/namespacedId" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind", "rendererRef", "parameters" ],
+          "properties": {
+            "kind": { "const": "renderer" },
+            "rendererRef": { "$ref": "#/$defs/versionedRef" },
+            "parameters": {
+              "type": "object",
+              "maxProperties": 128,
+              "propertyNames": { "$ref": "#/$defs/namespacedId" },
+              "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind", "textOwnership", "labelBounds" ],
+          "properties": {
+            "kind": { "const": "label" },
+            "textOwnership": {
+              "enum": [ "system-term", "user-content", "runtime-status" ]
+            },
+            "systemTermKey": {
+              "type": "string",
+              "pattern": "^system\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$"
+            },
+            "labelBounds": { "$ref": "#/$defs/shape" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "kind", "rendererRef", "pointerPolicy" ],
+          "properties": {
+            "kind": { "const": "ambient" },
+            "rendererRef": { "$ref": "#/$defs/versionedRef" },
+            "pointerPolicy": { "const": "passive" }
+          }
+        }
+      ]
+    },
+    "shape": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "x", "y", "width", "height" ],
+          "properties": {
+            "type": { "const": "rect" },
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 },
+            "radius": { "type": "number", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "cx", "cy", "rx", "ry" ],
+          "properties": {
+            "type": { "const": "ellipse" },
+            "cx": { "type": "number" },
+            "cy": { "type": "number" },
+            "rx": { "type": "number", "exclusiveMinimum": 0 },
+            "ry": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "points" ],
+          "properties": {
+            "type": { "const": "polygon" },
+            "points": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 128,
+              "items": { "$ref": "#/$defs/point" }
+            }
+          }
+        }
+      ]
+    },
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "x", "y" ],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "jsonValue": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string", "maxLength": 1000 },
+        {
+          "type": "array",
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/jsonValue" }
+        },
+        {
+          "type": "object",
+          "maxProperties": 128,
+          "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+        }
+      ]
+    }
+  }
+}

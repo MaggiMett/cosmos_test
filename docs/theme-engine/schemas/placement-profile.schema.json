@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:placement-profile:1",
+  "title": "Cosmos Placement Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "allowedSurfaces",
+    "requiredSurfaceContact",
+    "allowedNormals",
+    "wallStop",
+    "floorLock",
+    "ceilingLock",
+    "snapTargets",
+    "attachmentTargets",
+    "rotationPolicy",
+    "scalePolicy",
+    "collisionPolicy",
+    "clearance",
+    "preferredDistance",
+    "hysteresis",
+    "priority"
+  ],
+  "properties": {
+    "allowedSurfaces": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/surfaceKind" }
+    },
+    "requiredSurfaceContact": { "type": "boolean" },
+    "allowedNormals": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["up", "down", "horizontal", "any"] }
+    },
+    "wallStop": { "type": "boolean" },
+    "floorLock": { "type": "boolean" },
+    "ceilingLock": { "type": "boolean" },
+    "snapTargets": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["surface", "edge", "corner", "anchor", "object-anchor", "grid"] }
+    },
+    "attachmentTargets": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/symbol" }
+    },
+    "rotationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "alignToSurfaceNormal", "upright"],
+      "properties": {
+        "mode": { "enum": ["fixed", "steps", "free", "surface-normal"] },
+        "allowedDegrees": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "number", "minimum": -360, "maximum": 360 }
+        },
+        "stepDegrees": { "type": "number", "exclusiveMinimum": 0, "maximum": 360 },
+        "alignToSurfaceNormal": { "type": "boolean" },
+        "upright": { "type": "boolean" }
+      }
+    },
+    "scalePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "maximum", "uniform"],
+      "properties": {
+        "minimum": { "type": "number", "exclusiveMinimum": 0 },
+        "maximum": { "type": "number", "exclusiveMinimum": 0 },
+        "uniform": { "type": "boolean" }
+      }
+    },
+    "collisionPolicy": { "enum": ["solid", "soft", "overlap-allowed"] },
+    "clearance": { "type": "number", "minimum": 0 },
+    "preferredDistance": { "type": "number", "minimum": 0 },
+    "hysteresis": { "type": "number", "minimum": 0 },
+    "priority": { "type": "integer", "minimum": -1000, "maximum": 1000 }
+  }
+}

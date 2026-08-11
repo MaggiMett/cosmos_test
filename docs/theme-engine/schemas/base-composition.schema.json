@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:base-composition:1",
+  "title": "Cosmos Base Composition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "baseId",
+    "version",
+    "rooms",
+    "connections",
+    "presentationOverrides",
+    "revision"
+  ],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri" },
+    "schemaVersion": { "const": 1 },
+    "baseId": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" },
+    "version": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/semver" },
+    "rooms": {
+      "type": "array",
+      "maxItems": 1024,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-composition:1" }
+    },
+    "connections": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/roomConnection" }
+    },
+    "entryRoomId": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" },
+    "presentationOverrides": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/versionedRef" }
+    },
+    "revision": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/revision" }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:room-preset:1",
+  "title": "Cosmos Room Preset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "presetId",
+    "version",
+    "displayName",
+    "origin",
+    "shellRef",
+    "objectInstances",
+    "functionContainers"
+  ],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri" },
+    "schemaVersion": { "const": 1 },
+    "presetId": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" },
+    "version": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/semver" },
+    "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "origin": { "enum": ["core", "theme-pack", "user"] },
+    "shellRef": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/versionedRef" },
+    "objectInstances": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/objectInstance" }
+    },
+    "functionContainers": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/functionContainerInstance" }
+    },
+    "decorations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" }
+    },
+    "connections": {
+      "type": "array",
+      "maxItems": 1024,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/roomConnection" }
+    }
+  }
+}

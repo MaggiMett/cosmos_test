@@ -1,0 +1,553 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:environment-template:1",
+  "title": "Cosmos Environment Template",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "templateId",
+    "version",
+    "templateKind",
+    "displayName",
+    "environmentKind",
+    "compatibility",
+    "referenceViewport",
+    "coordinateMapping",
+    "surfaces",
+    "functionalZones",
+    "safeAreas",
+    "anchors",
+    "layerBands",
+    "sceneRoots",
+    "states",
+    "coreFallbackSkinRef"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "templateId": { "$ref": "#/$defs/namespacedId" },
+    "version": { "$ref": "#/$defs/semver" },
+    "templateKind": { "const": "environment" },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "environmentKind": {
+      "enum": [
+        "world",
+        "map",
+        "base-interior",
+        "room",
+        "workspace"
+      ]
+    },
+    "compatibility": { "$ref": "#/$defs/compatibility" },
+    "referenceViewport": { "$ref": "#/$defs/viewport" },
+    "coordinateMapping": { "$ref": "#/$defs/coordinateMapping" },
+    "surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/surface" }
+    },
+    "functionalZones": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": { "$ref": "#/$defs/functionalZone" }
+    },
+    "safeAreas": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/safeArea" }
+    },
+    "anchors": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/anchor" }
+    },
+    "layerBands": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/layerBand" }
+    },
+    "sceneRoots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/sceneRoot" }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": { "$ref": "#/$defs/state" }
+    },
+    "assetSlots": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/assetSlot" }
+    },
+    "cardinality": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/namespacedId" },
+      "additionalProperties": { "$ref": "#/$defs/cardinality" }
+    },
+    "portalPolicy": { "$ref": "#/$defs/portalPolicy" },
+    "coreFallbackSkinRef": { "$ref": "#/$defs/versionedRef" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "environmentKind": { "const": "base-interior" }
+        },
+        "required": [ "environmentKind" ]
+      },
+      "then": {
+        "properties": {
+          "referenceViewport": {
+            "properties": {
+              "width": { "const": 1600 },
+              "height": { "const": 900 }
+            }
+          },
+          "surfaces": {
+            "allOf": [
+              { "contains": { "properties": { "surfaceRole": { "const": "background" } }, "required": [ "surfaceRole" ] } },
+              { "contains": { "properties": { "surfaceRole": { "const": "rear" } }, "required": [ "surfaceRole" ] } },
+              { "contains": { "properties": { "surfaceRole": { "const": "left" } }, "required": [ "surfaceRole" ] } },
+              { "contains": { "properties": { "surfaceRole": { "const": "right" } }, "required": [ "surfaceRole" ] } },
+              { "contains": { "properties": { "surfaceRole": { "const": "floor" } }, "required": [ "surfaceRole" ] } },
+              { "contains": { "properties": { "surfaceRole": { "const": "ceiling" } }, "required": [ "surfaceRole" ] } },
+              { "contains": { "properties": { "surfaceRole": { "const": "foreground" } }, "required": [ "surfaceRole" ] } },
+              { "contains": { "properties": { "surfaceRole": { "const": "ambient" } }, "required": [ "surfaceRole" ] } }
+            ]
+          },
+          "functionalZones": {
+            "allOf": [
+              {
+                "contains": {
+                  "properties": { "role": { "const": "door" } },
+                  "required": [ "role" ]
+                },
+                "minContains": 2,
+                "maxContains": 2
+              },
+              {
+                "contains": {
+                  "properties": { "role": { "const": "workspace.entry" } },
+                  "required": [ "role" ]
+                },
+                "minContains": 2,
+                "maxContains": 2
+              },
+              {
+                "contains": {
+                  "properties": { "role": { "const": "base.exit" }, "critical": { "const": true } },
+                  "required": [ "role", "critical" ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": { "role": { "const": "companion.anchor" } },
+                  "required": [ "role" ]
+                }
+              }
+            ]
+          }
+        },
+        "required": [ "portalPolicy" ]
+      }
+    }
+  ],
+  "$defs": {
+    "namespacedId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)+$",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "symbol": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "versionRange": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "versionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "versionRange" ],
+      "properties": {
+        "id": { "$ref": "#/$defs/namespacedId" },
+        "versionRange": { "$ref": "#/$defs/versionRange" }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "themeEngine" ],
+      "properties": {
+        "themeEngine": { "$ref": "#/$defs/versionRange" },
+        "cosmos": { "$ref": "#/$defs/versionRange" }
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "width", "height", "unit", "origin" ],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 16384 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 16384 },
+        "unit": { "const": "du" },
+        "origin": { "const": "top-left" }
+      }
+    },
+    "coordinateMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "decorativeFit", "functionalFit", "alignment" ],
+      "properties": {
+        "decorativeFit": { "enum": [ "contain", "cover", "stretch" ] },
+        "functionalFit": { "const": "contain" },
+        "alignment": {
+          "enum": [
+            "center", "top", "right", "bottom", "left",
+            "top-left", "top-right", "bottom-left", "bottom-right"
+          ]
+        }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surfaceId",
+        "surfaceRole",
+        "required",
+        "assetSlotId",
+        "layerBandId",
+        "pointerPolicy"
+      ],
+      "properties": {
+        "surfaceId": { "$ref": "#/$defs/namespacedId" },
+        "surfaceRole": {
+          "enum": [
+            "background", "rear", "left", "right", "floor", "ceiling",
+            "foreground", "ambient"
+          ]
+        },
+        "required": { "type": "boolean" },
+        "assetSlotId": { "$ref": "#/$defs/namespacedId" },
+        "layerBandId": { "$ref": "#/$defs/symbol" },
+        "pointerPolicy": { "const": "passive" },
+        "shape": { "$ref": "#/$defs/shape" },
+        "allowedFit": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": [ "contain", "cover", "stretch" ] }
+        }
+      }
+    },
+    "functionalZone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zoneId",
+        "role",
+        "actionRoles",
+        "shape",
+        "required",
+        "critical",
+        "mutableBy",
+        "layerBandId",
+        "visualAnchorId",
+        "interactionAnchorId"
+      ],
+      "properties": {
+        "zoneId": { "$ref": "#/$defs/namespacedId" },
+        "role": {
+          "enum": [
+            "door", "workspace.entry", "companion.anchor", "base.exit",
+            "room.transition", "tool.entry", "map.navigation"
+          ]
+        },
+        "actionRoles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/namespacedId" }
+        },
+        "shape": { "$ref": "#/$defs/shape" },
+        "required": { "type": "boolean" },
+        "critical": { "type": "boolean" },
+        "mutableBy": {
+          "enum": [ "core", "template", "composition" ]
+        },
+        "layerBandId": { "$ref": "#/$defs/symbol" },
+        "visualAnchorId": { "$ref": "#/$defs/namespacedId" },
+        "interactionAnchorId": { "$ref": "#/$defs/namespacedId" },
+        "labelAnchorId": { "$ref": "#/$defs/namespacedId" },
+        "minimumTarget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "width", "height" ],
+          "properties": {
+            "width": { "type": "number", "minimum": 0 },
+            "height": { "type": "number", "minimum": 0 }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "critical": { "const": true } },
+            "required": [ "critical" ]
+          },
+          "then": {
+            "properties": {
+              "required": { "const": true },
+              "mutableBy": { "const": "core" }
+            }
+          }
+        }
+      ]
+    },
+    "safeArea": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "safeAreaId", "purpose", "shape", "critical", "mutableBy" ],
+      "properties": {
+        "safeAreaId": { "$ref": "#/$defs/namespacedId" },
+        "purpose": {
+          "enum": [
+            "functional-content", "window-recovery", "label", "viewport",
+            "art-documentation"
+          ]
+        },
+        "shape": { "$ref": "#/$defs/shape" },
+        "critical": { "type": "boolean" },
+        "mutableBy": {
+          "enum": [ "core", "template", "composition" ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "critical": { "const": true } },
+            "required": [ "critical" ]
+          },
+          "then": {
+            "properties": { "mutableBy": { "enum": [ "core", "template" ] } }
+          }
+        }
+      ]
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "anchorId", "x", "y", "owner", "mutableBy" ],
+      "properties": {
+        "anchorId": { "$ref": "#/$defs/namespacedId" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "rotation": { "type": "number", "minimum": -360, "maximum": 360 },
+        "owner": {
+          "enum": [ "visual", "interaction", "layout", "label", "transition" ]
+        },
+        "mutableBy": {
+          "enum": [ "core", "template", "composition", "skin" ]
+        }
+      }
+    },
+    "layerBand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "bandId", "minimum", "maximum", "owner" ],
+      "properties": {
+        "bandId": { "$ref": "#/$defs/symbol" },
+        "minimum": { "type": "integer", "minimum": -1000, "maximum": 1000 },
+        "maximum": { "type": "integer", "minimum": -1000, "maximum": 1000 },
+        "owner": {
+          "enum": [
+            "environment", "objects", "windows", "surface", "modal", "emergency"
+          ]
+        }
+      }
+    },
+    "sceneRoot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "rootId", "layerBandId", "allowedNodeKinds" ],
+      "properties": {
+        "rootId": { "$ref": "#/$defs/namespacedId" },
+        "layerBandId": { "$ref": "#/$defs/symbol" },
+        "allowedNodeKinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "group", "surface", "asset", "functional-object",
+              "renderer", "label", "ambient"
+            ]
+          }
+        }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "stateId", "source", "fallbackStateId" ],
+      "properties": {
+        "stateId": { "$ref": "#/$defs/symbol" },
+        "source": { "const": "core" },
+        "fallbackStateId": { "$ref": "#/$defs/symbol" }
+      }
+    },
+    "assetSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slotId", "purpose", "acceptedKinds", "acceptedFormats",
+        "required", "fallbackPolicy"
+      ],
+      "properties": {
+        "slotId": { "$ref": "#/$defs/namespacedId" },
+        "purpose": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "acceptedKinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": [ "image", "vector", "video" ] }
+        },
+        "acceptedFormats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": [ "png", "webp", "svg", "webm", "mp4" ] }
+        },
+        "required": { "type": "boolean" },
+        "fallbackPolicy": {
+          "enum": [ "skin-chain", "template-default", "core-emergency", "none" ]
+        },
+        "states": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/symbol" }
+        }
+      }
+    },
+    "cardinality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "minimum", "maximum" ],
+      "properties": {
+        "minimum": { "type": "integer", "minimum": 0 },
+        "maximum": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "portalPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "windowPortal",
+        "geometryOwner",
+        "forbiddenAncestorEffects",
+        "focusLayerBandId"
+      ],
+      "properties": {
+        "windowPortal": { "const": "geometry-neutral" },
+        "geometryOwner": { "const": "window-system" },
+        "forbiddenAncestorEffects": {
+          "type": "array",
+          "uniqueItems": true,
+          "allOf": [
+            { "contains": { "const": "transform" } },
+            { "contains": { "const": "filter" } },
+            { "contains": { "const": "backdrop-filter" } },
+            { "contains": { "const": "perspective" } },
+            { "contains": { "const": "contain" } },
+            { "contains": { "const": "overflow-clipping" } }
+          ],
+          "items": {
+            "enum": [
+              "transform", "filter", "backdrop-filter", "perspective",
+              "contain", "overflow-clipping"
+            ]
+          }
+        },
+        "focusLayerBandId": { "$ref": "#/$defs/symbol" }
+      }
+    },
+    "shape": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "x", "y", "width", "height" ],
+          "properties": {
+            "type": { "const": "rect" },
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 },
+            "radius": { "type": "number", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "cx", "cy", "rx", "ry" ],
+          "properties": {
+            "type": { "const": "ellipse" },
+            "cx": { "type": "number" },
+            "cy": { "type": "number" },
+            "rx": { "type": "number", "exclusiveMinimum": 0 },
+            "ry": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "points" ],
+          "properties": {
+            "type": { "const": "polygon" },
+            "points": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 128,
+              "items": { "$ref": "#/$defs/point" }
+            }
+          }
+        }
+      ]
+    },
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "x", "y" ],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    }
+  }
+}

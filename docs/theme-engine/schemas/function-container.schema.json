@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:function-container:1",
+  "title": "Cosmos Function Container",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "containerId",
+    "version",
+    "displayName",
+    "functionId",
+    "functionType",
+    "interactionBounds",
+    "functionBinding",
+    "allowedCatalogFamilies",
+    "accessibilityLabel",
+    "focusBehavior",
+    "states",
+    "minimumTarget",
+    "fallbackPresentationRef"
+  ],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri" },
+    "schemaVersion": { "const": 1 },
+    "containerId": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" },
+    "version": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/semver" },
+    "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "functionId": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" },
+    "functionType": {
+      "enum": [
+        "knowledge-workspace",
+        "creation-workspace",
+        "room-transition",
+        "companion-interaction",
+        "tool-entry",
+        "base-exit"
+      ]
+    },
+    "interactionBounds": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/shape" },
+    "functionBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "descriptorRole", "actionRole"],
+      "properties": {
+        "source": { "const": "runtime-context" },
+        "descriptorRole": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" },
+        "actionRole": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" }
+      }
+    },
+    "allowedCatalogFamilies": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/catalogFamily" }
+    },
+    "accessibilityLabel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "enum": ["runtime-context", "system-term"] },
+        "key": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/namespacedId" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "source": { "const": "system-term" } },
+            "required": ["source"]
+          },
+          "then": { "required": ["key"] },
+          "else": { "not": { "required": ["key"] } }
+        }
+      ]
+    },
+    "focusBehavior": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["focusable", "focusRing", "tabOrder"],
+      "properties": {
+        "focusable": { "const": true },
+        "focusRing": { "const": "core" },
+        "tabOrder": { "const": "core" }
+      }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/templateState" }
+    },
+    "minimumTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number", "minimum": 44 },
+        "height": { "type": "number", "minimum": 44 }
+      }
+    },
+    "requiredClearance": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/shape" },
+    "fallbackPresentationRef": { "$ref": "urn:cosmos:schema:theme-engine:room-common:1#/$defs/versionedRef" }
+  }
+}

@@ -1,0 +1,72 @@
+from __future__ import annotations
+
+import re
+from collections.abc import Mapping
+from dataclasses import dataclass
+from enum import StrEnum
+from typing import Any
+
+
+class ManifestValidationError(ValueError):
+    pass
+
+
+class ExtensionCategory(StrEnum):
+    USER_TOOL = "user-tool"
+    SYSTEM_TOOL = "system-tool"
+    ENTITY = "entity"
+    CAPABILITY_BUNDLE = "capability-bundle"
+    THEME = "theme"
+    WORKSPACE_BLUEPRINT = "workspace-blueprint"
+    OBJECT_BLUEPRINT = "object-blueprint"
+    CAPTURE_TEMPLATE = "capture-template"
+    PROVIDER = "provider"
+    INTEGRATION = "integration"
+
+
+_ID_PATTERN = re.compile(r"^[a-z0-9]+(?:[.-][a-z0-9]+)+$")
+
+
+@dataclass(frozen=True, slots=True)
+class ExtensionManifest:
+    extension_id: str
+    display_name: str
+    version: str
+    category: ExtensionCategory
+    runtime_api_version: str
+    permissions: frozenset[str]
+    capabilities: frozenset[str]
+    dependencies: tuple[str, ...]
+    entry_points: Mapping[str, str]
+
+    @classmethod
+    def from_mapping(cls, value: Mapping[str, Any]) -> ExtensionManifest:
+        required = {"id", "display_name", "version", "category", "runtime_api_version"}
+        missing = sorted(required.difference(value))
+        if missing:
+            raise ManifestValidationError(f"Manifest fields are required: {', '.join(missing)}")
+
+        extension_id = str(value["id"])
+        if not _ID_PATTERN.fullmatch(extension_id):
+            raise ManifestValidationError("Extension ID must be a lowercase dotted or hyphenated namespace.")
+
+        try:
+            category = ExtensionCategory(str(value["category"]))
+        except ValueError as error:
+            raise ManifestValidationError(f"Unsupported Extension category: {value['category']}") from error
+
+        entry_points = value.get("entry_points", {})
+        if not isinstance(entry_points, Mapping):
+            raise ManifestValidationError("entry_points must be an object.")
+
+        return cls(
+            extension_id=extension_id,
+            display_name=str(value["display_name"]),
+            version=str(value["version"]),
+            category=category,
+            runtime_api_version=str(value["runtime_api_version"]),
+            permissions=frozenset(str(item) for item in value.get("permissions", [])),
+            capabilities=frozenset(str(item) for item in value.get("capabilities", [])),
+            dependencies=tuple(str(item) for item in value.get("dependencies", [])),
+            entry_points={str(key): str(item) for key, item in entry_points.items()},
+        )

@@ -1,0 +1,443 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:room-common:1",
+  "title": "Cosmos Room Composition Common Definitions",
+  "$defs": {
+    "namespacedId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)+$",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "symbol": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "versionRange": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "versionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "versionRange"],
+      "properties": {
+        "id": { "$ref": "#/$defs/namespacedId" },
+        "versionRange": { "$ref": "#/$defs/versionRange" }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["themeEngine"],
+      "properties": {
+        "themeEngine": { "$ref": "#/$defs/versionRange" },
+        "cosmos": { "$ref": "#/$defs/versionRange" }
+      }
+    },
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "vector3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number", "minimum": -1, "maximum": 1 },
+        "y": { "type": "number", "minimum": -1, "maximum": 1 },
+        "z": { "type": "number", "minimum": -1, "maximum": 1 }
+      }
+    },
+    "shape": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "x", "y", "width", "height"],
+          "properties": {
+            "type": { "const": "rect" },
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 },
+            "radius": { "type": "number", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "cx", "cy", "rx", "ry"],
+          "properties": {
+            "type": { "const": "ellipse" },
+            "cx": { "type": "number" },
+            "cy": { "type": "number" },
+            "rx": { "type": "number", "exclusiveMinimum": 0 },
+            "ry": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "points"],
+          "properties": {
+            "type": { "const": "polygon" },
+            "points": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 128,
+              "items": { "$ref": "#/$defs/point" }
+            }
+          }
+        }
+      ]
+    },
+    "referenceViewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "unit", "origin"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "const": "du" },
+        "origin": { "const": "top-left" }
+      }
+    },
+    "layerBand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bandId", "minimum", "maximum", "owner"],
+      "properties": {
+        "bandId": { "$ref": "#/$defs/symbol" },
+        "minimum": { "type": "integer", "minimum": -1000, "maximum": 1000 },
+        "maximum": { "type": "integer", "minimum": -1000, "maximum": 1000 },
+        "owner": {
+          "enum": ["environment", "object", "objects", "window", "windows", "surface", "modal", "emergency"]
+        }
+      }
+    },
+    "safeArea": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["safeAreaId", "purpose", "shape", "critical", "mutableBy"],
+      "properties": {
+        "safeAreaId": { "$ref": "#/$defs/namespacedId" },
+        "purpose": {
+          "enum": ["functional-content", "window-recovery", "label", "viewport", "art-documentation"]
+        },
+        "shape": { "$ref": "#/$defs/shape" },
+        "critical": { "type": "boolean" },
+        "mutableBy": { "enum": ["core", "template", "composition"] }
+      }
+    },
+    "templateState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stateId", "source", "fallbackStateId"],
+      "properties": {
+        "stateId": { "$ref": "#/$defs/symbol" },
+        "source": { "const": "core" },
+        "fallbackStateId": { "$ref": "#/$defs/symbol" },
+        "description": { "type": "string", "maxLength": 500 }
+      }
+    },
+    "assetSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slotId", "purpose", "acceptedKinds", "acceptedFormats", "required", "fallbackPolicy"],
+      "properties": {
+        "slotId": { "$ref": "#/$defs/namespacedId" },
+        "purpose": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "acceptedKinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["image", "vector", "video"] }
+        },
+        "acceptedFormats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["png", "webp", "svg", "webm", "mp4"] }
+        },
+        "required": { "type": "boolean" },
+        "fallbackPolicy": { "enum": ["skin-chain", "template-default", "core-emergency", "none"] },
+        "boundsId": { "$ref": "#/$defs/namespacedId" },
+        "states": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/symbol" }
+        }
+      }
+    },
+    "catalogFamily": {
+      "enum": [
+        "door",
+        "workspace-furniture",
+        "furniture",
+        "decoration",
+        "plant",
+        "light",
+        "surface-material",
+        "window",
+        "architecture-object",
+        "companion-visual"
+      ]
+    },
+    "surfaceKind": {
+      "enum": ["floor", "wall", "ceiling", "background-opening", "architecture", "object-anchor"]
+    },
+    "surfaceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surfaceId", "placementAreaId", "localPosition", "normalOffset", "orientationMode", "shellVersion"],
+      "properties": {
+        "surfaceId": { "$ref": "#/$defs/namespacedId" },
+        "placementAreaId": { "$ref": "#/$defs/namespacedId" },
+        "anchorId": { "$ref": "#/$defs/namespacedId" },
+        "localPosition": { "$ref": "#/$defs/point" },
+        "normalOffset": { "type": "number" },
+        "orientationMode": { "enum": ["surface-normal", "room", "custom"] },
+        "shellVersion": { "$ref": "#/$defs/semver" }
+      }
+    },
+    "presetVersionReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["presetId", "version"],
+      "properties": {
+        "presetId": { "$ref": "#/$defs/namespacedId" },
+        "version": { "$ref": "#/$defs/semver" },
+        "presetItemId": { "$ref": "#/$defs/namespacedId" }
+      }
+    },
+    "overridePoint": {
+      "$ref": "#/$defs/overridePointUnion"
+    },
+    "overridePointUnion": {
+      "oneOf": [
+        { "$ref": "#/$defs/inheritState" },
+        { "$ref": "#/$defs/resetState" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "value"],
+          "properties": {
+            "mode": { "const": "pinned" },
+            "value": { "$ref": "#/$defs/point" },
+            "authoredAgainst": { "$ref": "#/$defs/versionedRef" }
+          }
+        }
+      ]
+    },
+    "overrideNumber": {
+      "oneOf": [
+        { "$ref": "#/$defs/inheritState" },
+        { "$ref": "#/$defs/resetState" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "value"],
+          "properties": {
+            "mode": { "const": "pinned" },
+            "value": { "type": "number" },
+            "authoredAgainst": { "$ref": "#/$defs/versionedRef" }
+          }
+        }
+      ]
+    },
+    "overrideString": {
+      "oneOf": [
+        { "$ref": "#/$defs/inheritState" },
+        { "$ref": "#/$defs/resetState" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "value"],
+          "properties": {
+            "mode": { "const": "pinned" },
+            "value": { "$ref": "#/$defs/symbol" },
+            "authoredAgainst": { "$ref": "#/$defs/versionedRef" }
+          }
+        }
+      ]
+    },
+    "overrideRef": {
+      "oneOf": [
+        { "$ref": "#/$defs/inheritState" },
+        { "$ref": "#/$defs/resetState" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "value"],
+          "properties": {
+            "mode": { "const": "pinned" },
+            "value": { "$ref": "#/$defs/versionedRef" },
+            "authoredAgainst": { "$ref": "#/$defs/versionedRef" }
+          }
+        }
+      ]
+    },
+    "overrideNullableRef": {
+      "oneOf": [
+        { "$ref": "#/$defs/inheritState" },
+        { "$ref": "#/$defs/resetState" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "value"],
+          "properties": {
+            "mode": { "const": "pinned" },
+            "value": {
+              "oneOf": [
+                { "type": "null" },
+                { "$ref": "#/$defs/versionedRef" }
+              ]
+            },
+            "authoredAgainst": { "$ref": "#/$defs/versionedRef" }
+          }
+        }
+      ]
+    },
+    "inheritState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "const": "inherit" },
+        "authoredAgainst": { "$ref": "#/$defs/versionedRef" }
+      }
+    },
+    "resetState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "const": "reset-to-parent" },
+        "authoredAgainst": { "$ref": "#/$defs/versionedRef" }
+      }
+    },
+    "objectInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instanceId",
+        "catalogObjectRef",
+        "position",
+        "rotation",
+        "scale",
+        "layer",
+        "depth",
+        "surfaceBinding",
+        "skinRef",
+        "propertyOverrides"
+      ],
+      "properties": {
+        "instanceId": { "$ref": "#/$defs/namespacedId" },
+        "catalogObjectRef": { "$ref": "#/$defs/versionedRef" },
+        "position": { "$ref": "#/$defs/point" },
+        "rotation": { "type": "number", "minimum": -360, "maximum": 360 },
+        "scale": { "$ref": "#/$defs/positivePoint" },
+        "layer": { "$ref": "#/$defs/symbol" },
+        "depth": { "type": "number", "minimum": -1000, "maximum": 1000 },
+        "surfaceBinding": { "$ref": "#/$defs/surfaceBinding" },
+        "parentAttachment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["parentInstanceId", "anchorId"],
+          "properties": {
+            "parentInstanceId": { "$ref": "#/$defs/namespacedId" },
+            "anchorId": { "$ref": "#/$defs/namespacedId" }
+          }
+        },
+        "functionContainerInstanceId": { "$ref": "#/$defs/namespacedId" },
+        "skinRef": { "$ref": "#/$defs/versionedRef" },
+        "animationRef": { "$ref": "#/$defs/versionedRef" },
+        "materialRef": { "$ref": "#/$defs/versionedRef" },
+        "propertyOverrides": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["position", "rotation", "scale", "skin", "animation", "material", "layer", "depth"],
+          "properties": {
+            "position": { "$ref": "#/$defs/overridePoint" },
+            "rotation": { "$ref": "#/$defs/overrideNumber" },
+            "scale": { "$ref": "#/$defs/overridePoint" },
+            "skin": { "$ref": "#/$defs/overrideRef" },
+            "animation": { "$ref": "#/$defs/overrideNullableRef" },
+            "material": { "$ref": "#/$defs/overrideNullableRef" },
+            "layer": { "$ref": "#/$defs/overrideString" },
+            "depth": { "$ref": "#/$defs/overrideNumber" }
+          }
+        },
+        "origin": { "$ref": "#/$defs/presetVersionReference" },
+        "placementState": { "enum": ["valid", "needs-placement-repair"] }
+      }
+    },
+    "positivePoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "y": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 }
+      }
+    },
+    "functionContainerInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["containerInstanceId", "definitionRef", "attachedObjectInstanceId", "expectedDescriptorRole"],
+      "properties": {
+        "containerInstanceId": { "$ref": "#/$defs/namespacedId" },
+        "definitionRef": { "$ref": "#/$defs/versionedRef" },
+        "attachedObjectInstanceId": { "$ref": "#/$defs/namespacedId" },
+        "expectedDescriptorRole": { "$ref": "#/$defs/namespacedId" }
+      }
+    },
+    "roomConnection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["connectionId", "fromRoomId", "toRoomId", "bidirectional"],
+      "properties": {
+        "connectionId": { "$ref": "#/$defs/namespacedId" },
+        "fromRoomId": { "$ref": "#/$defs/namespacedId" },
+        "toRoomId": { "$ref": "#/$defs/namespacedId" },
+        "bidirectional": { "type": "boolean" },
+        "visualObjectInstanceIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/namespacedId" }
+        }
+      }
+    },
+    "surfaceMaterialBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bindingId", "surfaceId", "materialRef"],
+      "properties": {
+        "bindingId": { "$ref": "#/$defs/namespacedId" },
+        "surfaceId": { "$ref": "#/$defs/namespacedId" },
+        "materialRef": { "$ref": "#/$defs/versionedRef" }
+      }
+    },
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revisionId"],
+      "properties": {
+        "revisionId": { "type": "string", "minLength": 1, "maxLength": 200 }
+      }
+    }
+  }
+}

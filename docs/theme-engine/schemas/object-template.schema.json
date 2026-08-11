@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cosmos:schema:theme-engine:object-template:1",
+  "title": "Cosmos Object Template",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "templateId",
+    "version",
+    "templateKind",
+    "displayName",
+    "targetRole",
+    "compatibility",
+    "referenceViewport",
+    "coordinateMapping",
+    "functionalRoles",
+    "states",
+    "anchors",
+    "bounds",
+    "assetSlots",
+    "layerBands",
+    "rendererCompatibility",
+    "coreFallbackSkinRef"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "templateId": { "$ref": "#/$defs/namespacedId" },
+    "version": { "$ref": "#/$defs/semver" },
+    "templateKind": { "const": "object" },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "targetRole": { "$ref": "#/$defs/namespacedId" },
+    "compatibility": { "$ref": "#/$defs/compatibility" },
+    "referenceViewport": { "$ref": "#/$defs/viewport" },
+    "coordinateMapping": { "$ref": "#/$defs/coordinateMapping" },
+    "functionalRoles": {
+      "type": "array",
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/functionalRole" }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": { "$ref": "#/$defs/state" }
+    },
+    "statePriority": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/symbol" }
+    },
+    "anchors": {
+      "type": "array",
+      "maxItems": 128,
+      "items": { "$ref": "#/$defs/anchor" }
+    },
+    "bounds": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 128,
+      "items": { "$ref": "#/$defs/bounds" }
+    },
+    "assetSlots": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/assetSlot" }
+    },
+    "layerBands": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/layerBand" }
+    },
+    "rendererCompatibility": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/rendererCompatibility" }
+    },
+    "coreFallbackSkinRef": { "$ref": "#/$defs/versionedRef" },
+    "scaleRules": { "$ref": "#/$defs/scaleRules" },
+    "cardinality": { "$ref": "#/$defs/cardinality" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "owner": { "type": "string", "maxLength": 120 },
+        "notes": { "type": "string", "maxLength": 2000 }
+      }
+    }
+  },
+  "$defs": {
+    "namespacedId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)+$",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "symbol": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "versionRange": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "versionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "versionRange" ],
+      "properties": {
+        "id": { "$ref": "#/$defs/namespacedId" },
+        "versionRange": { "$ref": "#/$defs/versionRange" }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "themeEngine" ],
+      "properties": {
+        "themeEngine": { "$ref": "#/$defs/versionRange" },
+        "cosmos": { "$ref": "#/$defs/versionRange" }
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "width", "height", "unit", "origin" ],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 16384 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 16384 },
+        "unit": { "const": "du" },
+        "origin": { "const": "top-left" }
+      }
+    },
+    "coordinateMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "fit", "alignment", "functionalFit" ],
+      "properties": {
+        "fit": { "enum": [ "contain", "cover", "stretch" ] },
+        "alignment": {
+          "enum": [
+            "center", "top", "right", "bottom", "left",
+            "top-left", "top-right", "bottom-left", "bottom-right"
+          ]
+        },
+        "functionalFit": { "const": "contain" }
+      }
+    },
+    "functionalRole": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "roleId",
+        "actionRoles",
+        "required",
+        "interactionBoundsId"
+      ],
+      "properties": {
+        "roleId": { "$ref": "#/$defs/namespacedId" },
+        "actionRoles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/namespacedId" }
+        },
+        "required": { "type": "boolean" },
+        "interactionBoundsId": { "$ref": "#/$defs/namespacedId" },
+        "visualAnchorId": { "$ref": "#/$defs/namespacedId" },
+        "labelAnchorId": { "$ref": "#/$defs/namespacedId" },
+        "cardinality": { "$ref": "#/$defs/cardinality" },
+        "critical": { "type": "boolean", "default": false }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "stateId", "source", "fallbackStateId" ],
+      "properties": {
+        "stateId": { "$ref": "#/$defs/symbol" },
+        "source": { "const": "core" },
+        "fallbackStateId": { "$ref": "#/$defs/symbol" },
+        "description": { "type": "string", "maxLength": 500 }
+      }
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "anchorId", "x", "y", "owner", "mutableBy" ],
+      "properties": {
+        "anchorId": { "$ref": "#/$defs/namespacedId" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "rotation": { "type": "number", "minimum": -360, "maximum": 360 },
+        "owner": {
+          "enum": [ "visual", "interaction", "layout", "label", "transition" ]
+        },
+        "mutableBy": {
+          "enum": [ "core", "template", "composition", "skin" ]
+        },
+        "safeAreaId": { "$ref": "#/$defs/namespacedId" }
+      }
+    },
+    "bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundsId",
+        "role",
+        "shape",
+        "mutableBy",
+        "critical",
+        "pointerPolicy"
+      ],
+      "properties": {
+        "boundsId": { "$ref": "#/$defs/namespacedId" },
+        "role": {
+          "enum": [ "interaction", "layout", "visual", "effect", "label" ]
+        },
+        "shape": { "$ref": "#/$defs/shape" },
+        "mutableBy": {
+          "enum": [ "core", "template", "composition", "skin" ]
+        },
+        "critical": { "type": "boolean" },
+        "pointerPolicy": {
+          "enum": [ "active", "passive", "none" ]
+        },
+        "minimumTarget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "width", "height" ],
+          "properties": {
+            "width": { "type": "number", "minimum": 0 },
+            "height": { "type": "number", "minimum": 0 }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "critical": { "const": true } },
+            "required": [ "critical" ]
+          },
+          "then": {
+            "properties": { "mutableBy": { "const": "core" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "role": { "const": "interaction" } },
+            "required": [ "role" ]
+          },
+          "then": {
+            "properties": {
+              "mutableBy": { "enum": [ "core", "template", "composition" ] },
+              "pointerPolicy": { "enum": [ "active", "passive" ] }
+            }
+          },
+          "else": {
+            "properties": { "pointerPolicy": { "const": "none" } }
+          }
+        }
+      ]
+    },
+    "shape": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "x", "y", "width", "height" ],
+          "properties": {
+            "type": { "const": "rect" },
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 },
+            "radius": { "type": "number", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "cx", "cy", "rx", "ry" ],
+          "properties": {
+            "type": { "const": "ellipse" },
+            "cx": { "type": "number" },
+            "cy": { "type": "number" },
+            "rx": { "type": "number", "exclusiveMinimum": 0 },
+            "ry": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "type", "points" ],
+          "properties": {
+            "type": { "const": "polygon" },
+            "points": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 128,
+              "items": { "$ref": "#/$defs/point" }
+            }
+          }
+        }
+      ]
+    },
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "x", "y" ],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "assetSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slotId",
+        "purpose",
+        "acceptedKinds",
+        "acceptedFormats",
+        "required",
+        "fallbackPolicy"
+      ],
+      "properties": {
+        "slotId": { "$ref": "#/$defs/namespacedId" },
+        "purpose": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "acceptedKinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": [ "image", "vector", "video" ] }
+        },
+        "acceptedFormats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": [ "png", "webp", "svg", "webm", "mp4" ] }
+        },
+        "required": { "type": "boolean" },
+        "fallbackPolicy": {
+          "enum": [ "skin-chain", "template-default", "core-emergency", "none" ]
+        },
+        "boundsId": { "$ref": "#/$defs/namespacedId" },
+        "states": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/symbol" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "required": { "const": true } },
+            "required": [ "required" ]
+          },
+          "then": {
+            "properties": {
+              "fallbackPolicy": {
+                "enum": [ "skin-chain", "template-default", "core-emergency" ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "layerBand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "bandId", "minimum", "maximum", "owner" ],
+      "properties": {
+        "bandId": { "$ref": "#/$defs/symbol" },
+        "minimum": { "type": "integer", "minimum": -1000, "maximum": 1000 },
+        "maximum": { "type": "integer", "minimum": -1000, "maximum": 1000 },
+        "owner": {
+          "enum": [ "environment", "object", "window", "surface", "modal", "emergency" ]
+        }
+      }
+    },
+    "rendererCompatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "rendererRef", "role", "required" ],
+      "properties": {
+        "rendererRef": { "$ref": "#/$defs/versionedRef" },
+        "role": { "$ref": "#/$defs/namespacedId" },
+        "required": { "type": "boolean" }
+      }
+    },
+    "scaleRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "universalScale", "minimum", "maximum", "hierarchy" ],
+      "properties": {
+        "universalScale": { "type": "number", "exclusiveMinimum": 0 },
+        "minimum": { "type": "number", "exclusiveMinimum": 0 },
+        "maximum": { "type": "number", "exclusiveMinimum": 0 },
+        "hierarchy": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/namespacedId" },
+          "additionalProperties": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "autoScale": { "type": "boolean", "default": true }
+      }
+    },
+    "cardinality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "minimum", "maximum" ],
+      "properties": {
+        "minimum": { "type": "integer", "minimum": 0 },
+        "maximum": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}
