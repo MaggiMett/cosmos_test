@@ -11,6 +11,7 @@ from cosmos.runtime.providers import (
 )
 from cosmos.runtime.registry import Registry, RegistryEntry, RegistryStatus
 from cosmos.runtime.tool_adapters import (
+    CommandToolAdapter,
     NativeToolAdapter,
     ServiceToolAdapter,
     ToolAdapter,
@@ -22,6 +23,7 @@ from cosmos.runtime.tool_adapters import (
 from cosmos.runtime.tools import ToolInstance, ToolLifecycleState, ToolRuntime
 
 __all__ = [
+    "CommandToolAdapter",
     "ContextSnapshot",
     "DenyByDefaultPolicy",
     "EventDispatcher",

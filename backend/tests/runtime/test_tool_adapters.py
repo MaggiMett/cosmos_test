@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import pytest
 
 from cosmos.runtime import (
+    CommandToolAdapter,
     NativeToolAdapter,
     RegistryEntry,
     RuntimeContext,
@@ -55,6 +56,18 @@ def test_native_tool_adapter_is_available_and_keeps_lifecycle_external() -> None
 
     assert adapter.runtime_kind is ToolRuntimeKind.NATIVE
     assert adapter.availability_error(definition(), RuntimeContext()) is None
+
+
+def test_command_tool_adapter_requires_the_command_namespace() -> None:
+    adapter = CommandToolAdapter()
+
+    assert adapter.availability_error(definition(entry_point="command:reindex"), RuntimeContext()) is None
+    assert "command:<name>" in str(
+        adapter.availability_error(definition(entry_point="service:reindex"), RuntimeContext())
+    )
+    assert "command:<name>" in str(
+        adapter.availability_error(definition(entry_point="command:"), RuntimeContext())
+    )
 
 
 def test_service_tool_adapter_requires_a_namespaced_entry_point() -> None:

@@ -53,6 +53,27 @@ class NativeToolAdapter:
         pass
 
 
+class CommandToolAdapter:
+    runtime_kind = ToolRuntimeKind.COMMAND
+
+    def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
+        entry_point = definition.entry_point.strip()
+        if not entry_point:
+            return "Command Tool entry point is required."
+        if not entry_point.startswith("command:") or not entry_point.removeprefix("command:").strip():
+            return "Command Tool entry point must use the command:<name> namespace."
+        return None
+
+    def open(self, context: ToolAdapterContext) -> None:
+        pass
+
+    def update(self, context: ToolAdapterContext) -> None:
+        pass
+
+    def close(self, context: ToolAdapterContext) -> None:
+        pass
+
+
 class ServiceToolAdapter:
     runtime_kind = ToolRuntimeKind.SERVICE
 
