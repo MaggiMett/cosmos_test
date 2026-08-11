@@ -76,6 +76,25 @@ def test_enable_restores_extension_discovery(tmp_path: Path) -> None:
     )] == ["example.extension.lifecycle"]
 
 
+def test_unregister_requires_disabled_extension_and_preserves_tool_object(tmp_path: Path) -> None:
+    runtime = CosmosRuntime.build(RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0))
+    runtime.initialize()
+    owner = owner_context()
+    runtime.extensions.register_tool(manifest(), owner)
+
+    with pytest.raises(RuntimeServiceError, match="must be disabled"):
+        runtime.extensions.unregister_tool("example.extension.lifecycle", owner)
+
+    runtime.extensions.disable_tool("example.extension.lifecycle", owner)
+    removed = runtime.extensions.unregister_tool("example.extension.lifecycle", owner)
+
+    assert removed.status is RegistryStatus.DISABLED
+    assert runtime.tools.definitions(owner, required_capabilities=frozenset({"lifecycle-test"})) == []
+    assert runtime.objects.get("example.extension.lifecycle", owner).identity.object_id == "example.extension.lifecycle"
+    with pytest.raises(RuntimeServiceError, match="not found"):
+        runtime.extensions.enable_tool("example.extension.lifecycle", owner)
+
+
 def test_extension_lifecycle_requires_tool_write_permission(tmp_path: Path) -> None:
     runtime = CosmosRuntime.build(RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0))
     runtime.initialize()

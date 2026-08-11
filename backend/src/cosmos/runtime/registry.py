@@ -60,6 +60,13 @@ class Registry:
         self._entries[component_id] = disabled
         return disabled
 
+    def unregister(self, component_id: str) -> RegistryEntry:
+        entry = self.resolve(component_id)
+        if entry.status is not RegistryStatus.DISABLED:
+            raise ValueError(f"Registry component must be disabled before unregister: {component_id}")
+        del self._entries[component_id]
+        return entry
+
     def resolve(self, component_id: str) -> RegistryEntry:
         try:
             return self._entries[component_id]

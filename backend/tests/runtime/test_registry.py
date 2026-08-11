@@ -49,6 +49,21 @@ def test_registry_queries_capability_sets_as_subset_requirements() -> None:
     ) == ()
 
 
+def test_registry_unregister_requires_disabled_component() -> None:
+    registry = Registry()
+    registered = registry.register(entry("cosmos.tool.test"))
+    registry.activate(registered.component_id)
+
+    with pytest.raises(ValueError, match="must be disabled"):
+        registry.unregister(registered.component_id)
+
+    registry.disable(registered.component_id)
+    removed = registry.unregister(registered.component_id)
+    assert removed.status is RegistryStatus.DISABLED
+    with pytest.raises(KeyError):
+        registry.resolve(registered.component_id)
+
+
 def test_registration_and_activation_are_separate() -> None:
     registry = Registry()
 

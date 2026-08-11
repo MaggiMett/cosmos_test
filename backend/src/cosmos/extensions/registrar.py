@@ -53,6 +53,19 @@ class ExtensionRegistrar:
         entry = self._tool_entry(extension_id)
         return self._registry.activate(entry.component_id)
 
+    def unregister_tool(self, extension_id: str, context: RuntimeContext) -> RegistryEntry:
+        require_permission(context.permissions, "tools.write")
+        entry = self._tool_entry(extension_id)
+        if entry.status is not RegistryStatus.DISABLED:
+            raise RuntimeServiceError(
+                "extension_must_be_disabled",
+                f"Tool Extension must be disabled before unregister: {extension_id}",
+            )
+        try:
+            return self._registry.unregister(entry.component_id)
+        except ValueError as error:
+            raise RuntimeServiceError("extension_unregister_failed", str(error)) from error
+
     def _tool_entry(self, extension_id: str) -> RegistryEntry:
         try:
             entry = self._registry.resolve(extension_id)
