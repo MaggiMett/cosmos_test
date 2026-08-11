@@ -50,3 +50,37 @@ def test_repository_web_extension_loads_through_complete_external_tool_pipeline(
 
     assert instance.definition_object_id == "cosmos.example.web-tool"
     assert instance.workspace_session_id == workspace["objectId"]
+
+
+def test_hedgedoc_reference_extension_is_discovered_as_real_external_web_tool(tmp_path: Path) -> None:
+    runtime = CosmosRuntime.build(
+        RuntimeSettings(
+            runtime_path=tmp_path / "Runtime",
+            extensions_path=REPOSITORY_EXTENSIONS,
+            port=0,
+        )
+    )
+    runtime.initialize()
+    context = RuntimeContext(
+        permissions=frozenset({"objects.read", "tools.read", "tools.write", "runtime_state.read", "workspaces.write"})
+    )
+
+    definitions = runtime.tools.definitions(
+        context,
+        required_capabilities=frozenset({"markdown", "collaboration", "web"}),
+    )
+
+    assert [definition["objectId"] for definition in definitions] == ["cosmos.hedgedoc"]
+    definition = definitions[0]
+    assert definition["displayName"] == "HedgeDoc"
+    assert definition["runtimeKind"] == "web"
+    assert definition["entryPoint"] == "http://192.168.50.164:3000/"
+    assert definition["runtimeConfiguration"] == {
+        "sandbox": ["forms", "modals", "popups", "same-origin", "scripts"]
+    }
+
+    workspace = runtime.workspaces.open("cosmos.workspace.creation", "cosmos.room.main", context)
+    instance = runtime.tools.open_workspace_tool("cosmos.hedgedoc", str(workspace["objectId"]), context)
+
+    assert instance.definition_object_id == "cosmos.hedgedoc"
+    assert instance.workspace_session_id == workspace["objectId"]
