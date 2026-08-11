@@ -1,0 +1,17 @@
+{
+  "id": "cosmos.example.web-tool",
+  "display_name": "Cosmos Web Tool Example",
+  "version": "1.0.0",
+  "category": "user-tool",
+  "runtime_api_version": "1",
+  "runtime_kind": "web",
+  "entry_points": {
+    "tool": "https://example.com/"
+  },
+  "capabilities": [
+    "example",
+    "web"
+  ],
+  "permissions": [],
+  "dependencies": []
+}
