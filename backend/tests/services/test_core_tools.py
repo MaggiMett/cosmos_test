@@ -96,6 +96,25 @@ def test_tool_definitions_support_capability_set_selection(active_runtime: Cosmo
     ) == []
 
 
+def test_tool_discovery_excludes_tools_without_granted_manifest_permissions(active_runtime: CosmosRuntime) -> None:
+    limited = RuntimeContext(permissions=frozenset({"tools.read", "tools.write"}))
+
+    assert active_runtime.tools.definitions(limited) == []
+
+
+def test_tool_activation_requires_declared_permissions(active_runtime: CosmosRuntime) -> None:
+    owner = owner_context()
+    session = active_runtime.workspaces.open("cosmos.workspace.creation", "cosmos.room.main", owner)
+    limited = RuntimeContext(
+        permissions=frozenset({"objects.read", "tools.read", "tools.write"})
+    )
+
+    with pytest.raises(RuntimeServiceError, match="resources.read"):
+        active_runtime.tools.open_workspace_tool(
+            "cosmos.tool.files", str(session["objectId"]), limited
+        )
+
+
 def test_disabled_tools_are_excluded_from_definition_selection(active_runtime: CosmosRuntime) -> None:
     active_runtime.registry.disable("cosmos.tool.files")
 

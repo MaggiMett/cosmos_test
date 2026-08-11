@@ -71,6 +71,25 @@ def test_tool_manifest_rejects_runtime_entry_point_mismatch() -> None:
         )
 
 
+def test_tool_manifest_preserves_declared_capabilities_and_permissions() -> None:
+    manifest = ExtensionManifest.from_mapping(
+        {
+            "id": "cosmos.tool.example",
+            "display_name": "Example",
+            "version": "1.0.0",
+            "category": "user-tool",
+            "runtime_api_version": "1",
+            "runtime_kind": "service",
+            "entry_points": {"tool": "service:search"},
+            "capabilities": ["search", "preview"],
+            "permissions": ["knowledge.read", "resources.read"],
+        }
+    )
+
+    assert manifest.capabilities == frozenset({"search", "preview"})
+    assert manifest.permissions == frozenset({"knowledge.read", "resources.read"})
+
+
 def test_manifest_rejects_unsupported_runtime_kind() -> None:
     with pytest.raises(ManifestValidationError, match="runtime kind"):
         ExtensionManifest.from_mapping(

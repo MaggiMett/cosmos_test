@@ -34,6 +34,18 @@ def owner_context() -> RuntimeContext:
                 "tags.write",
                 "notifications.read",
                 "notifications.write",
+                "resources.read",
+                "resources.write",
+                "knowledge.read",
+                "knowledge.write",
+                "drafts.read",
+                "drafts.write",
+                "reviews.read",
+                "reviews.write",
+                "jobs.read",
+                "jobs.write",
+                "journeyman.read",
+                "journeyman.write",
             }
         )
     )

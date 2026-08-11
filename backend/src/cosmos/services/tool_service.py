@@ -74,6 +74,12 @@ class ToolService:
         availability_error = adapter.availability_error(registry_entry, context)
         if availability_error is not None:
             raise RuntimeServiceError("tool_unavailable", availability_error)
+        missing_permissions = registry_entry.permissions - context.permissions
+        if missing_permissions:
+            raise RuntimeServiceError(
+                "tool_permission_denied",
+                "Tool requires permissions that are not granted: " + ", ".join(sorted(missing_permissions)),
+            )
         object_id = instance_id or f"cosmos.tool-instance.{uuid4()}"
         tool_context = replace(
             context,
@@ -104,6 +110,7 @@ class ToolService:
             capabilities=required_capabilities or None,
             status=RegistryStatus.ACTIVE,
         )
+        entries = tuple(entry for entry in entries if entry.permissions.issubset(context.permissions))
         definitions: list[dict[str, JSONValue]] = []
         for entry in entries:
             if entry.object_id is None:
