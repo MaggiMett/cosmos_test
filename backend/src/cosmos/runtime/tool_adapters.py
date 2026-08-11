@@ -53,6 +53,27 @@ class NativeToolAdapter:
         pass
 
 
+class DesktopToolAdapter:
+    runtime_kind = ToolRuntimeKind.DESKTOP
+
+    def availability_error(self, definition: RegistryEntry, context: RuntimeContext) -> str | None:
+        entry_point = definition.entry_point.strip()
+        if not entry_point:
+            return "Desktop Tool entry point is required."
+        if not entry_point.startswith("desktop:") or not entry_point.removeprefix("desktop:").strip():
+            return "Desktop Tool entry point must use the desktop:<application> namespace."
+        return None
+
+    def open(self, context: ToolAdapterContext) -> None:
+        pass
+
+    def update(self, context: ToolAdapterContext) -> None:
+        pass
+
+    def close(self, context: ToolAdapterContext) -> None:
+        pass
+
+
 class CommandToolAdapter:
     runtime_kind = ToolRuntimeKind.COMMAND
 

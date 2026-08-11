@@ -18,6 +18,7 @@ from cosmos.persistence import (
 )
 from cosmos.runtime import (
     CommandToolAdapter,
+    DesktopToolAdapter,
     EventDispatcher,
     NativeToolAdapter,
     ProviderRuntime,
@@ -143,6 +144,7 @@ class CosmosRuntime:
         tool_adapters.register(WebToolAdapter())
         tool_adapters.register(ServiceToolAdapter())
         tool_adapters.register(CommandToolAdapter())
+        tool_adapters.register(DesktopToolAdapter())
         tools = ToolService(objects, ToolRuntime(objects.contract), events, registry, tool_adapters)
         workspaces = WorkspaceService(objects, runtime_state, tools, events)
         jobs = JobService(JobRepository(persistence), events)

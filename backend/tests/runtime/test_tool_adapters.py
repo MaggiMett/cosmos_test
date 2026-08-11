@@ -4,6 +4,7 @@ import pytest
 
 from cosmos.runtime import (
     CommandToolAdapter,
+    DesktopToolAdapter,
     NativeToolAdapter,
     RegistryEntry,
     RuntimeContext,
@@ -56,6 +57,18 @@ def test_native_tool_adapter_is_available_and_keeps_lifecycle_external() -> None
 
     assert adapter.runtime_kind is ToolRuntimeKind.NATIVE
     assert adapter.availability_error(definition(), RuntimeContext()) is None
+
+
+def test_desktop_tool_adapter_requires_the_desktop_namespace() -> None:
+    adapter = DesktopToolAdapter()
+
+    assert adapter.availability_error(definition(entry_point="desktop:photos"), RuntimeContext()) is None
+    assert "desktop:<application>" in str(
+        adapter.availability_error(definition(entry_point="command:photos"), RuntimeContext())
+    )
+    assert "desktop:<application>" in str(
+        adapter.availability_error(definition(entry_point="desktop:"), RuntimeContext())
+    )
 
 
 def test_command_tool_adapter_requires_the_command_namespace() -> None:
