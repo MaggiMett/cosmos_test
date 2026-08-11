@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from cosmos.domain import ObjectIdentity
 from cosmos.extensions.manifests import ExtensionCategory, ExtensionManifest
 from cosmos.runtime import Registry, RegistryEntry, RegistryStatus, RuntimeContext
-from cosmos.services.errors import RuntimeServiceError
+from cosmos.services.errors import RuntimeServiceError, require_permission
 from cosmos.services.object_service import CreateObjectCommand, ObjectService
 
 
@@ -42,6 +42,27 @@ class ExtensionRegistrar:
         except ValueError as error:
             raise RuntimeServiceError("extension_already_registered", str(error)) from error
         return self._registry.activate(entry.component_id)
+
+    def disable_tool(self, extension_id: str, context: RuntimeContext) -> RegistryEntry:
+        require_permission(context.permissions, "tools.write")
+        entry = self._tool_entry(extension_id)
+        return self._registry.disable(entry.component_id)
+
+    def enable_tool(self, extension_id: str, context: RuntimeContext) -> RegistryEntry:
+        require_permission(context.permissions, "tools.write")
+        entry = self._tool_entry(extension_id)
+        return self._registry.activate(entry.component_id)
+
+    def _tool_entry(self, extension_id: str) -> RegistryEntry:
+        try:
+            entry = self._registry.resolve(extension_id)
+        except KeyError as error:
+            raise RuntimeServiceError(
+                "extension_not_found", f"Tool Extension not found: {extension_id}"
+            ) from error
+        if entry.category != "tool" or entry.source_extension_id != extension_id:
+            raise RuntimeServiceError("extension_not_found", f"Tool Extension not found: {extension_id}")
+        return entry
 
     def _ensure_tool_object(
         self, manifest: ExtensionManifest, entry_point: str, context: RuntimeContext
