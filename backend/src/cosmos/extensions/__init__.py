@@ -6,6 +6,7 @@ from cosmos.extensions.manifests import (
     ManifestValidationError,
 )
 from cosmos.extensions.registrar import ExtensionRegistrar
+from cosmos.extensions.validation import ExtensionValidationResult, ExtensionValidator
 
 __all__ = [
     "ExtensionCategory",
@@ -14,5 +15,7 @@ __all__ = [
     "ExtensionManifest",
     "ExtensionRegistrar",
     "ExtensionRuntimeKind",
+    "ExtensionValidationResult",
+    "ExtensionValidator",
     "ManifestValidationError",
 ]
