@@ -107,27 +107,16 @@ describe("Base Room Runtime visual slice", () => {
     expect(room).toContain("placementClass(slot.placement)");
   });
 
-  it("uses real Workspace summaries in the existing Knowledge and Capture windows", () => {
+  it("keeps fixed Workspaces in the Room scene instead of duplicating them as dashboard windows", () => {
     const view = sourceFor("./BaseRuntimeView.vue");
-    const knowledge = sourceFor("./components/BaseKnowledgeWindow.vue");
-    const capture = sourceFor("./components/BaseCaptureWindow.vue");
+    const room = sourceFor("./components/BaseRoomScene.vue");
 
-    expect(knowledge).toContain("workspace.displayName");
-    expect(knowledge).toContain("workspace.sourceProjectId");
-    expect(knowledge).toContain("Knowledge Workspace unavailable");
-    expect(capture).toContain("workspace.displayName");
-    expect(capture).toContain("workspace.sourceProjectId");
-    expect(capture).toContain("Creation Workspace unavailable");
-    expect(view.match(/v-if="!backgroundOnly && presentation\.room\.slug === 'main'"/g)).toHaveLength(2);
-    for (const fixture of [
-      "Orbital Architecture",
-      "Recent Research",
-      "Habitat Materials",
-      "Celestial Mechanics",
-      "Material Study 07",
-    ]) {
-      expect(`${knowledge}\n${capture}`).not.toContain(fixture);
-    }
+    expect(room).toContain('v-for="slot in room.workspaceSlots"');
+    expect(room).toContain("@click=\"$emit('open-workspace', slot)\"");
+    expect(view).not.toContain("<BaseKnowledgeWindow");
+    expect(view).not.toContain("<BaseCaptureWindow");
+    expect(view).not.toContain("base-runtime-view__knowledge");
+    expect(view).not.toContain("base-runtime-view__capture");
   });
 
   it("uses only existing Router and Runtime interaction paths and remains asset-free", () => {
