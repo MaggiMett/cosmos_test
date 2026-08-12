@@ -2,7 +2,10 @@
   <section
     ref="viewportElement"
     class="cosmos-global-view environment-view"
-    :class="{ 'cosmos-global-view--interacting': isPanning }"
+    :class="{
+      'cosmos-global-view--interacting': isPanning,
+      'cosmos-global-view--background': backgroundOnly,
+    }"
     aria-label="Global Cosmos View"
     data-testid="cosmos-global-view"
     @pointerdown="startPan"
@@ -100,9 +103,13 @@ import { loadGlobalCosmosSnapshot, projectGlobalCosmosState } from "./globalCosm
 
 const runtime = useCosmosRuntime();
 const router = useRouter();
-const props = withDefaults(defineProps<{ navigationScope?: CosmosNavigationScope }>(), {
-  navigationScope: "development",
-});
+const props = withDefaults(
+  defineProps<{ navigationScope?: CosmosNavigationScope; backgroundOnly?: boolean }>(),
+  {
+    navigationScope: "development",
+    backgroundOnly: false,
+  },
+);
 const mapState = runtime.cosmosMap.state;
 const quickTravelOpen = ref(false);
 const companionWindowHost = ref<InstanceType<typeof CompanionWindowHost> | null>(null);
@@ -205,6 +212,16 @@ onMounted(() => {
 
 .cosmos-global-view--interacting {
   cursor: grabbing;
+}
+
+.cosmos-global-view--background {
+  pointer-events: none;
+}
+
+.cosmos-global-view--background :deep(.global-cosmos-chrome),
+.cosmos-global-view--background :deep(.global-cosmos-controls),
+.cosmos-global-view--background :deep(.cosmos-quick-travel) {
+  display: none;
 }
 
 .cosmos-global-view::after {

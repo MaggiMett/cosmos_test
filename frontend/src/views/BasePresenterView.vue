@@ -4,18 +4,21 @@
     :background-only="backgroundOnly"
     data-base-presenter="legacy"
   />
-  <BaseRuntimeView
-    v-else
-    navigation-scope="production"
-    :background-only="backgroundOnly"
-    data-base-presenter="new"
-  />
+  <template v-else>
+    <CosmosPresenterView background-only />
+    <BaseRuntimeView
+      navigation-scope="production"
+      :background-only="backgroundOnly"
+      data-base-presenter="new"
+    />
+  </template>
 </template>
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from "vue";
 
 import { configuredBasePresenter, type BasePresenter } from "./basePresenter";
+import CosmosPresenterView from "./CosmosPresenterView.vue";
 
 const LegacyBaseView = defineAsyncComponent(() => import("./BaseView.vue"));
 const BaseRuntimeView = defineAsyncComponent(

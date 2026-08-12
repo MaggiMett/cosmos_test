@@ -2,7 +2,10 @@
   <section
     ref="viewportElement"
     class="cosmos-project-view environment-view"
-    :class="{ 'cosmos-project-view--interacting': isPanning || nodeMove !== null }"
+    :class="{
+      'cosmos-project-view--interacting': isPanning || nodeMove !== null,
+      'cosmos-project-view--background': backgroundOnly,
+    }"
     :aria-label="`${presentation.projectName} Project Cosmos`"
     data-testid="cosmos-project-view"
     @pointerdown="startPan"
@@ -126,9 +129,13 @@ import {
 const runtime = useCosmosRuntime();
 const route = useRoute();
 const router = useRouter();
-const props = withDefaults(defineProps<{ navigationScope?: CosmosNavigationScope }>(), {
-  navigationScope: "development",
-});
+const props = withDefaults(
+  defineProps<{ navigationScope?: CosmosNavigationScope; backgroundOnly?: boolean }>(),
+  {
+    navigationScope: "development",
+    backgroundOnly: false,
+  },
+);
 const mapState = runtime.cosmosMap.state;
 const requestedProjectId = computed(() => projectIdFromQuery(route.query.projectId));
 const presentation = computed(() =>
@@ -319,6 +326,16 @@ onMounted(() => {
 
 .cosmos-project-view--interacting {
   cursor: grabbing;
+}
+
+.cosmos-project-view--background {
+  pointer-events: none;
+}
+
+.cosmos-project-view--background :deep(.project-cosmos-chrome),
+.cosmos-project-view--background :deep(.project-cosmos-controls),
+.cosmos-project-view--background :deep(.cosmos-quick-travel) {
+  display: none;
 }
 
 .cosmos-project-view__world {

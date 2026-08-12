@@ -1,13 +1,25 @@
 <template>
-  <LegacyCosmosView v-if="presenter === 'legacy'" data-cosmos-presenter="legacy" />
+  <LegacyCosmosView
+    v-if="presenter === 'legacy'"
+    :background-only="backgroundOnly"
+    :inert="backgroundOnly || undefined"
+    :aria-hidden="backgroundOnly ? 'true' : undefined"
+    data-cosmos-presenter="legacy"
+  />
   <CosmosProjectView
     v-else-if="projectId"
     navigation-scope="production"
+    :background-only="backgroundOnly"
+    :inert="backgroundOnly || undefined"
+    :aria-hidden="backgroundOnly ? 'true' : undefined"
     data-cosmos-presenter="new"
   />
   <CosmosGlobalView
     v-else
     navigation-scope="production"
+    :background-only="backgroundOnly"
+    :inert="backgroundOnly || undefined"
+    :aria-hidden="backgroundOnly ? 'true' : undefined"
     data-cosmos-presenter="new"
   />
 </template>
@@ -27,9 +39,13 @@ const CosmosProjectView = defineAsyncComponent(
   () => import("../dev/cosmos-project/CosmosProjectView.vue"),
 );
 
-const props = withDefaults(defineProps<{ presenter?: CosmosPresenter }>(), {
-  presenter: configuredCosmosPresenter,
-});
+const props = withDefaults(
+  defineProps<{ presenter?: CosmosPresenter; backgroundOnly?: boolean }>(),
+  {
+    presenter: configuredCosmosPresenter,
+    backgroundOnly: false,
+  },
+);
 const route = useRoute();
 const projectId = computed(() => projectIdFromQuery(route.query.projectId));
 const presenter = computed(() => props.presenter);
