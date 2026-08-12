@@ -166,20 +166,15 @@ describe("Base Room Runtime visual slice", () => {
     expect(diagnostics).not.toContain("fetch(");
   });
 
-  it("uses Composition by default and keeps the previous presenter as explicit rollback", () => {
+  it("uses Composition as the Base room renderer with safe scene fallback", () => {
     const view = sourceFor("./BaseRuntimeView.vue");
-    const switchSource = readFileSync(
-      fileURLToPath(new URL("./baseRoomRenderer.ts", import.meta.url)),
-      "utf8",
-    );
     const gate = readFileSync(
       fileURLToPath(new URL("./baseRoomCompositionPresenter.ts", import.meta.url)),
       "utf8",
     );
 
-    expect(switchSource).toContain('value === "presenter" ? "presenter" : "composition"');
-    expect(switchSource).toContain("VITE_BASE_ROOM_RENDERER");
-    expect(view).toContain("configuredBaseRoomRenderer");
+    expect(view).not.toContain("configuredBaseRoomRenderer");
+    expect(view).not.toContain("VITE_BASE_ROOM_RENDERER");
     expect(view).toContain("resolveBaseRoomCompositionPresenter(");
     expect(view).toContain("compositionResult.value?.status === \"active\"");
     expect(view).toContain("<RoomCompositionRuntimeScene");
@@ -197,16 +192,10 @@ describe("Base Room Runtime visual slice", () => {
       fileURLToPath(new URL("./baseThemeVisuals.ts", import.meta.url)),
       "utf8",
     );
-    const roomSwitch = readFileSync(
-      fileURLToPath(new URL("./baseRoomRenderer.ts", import.meta.url)),
-      "utf8",
-    );
-
     expect(switchSource).toContain('value === "core" ? "core" : "theme"');
     expect(switchSource).toContain("VITE_BASE_THEME_VISUALS");
     expect(switchSource).not.toContain("VITE_BASE_ROOM_RENDERER");
     expect(switchSource).not.toContain("VITE_BASE_PRESENTER");
-    expect(roomSwitch).not.toContain("VITE_BASE_THEME_VISUALS");
     expect(view).toContain("themeVisuals: configuredBaseThemeVisuals");
     expect(view).toContain("loadBaseRoomThemePresentation({");
     expect(view).toContain(':theme-presentation="themePresentation"');

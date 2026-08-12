@@ -14,7 +14,6 @@ import {
 import {
   projectRoomCompositionForShadowRender,
 } from "../room-composition-preview/roomCompositionRenderProjection";
-import { resolveBaseRoomRenderer } from "./baseRoomRenderer";
 import { projectBaseRuntimeState } from "./baseRuntimeProjection";
 import {
   compareBaseRoomVisualParity,
@@ -179,12 +178,6 @@ describe("Room Composition visual acceptance and default readiness", () => {
     expect(result.blockers).toEqual([]);
   });
 
-  it("keeps the Room renderer rollback explicit and functional", () => {
-    expect(resolveBaseRoomRenderer(undefined)).toBe("composition");
-    expect(resolveBaseRoomRenderer("presenter")).toBe("presenter");
-    expect(resolveBaseRoomRenderer("composition")).toBe("composition");
-    expect(resolveBaseRoomRenderer("unexpected")).toBe("composition");
-  });
 });
 
 function visualInput(

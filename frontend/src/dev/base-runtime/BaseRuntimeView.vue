@@ -4,7 +4,7 @@
     :aria-label="viewLabel"
     :aria-hidden="backgroundOnly ? 'true' : undefined"
     :inert="backgroundOnly || undefined"
-    :data-room-renderer="compositionActive ? 'composition' : 'presenter'"
+    :data-room-renderer="compositionActive ? 'composition' : 'fallback'"
     :data-room-renderer-fallback="compositionFallbackReason"
     :data-theme-visuals="themePresentation ? 'theme' : 'core'"
     :data-theme-visuals-fallback="themePresentationFallbackReason"
@@ -83,10 +83,6 @@ import BaseRoomScene from "./components/BaseRoomScene.vue";
 import BaseRuntimeChrome from "./components/BaseRuntimeChrome.vue";
 import RoomCompositionRuntimeScene from "./components/RoomCompositionRuntimeScene.vue";
 import {
-  configuredBaseRoomRenderer,
-  type BaseRoomRenderer,
-} from "./baseRoomRenderer";
-import {
   resolveBaseRoomCompositionPresenter,
   type BaseRoomCompositionFallbackReason,
 } from "./baseRoomCompositionPresenter";
@@ -119,12 +115,10 @@ import { scheduleBaseRoomShadowDiagnostics } from "./baseRoomShadowDiagnostics";
 const props = withDefaults(defineProps<{
   navigationScope?: BaseNavigationScope;
   backgroundOnly?: boolean;
-  roomRenderer?: BaseRoomRenderer;
   themeVisuals?: BaseThemeVisuals;
 }>(), {
   navigationScope: "development",
   backgroundOnly: false,
-  roomRenderer: configuredBaseRoomRenderer,
   themeVisuals: configuredBaseThemeVisuals,
 });
 
@@ -161,9 +155,7 @@ const presentation = computed(() =>
 const compositionResult = computed(() => {
   const state = presentation.value;
   const snapshot = baseState.snapshot;
-  if (props.roomRenderer !== "composition" || state.phase !== "success" || !snapshot) {
-    return null;
-  }
+  if (state.phase !== "success" || !snapshot) return null;
   return resolveBaseRoomCompositionPresenter(
     true,
     snapshot,
@@ -174,7 +166,7 @@ const compositionActive = computed(
   () => compositionResult.value?.status === "active",
 );
 const compositionFallbackReason = computed(() =>
-  props.roomRenderer === "composition" && compositionResult.value?.status === "fallback"
+  compositionResult.value?.status === "fallback"
     ? compositionResult.value.reason
     : undefined,
 );

@@ -10,18 +10,7 @@ const environmentSource = source("./EnvironmentView.ts");
 const newSource = source("../dev/base-runtime/BaseRuntimeView.vue");
 const roomSource = source("../dev/base-runtime/components/BaseRoomScene.vue");
 const workspaceSource = source("./WorkspaceView.vue");
-const roomRendererSource = source("../dev/base-runtime/baseRoomRenderer.ts");
-
-describe("controlled Base presenter rollout", () => {
-  it("keeps the Room renderer switch isolated from the production Base presenter", () => {
-    expect(roomRendererSource).toContain("VITE_BASE_ROOM_RENDERER");
-    expect(roomRendererSource).not.toContain("VITE_BASE_PRESENTER");
-    expect(roomRendererSource).toContain(
-      'value === "presenter" ? "presenter" : "composition"',
-    );
-    expect(presenterSource).not.toContain("configuredBaseRoomRenderer");
-  });
-
+describe("Base production presenter", () => {
   it("compiles a narrow production wrapper around the promoted Base presenter", () => {
     const descriptor = parse(presenterSource, { filename: presenterPath }).descriptor;
     compileScript(descriptor, { id: "base-presenter" });

@@ -11,21 +11,7 @@ import { createRoomCompositionInteractionDiagnostics } from "../room-composition
 import {
   resolveBaseRoomCompositionPresenter,
 } from "./baseRoomCompositionPresenter";
-import {
-  configuredBaseRoomRenderer,
-  resolveBaseRoomRenderer,
-} from "./baseRoomRenderer";
-
-describe("controlled productive Room Composition renderer gate", () => {
-  it("promotes Composition by default and keeps presenter as the exact rollback", () => {
-    expect(resolveBaseRoomRenderer(undefined)).toBe("composition");
-    expect(resolveBaseRoomRenderer("presenter")).toBe("presenter");
-    expect(resolveBaseRoomRenderer("unexpected")).toBe("composition");
-    expect(resolveBaseRoomRenderer("COMPOSITION")).toBe("composition");
-    expect(resolveBaseRoomRenderer("composition")).toBe("composition");
-    expect(configuredBaseRoomRenderer).toBe("composition");
-  });
-
+describe("productive Room Composition renderer gate", () => {
   it("keeps the previous presenter renderer when Composition is disabled", () => {
     expect(resolveBaseRoomCompositionPresenter(
       false,
