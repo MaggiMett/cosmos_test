@@ -21,10 +21,7 @@
         class="workspace-environment__header"
         @contextmenu.prevent="openWorkspaceContextMenu"
       >
-        <span class="workspace-environment__identity">
-          <i aria-hidden="true" />
-          <strong>{{ session.definition.displayName }}</strong>
-        </span>
+        <strong class="workspace-environment__identity">{{ session.definition.displayName }}</strong>
         <button type="button" aria-label="Close Workspace" title="Close" @click="closeWorkspace">
           <span aria-hidden="true">×</span>
         </button>
@@ -296,10 +293,12 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
     linear-gradient(180deg, rgba(24, 36, 47, 0.88), rgba(11, 20, 28, 0.82));
 }
 
-.workspace-environment__identity { display: flex; align-items: center; gap: 10px; }
-.workspace-environment__identity > i { width: 8px; height: 8px; transform: rotate(45deg); border: 1px solid color-mix(in srgb, var(--workspace-accent) 78%, white); background: color-mix(in srgb, var(--workspace-accent) 72%, #071018); box-shadow: 0 0 12px color-mix(in srgb, var(--workspace-accent) 54%, transparent); }
-.workspace-environment__identity > span { display: grid; gap: 1px; }
-.workspace-environment__identity strong { color: var(--cosmos-color-text); font-size: 0.77rem; font-weight: 560; letter-spacing: 0.035em; }
+.workspace-environment__identity {
+  color: var(--cosmos-color-text);
+  font-size: 0.77rem;
+  font-weight: 560;
+  letter-spacing: 0.035em;
+}
 
 .workspace-environment__header > button {
   display: grid;
