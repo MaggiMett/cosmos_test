@@ -38,8 +38,7 @@
           <i v-for="index in 9" :key="index" :style="overlayMark(index)" />
         </div>
 
-        <nav class="tool-area" aria-label="Tool Area">
-          <span class="tool-area__label">Tools</span>
+        <nav class="tool-area" aria-label="Tools">
           <button
             v-for="tool in availableTools"
             :key="tool.objectId"
@@ -383,7 +382,6 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
   backdrop-filter: blur(14px);
   gap: 5px;
 }
-.tool-area__label { padding: 0 7px; color: var(--cosmos-color-faint); font-size: 0.49rem; letter-spacing: 0.18em; text-transform: uppercase; }
 .tool-area button { display: flex; min-height: 30px; padding: 3px 8px 3px 5px; align-items: center; border: 1px solid transparent; border-radius: 4px; background: transparent; color: #d7e5eb; cursor: pointer; gap: 6px; }
 .tool-area button:hover,
 .tool-area button:focus-visible { border-color: color-mix(in srgb, var(--workspace-accent) 28%, transparent); background: color-mix(in srgb, var(--workspace-accent) 8%, transparent); outline: 0; }
