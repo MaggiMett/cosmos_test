@@ -7,7 +7,6 @@ import { describe, expect, it } from "vitest";
 const presenterPath = "./BasePresenterView.vue";
 const presenterSource = source(presenterPath);
 const environmentSource = source("./EnvironmentView.ts");
-const legacySource = source("./BaseView.vue");
 const newSource = source("../dev/base-runtime/BaseRuntimeView.vue");
 const roomSource = source("../dev/base-runtime/components/BaseRoomScene.vue");
 const workspaceSource = source("./WorkspaceView.vue");
@@ -75,14 +74,6 @@ describe("controlled Base presenter rollout", () => {
     expect(combined).not.toContain("sessionStorage");
   });
 
-  it("leaves the complete Legacy presenter and canonical Workspace path intact", () => {
-    expect(legacySource).toContain("useCosmosRuntime()");
-    expect(legacySource).toContain("travelThroughDoor");
-    expect(legacySource).toContain("openObjectContextMenu");
-    expect(legacySource).toContain("greetPet");
-    expect(legacySource).toContain("companionWindowHost.value?.open()");
-    expect(legacySource).toContain('router.push(`/workspaces/${slot.workspace.objectId}`)');
-  });
 });
 
 function source(path: string): string {

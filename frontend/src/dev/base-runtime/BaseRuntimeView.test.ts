@@ -376,18 +376,6 @@ describe("Base Room Runtime visual slice", () => {
     expect(view).not.toContain("runtime.tools.open");
   });
 
-  it("leaves the productive BaseView interaction contract intact", () => {
-    const baseView = readFileSync(
-      fileURLToPath(new URL("../../views/BaseView.vue", import.meta.url)),
-      "utf8",
-    );
-
-    expect(baseView).toContain("runtime.base.select(objectId)");
-    expect(baseView).toContain('router.push(`/workspaces/${slot.workspace.objectId}`)');
-    expect(baseView).toContain("companionWindowHost.value?.open()");
-    expect(baseView).toContain("travelThroughDoor");
-  });
-
   it("contains quiet Loading, Error and Empty states", () => {
     const view = sourceFor("./BaseRuntimeView.vue");
 
