@@ -54,7 +54,7 @@ describe("Base Room Runtime visual slice", () => {
     expect(view).toContain(':current-location="presentation.currentLocation"');
     expect(view).toContain(':right-neighbor="rightNeighbor"');
     expect(view).toContain("presentation.room.companion");
-    expect(chrome).toContain("Local · Synced");
+    expect(chrome).not.toContain("Local · Synced");
     expect(chrome).toContain("roomStatus");
     expect(chrome).toContain("Companion unavailable");
     expect(chrome).toContain(':disabled="!companion"');

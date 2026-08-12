@@ -28,9 +28,8 @@
       @travel="$emit('travel-room', $event)"
     />
 
-    <div class="base-runtime-chrome__status" aria-label="Runtime status">
-      <span><i class="base-runtime-chrome__dot base-runtime-chrome__dot--synced" />Local · Synced</span>
-      <span><i class="base-runtime-chrome__dot" />{{ roomStatus }}</span>
+    <div class="base-runtime-chrome__status" aria-label="Room controls">
+      <span class="base-runtime-chrome__room-status">{{ roomStatus }}</span>
       <button
         v-if="!sceneOwnsFunctionControls"
         type="button"
@@ -156,17 +155,9 @@ const companionLabel = computed(() =>
   backdrop-filter: blur(12px);
 }
 
-.base-runtime-chrome__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #6aa8d8;
-  box-shadow: 0 0 8px rgba(106, 168, 216, 0.45);
-}
-
-.base-runtime-chrome__dot--synced {
-  background: var(--cosmos-color-green);
-  box-shadow: 0 0 8px rgba(117, 207, 169, 0.45);
+.base-runtime-chrome__room-status {
+  color: var(--cosmos-color-text-muted);
+  white-space: nowrap;
 }
 
 .base-runtime-chrome__status button {
