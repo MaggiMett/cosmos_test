@@ -103,7 +103,8 @@ describe("Base Room Runtime visual slice", () => {
     expect(room).toContain(':pet="room.pet"');
     expect(room).toContain("<button");
     expect(room).toContain("@click=\"door.targetRoomId && $emit('travel-room', door.targetRoomId)\"");
-    expect(room).toContain("@click=\"$emit('open-workspace', slot)\"");
+    expect(room).toContain("@click=\"slot.occupied && $emit('open-workspace', slot)\"");
+    expect(room).toContain(':disabled="!slot.occupied"');
     expect(room).toContain(':aria-pressed="selectedObjectId === slot.slotObjectId"');
     expect(room).toContain("placementClass(slot.placement)");
   });
@@ -113,7 +114,8 @@ describe("Base Room Runtime visual slice", () => {
     const room = sourceFor("./components/BaseRoomScene.vue");
 
     expect(room).toContain('v-for="slot in room.workspaceSlots"');
-    expect(room).toContain("@click=\"$emit('open-workspace', slot)\"");
+    expect(room).toContain("@click=\"slot.occupied && $emit('open-workspace', slot)\"");
+    expect(room).toContain(':disabled="!slot.occupied"');
     expect(view).not.toContain("<BaseKnowledgeWindow");
     expect(view).not.toContain("<BaseCaptureWindow");
     expect(view).not.toContain("base-runtime-view__knowledge");
@@ -321,7 +323,7 @@ describe("Base Room Runtime visual slice", () => {
     expect(pet).not.toContain("runtime.");
   });
 
-  it("retains Legacy retry, return-to-Cosmos and selected empty-Slot feedback", () => {
+  it("retains retry and return-to-Cosmos while keeping empty Workspace slots passive", () => {
     const view = sourceFor("./BaseRuntimeView.vue");
     const room = sourceFor("./components/BaseRoomScene.vue");
     const chrome = sourceFor("./components/BaseRuntimeChrome.vue");
@@ -330,8 +332,9 @@ describe("Base Room Runtime visual slice", () => {
     expect(view).toContain('@click="loadBase"');
     expect(view).toContain('@close-base="closeBase"');
     expect(chrome).toContain('aria-label="Return to Cosmos"');
-    expect(room).toContain("selectedSlot");
-    expect(room).toContain("Available for a future Workspace");
+    expect(room).toContain(':disabled="!slot.occupied"');
+    expect(room).toContain("Available workspace slot");
+    expect(room).not.toContain("Opening Workspace");
   });
 
   it("keeps keyboard activation native and visually distinguishes focus", () => {
