@@ -103,6 +103,8 @@ describe("Base Room Runtime visual slice", () => {
     expect(room).toContain(':pet="room.pet"');
     expect(room).toContain("<button");
     expect(room).toContain("@click=\"door.targetRoomId && $emit('travel-room', door.targetRoomId)\"");
+    expect(room).toContain('class="base-room-scene__door-label"');
+    expect(room).toContain("{{ door.targetRoomName }}");
     expect(room).toContain("@click=\"slot.occupied && $emit('open-workspace', slot)\"");
     expect(room).toContain(':disabled="!slot.occupied"');
     expect(room).toContain(':aria-pressed="selectedObjectId === slot.slotObjectId"');

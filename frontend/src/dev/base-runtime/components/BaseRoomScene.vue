@@ -39,7 +39,10 @@
       :data-target-room-id="door.targetRoomId"
       :disabled="!door.targetRoomId"
       @click="door.targetRoomId && $emit('travel-room', door.targetRoomId)"
-    ><span /></button>
+    >
+      <span aria-hidden="true" />
+      <strong v-if="door.targetRoomId" class="base-room-scene__door-label">{{ door.targetRoomName }}</strong>
+    </button>
 
     <button
       v-for="slot in room.workspaceSlots"
@@ -278,7 +281,19 @@ function placementClass(placement: string) {
   cursor: pointer;
 }
 
-.base-room-scene__door:disabled { cursor: default; }
+.base-room-scene__door:disabled {
+  cursor: default;
+  opacity: 0.46;
+}
+
+.base-room-scene__door:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--cosmos-color-accent) 38%, rgba(210, 181, 146, 0.12));
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.58),
+    0 0 0 5px rgba(28, 28, 27, 0.8),
+    0 0 24px color-mix(in srgb, var(--cosmos-color-accent) 12%, transparent);
+}
+
 .base-room-scene__door:focus-visible,
 .base-room-scene__workspace:focus-visible {
   outline: 2px solid var(--cosmos-color-accent);
@@ -301,6 +316,29 @@ function placementClass(placement: string) {
 
 .base-room-scene__door--left span { right: 17px; }
 .base-room-scene__door--right span { left: 17px; }
+
+.base-room-scene__door-label {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  max-width: 110px;
+  transform: translateX(-50%);
+  color: rgba(224, 218, 207, 0.72);
+  font-size: 0.5rem;
+  font-weight: 560;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 7px #050607;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  pointer-events: none;
+}
+
+.base-room-scene__door:not(:disabled):hover .base-room-scene__door-label,
+.base-room-scene__door:focus-visible .base-room-scene__door-label {
+  opacity: 1;
+}
 
 .base-room-scene__workspace {
   position: absolute;
