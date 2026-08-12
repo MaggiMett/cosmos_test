@@ -31,10 +31,6 @@
       </header>
 
       <div class="workspace-canvas" aria-label="Workspace Canvas">
-        <div class="workspace-canvas__overlay" aria-hidden="true">
-          <i v-for="index in 9" :key="index" :style="overlayMark(index)" />
-        </div>
-
         <nav class="tool-area" aria-label="Tools">
           <button
             v-for="tool in availableTools"
@@ -233,14 +229,6 @@ function workspaceBounds() {
   };
 }
 
-function overlayMark(index: number) {
-  return {
-    left: `${8 + ((index * 29) % 84)}%`,
-    top: `${10 + ((index * 37) % 76)}%`,
-    opacity: 0.05 + (index % 3) * 0.025,
-  };
-}
-
 onMounted(() => {
   window.addEventListener("keydown", onKeyDown);
   void openWorkspace();
@@ -358,8 +346,6 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
   content: "";
   pointer-events: none;
 }
-.workspace-canvas__overlay { position: absolute; inset: 0; pointer-events: none; }
-.workspace-canvas__overlay i { position: absolute; width: 190px; height: 116px; border: 1px solid var(--workspace-accent); border-color: color-mix(in srgb, var(--workspace-accent) 58%, transparent) transparent; border-radius: 50%; transform: translate(-50%, -50%) rotate(-12deg); }
 
 .tool-area {
   position: absolute;
