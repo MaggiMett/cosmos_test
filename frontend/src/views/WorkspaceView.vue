@@ -322,29 +322,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
   inset: 54px 0 0;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 62% 32%, color-mix(in srgb, var(--workspace-accent) 5%, transparent), transparent 31%),
-    radial-gradient(ellipse at 36% 72%, rgba(74, 116, 151, 0.055), transparent 35%),
     linear-gradient(142deg, #071019, #08121b 47%, #050b11);
-}
-.workspace-canvas::before {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(168, 201, 213, 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(168, 201, 213, 0.022) 1px, transparent 1px),
-    radial-gradient(circle, rgba(205, 228, 238, 0.34) 0 0.65px, transparent 1px);
-  background-position: 0 0, 0 0, 17px 23px;
-  background-size: 40px 40px, 40px 40px, 131px 131px;
-  content: "";
-  opacity: 0.72;
-  pointer-events: none;
-}
-.workspace-canvas::after {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 2, 5, 0.34) 100%);
-  content: "";
-  pointer-events: none;
 }
 
 .tool-area {
