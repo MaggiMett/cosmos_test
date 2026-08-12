@@ -23,6 +23,7 @@ export interface MapNode {
 
 export interface MapProject {
   objectId: string;
+  workspaceObjectId: string | null;
   displayName: string;
   description: string;
   systemTags: string[];

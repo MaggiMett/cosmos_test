@@ -35,6 +35,12 @@ class CosmosMapService:
     def snapshot(self, context: RuntimeContext) -> dict[str, JSONValue]:
         projects = self._objects.list(context, system_tag="Project")
         nodes = self._objects.list(context, system_tag="Node")
+        workspaces = self._objects.list(context, system_tag="Workspace")
+        workspace_by_project = {
+            str(workspace.properties.get("source_project_id")): workspace.identity.object_id
+            for workspace in workspaces
+            if workspace.properties.get("source_project_id")
+        }
         camera = self.camera(context)
         focused = _focused_project(projects, camera)
         relationships = self._relationships.list(context)
@@ -49,7 +55,13 @@ class CosmosMapService:
                 if node.identity.object_id == project.identity.object_id
                 or node.primary_project_id == project.identity.object_id
             ]
-            project_payloads.append(_project_payload(project, project_nodes))
+            project_payloads.append(
+                _project_payload(
+                    project,
+                    project_nodes,
+                    workspace_by_project.get(project.identity.object_id),
+                )
+            )
 
         connections: list[dict[str, JSONValue]] = []
         for node in nodes:
@@ -159,9 +171,14 @@ def _focused_project(projects: tuple[CosmosObject, ...], camera: dict[str, JSONV
     return nearest if distance <= 280.0 else None
 
 
-def _project_payload(project: CosmosObject, nodes: list[CosmosObject]) -> dict[str, JSONValue]:
+def _project_payload(
+    project: CosmosObject,
+    nodes: list[CosmosObject],
+    workspace_object_id: str | None = None,
+) -> dict[str, JSONValue]:
     return {
         **object_payload(project),
+        "workspaceObjectId": workspace_object_id,
         "vision": project.properties["vision"],
         "color": project.properties["project_color"],
         "x": project.properties["position_x"],

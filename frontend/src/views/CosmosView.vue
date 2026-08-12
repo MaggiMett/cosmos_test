@@ -410,8 +410,13 @@ function openCompanion() {
 }
 
 function openNode(objectId: string) {
+  const project = snapshot.value?.projects.find((candidate) => candidate.objectId === objectId);
+  if (project?.workspaceObjectId) {
+    void router.push(`/workspaces/${encodeURIComponent(project.workspaceObjectId)}`);
+    return;
+  }
   const node = snapshot.value?.projects
-    .flatMap((project) => project.nodes)
+    .flatMap((candidate) => candidate.nodes)
     .find((candidate) => candidate.objectId === objectId);
   if (node?.systemTags.includes("Workspace")) {
     void router.push(`/workspaces/${encodeURIComponent(objectId)}`);
