@@ -209,7 +209,12 @@ function selectNode(objectId: string): void {
 function openNode(objectId: string): void {
   const project = visibleProject.value;
   const host = objectInteractionHost.value;
-  if (!project || !host) return;
+  if (!project) return;
+  if (objectId === project.objectId && project.workspaceObjectId) {
+    void router.push(`/workspaces/${encodeURIComponent(project.workspaceObjectId)}`);
+    return;
+  }
+  if (!host) return;
   void openSelectedProjectCosmosNode(host, project, objectId).catch(() => undefined);
 }
 

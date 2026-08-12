@@ -27,6 +27,7 @@ export interface ProjectCosmosConnectionPresentation {
 
 export interface ProjectCosmosPresentation {
   objectId: string;
+  workspaceObjectId: string | null;
   displayName: string;
   description: string;
   isFocused: boolean;
@@ -151,6 +152,7 @@ export function projectProjectCosmosSnapshot(
 
   return {
     objectId: project.objectId,
+    workspaceObjectId: project.workspaceObjectId,
     displayName: project.displayName,
     description: project.description,
     isFocused: snapshot.focusedProjectId === project.objectId,

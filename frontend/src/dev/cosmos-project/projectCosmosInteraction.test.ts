@@ -12,6 +12,7 @@ import {
 function project(selectedObjectId: string | null = null): ProjectCosmosPresentation {
   return {
     objectId: "project.real",
+    workspaceObjectId: "workspace.real",
     displayName: "Real Project",
     description: "",
     isFocused: false,
