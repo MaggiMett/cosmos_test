@@ -4,8 +4,6 @@ import { fileURLToPath } from "node:url";
 import { compileScript, compileTemplate, parse } from "vue/compiler-sfc";
 import { describe, expect, it } from "vitest";
 
-import { configuredCosmosPresenter, resolveCosmosPresenter } from "./cosmosPresenter";
-
 const presenterPath = "./CosmosPresenterView.vue";
 const presenterSource = readFileSync(
   fileURLToPath(new URL(presenterPath, import.meta.url)),
@@ -29,25 +27,6 @@ const projectSource = readFileSync(
 );
 
 describe("controlled Cosmos presenter cutover", () => {
-  it("promotes New when the presenter variable is unset", () => {
-    expect(resolveCosmosPresenter(undefined)).toBe("new");
-    expect(configuredCosmosPresenter).toBe("new");
-  });
-
-  it("accepts the explicit New presenter value", () => {
-    expect(resolveCosmosPresenter("new")).toBe("new");
-  });
-
-  it("keeps Legacy explicitly available as the rollback presenter", () => {
-    expect(resolveCosmosPresenter("legacy")).toBe("legacy");
-  });
-
-  it("documents invalid values as New unless Legacy is explicitly requested", () => {
-    expect(resolveCosmosPresenter("unexpected")).toBe("new");
-    expect(resolveCosmosPresenter(42)).toBe("new");
-    expect(resolveCosmosPresenter(null)).toBe("new");
-  });
-
   it("compiles the promoted Global and Project Cosmos experiences", () => {
     const descriptor = parse(presenterSource, { filename: presenterPath }).descriptor;
     compileScript(descriptor, { id: "cosmos-presenter" });

@@ -8,7 +8,6 @@ import type {
 } from "../../runtime/baseRuntime";
 import { deepClone } from "../../theme-engine/immutable";
 import { runBaseRoomShadowMode } from "../../theme-engine/roomShadowMode";
-import { resolveBasePresenter } from "../../views/basePresenter";
 import {
   createRoomCompositionInteractionDiagnostics,
 } from "../room-composition-preview/roomCompositionInteractionProjection";
@@ -180,13 +179,11 @@ describe("Room Composition visual acceptance and default readiness", () => {
     expect(result.blockers).toEqual([]);
   });
 
-  it("keeps both presenter rollback levels independent and functional", () => {
+  it("keeps the Room renderer rollback explicit and functional", () => {
     expect(resolveBaseRoomRenderer(undefined)).toBe("composition");
     expect(resolveBaseRoomRenderer("presenter")).toBe("presenter");
     expect(resolveBaseRoomRenderer("composition")).toBe("composition");
     expect(resolveBaseRoomRenderer("unexpected")).toBe("composition");
-    expect(resolveBasePresenter("legacy")).toBe("legacy");
-    expect(resolveBasePresenter("new")).toBe("new");
   });
 });
 

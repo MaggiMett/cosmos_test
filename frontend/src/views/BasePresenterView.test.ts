@@ -4,8 +4,6 @@ import { fileURLToPath } from "node:url";
 import { compileScript, compileTemplate, parse } from "vue/compiler-sfc";
 import { describe, expect, it } from "vitest";
 
-import { configuredBasePresenter, resolveBasePresenter } from "./basePresenter";
-
 const presenterPath = "./BasePresenterView.vue";
 const presenterSource = source(presenterPath);
 const environmentSource = source("./EnvironmentView.ts");
@@ -16,26 +14,7 @@ const workspaceSource = source("./WorkspaceView.vue");
 const roomRendererSource = source("../dev/base-runtime/baseRoomRenderer.ts");
 
 describe("controlled Base presenter rollout", () => {
-  it("promotes New when the variable is unset", () => {
-    expect(resolveBasePresenter(undefined)).toBe("new");
-    expect(configuredBasePresenter).toBe("new");
-  });
-
-  it("keeps New for explicit new and invalid values", () => {
-    expect(resolveBasePresenter("new")).toBe("new");
-    expect(resolveBasePresenter("NEW")).toBe("new");
-    expect(resolveBasePresenter("unexpected")).toBe("new");
-    expect(resolveBasePresenter(null)).toBe("new");
-  });
-
-  it("uses Legacy only for the exact rollback value", () => {
-    expect(resolveBasePresenter("legacy")).toBe("legacy");
-    expect(resolveBasePresenter("LEGACY")).toBe("new");
-  });
-
-  it("keeps the Base presenter and Room renderer switches independent", () => {
-    expect(source("./basePresenter.ts")).toContain("VITE_BASE_PRESENTER");
-    expect(source("./basePresenter.ts")).not.toContain("VITE_BASE_ROOM_RENDERER");
+  it("keeps the Room renderer switch isolated from the production Base presenter", () => {
     expect(roomRendererSource).toContain("VITE_BASE_ROOM_RENDERER");
     expect(roomRendererSource).not.toContain("VITE_BASE_PRESENTER");
     expect(roomRendererSource).toContain(
