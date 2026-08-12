@@ -48,7 +48,7 @@ describe("controlled Cosmos presenter cutover", () => {
     expect(resolveCosmosPresenter(null)).toBe("new");
   });
 
-  it("compiles a presenter that can render both Legacy and New experiences", () => {
+  it("compiles the promoted Global and Project Cosmos experiences", () => {
     const descriptor = parse(presenterSource, { filename: presenterPath }).descriptor;
     compileScript(descriptor, { id: "cosmos-presenter" });
     if (!descriptor.template) throw new Error("Presenter template missing.");
@@ -59,11 +59,11 @@ describe("controlled Cosmos presenter cutover", () => {
         source: descriptor.template.content,
       }).errors,
     ).toEqual([]);
-    expect(presenterSource).toContain("LegacyCosmosView");
+    expect(presenterSource).not.toContain("LegacyCosmosView");
     expect(presenterSource).toContain("CosmosGlobalView");
     expect(presenterSource).toContain("CosmosProjectView");
-    expect(presenterSource).toContain("presenter: configuredCosmosPresenter");
-    expect(presenterSource).toContain("presenter === 'legacy'");
+    expect(presenterSource).not.toContain("configuredCosmosPresenter");
+    expect(presenterSource).not.toContain("presenter === 'legacy'");
   });
 
   it("uses Product query navigation for Global to Project to Global", () => {
