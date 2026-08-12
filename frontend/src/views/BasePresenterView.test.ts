@@ -67,11 +67,9 @@ describe("controlled Base presenter rollout", () => {
     expect(environmentSource).not.toContain("h(BaseView)");
   });
 
-  it("preserves the existing Workspace stack with a presenter background", () => {
-    expect(environmentSource).toContain(
-      'h(BasePresenterView, { backgroundOnly: true, inert: true, "aria-hidden": "true" })',
-    );
-    expect(environmentSource).toContain("h(WorkspaceView)");
+  it("keeps Workspace as a single production layer without a hidden Base presenter", () => {
+    expect(environmentSource).toContain("return h(WorkspaceView)");
+    expect(environmentSource).not.toContain("backgroundOnly: true");
     expect(presenterSource).toContain(':background-only="backgroundOnly"');
     expect(newSource).toContain(':inert="backgroundOnly || undefined"');
     expect(newSource).toContain('v-if="!backgroundOnly"');

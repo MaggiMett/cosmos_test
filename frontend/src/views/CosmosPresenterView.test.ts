@@ -72,10 +72,13 @@ describe("controlled Cosmos presenter cutover", () => {
     expect(presenterSource).not.toMatch(/["']\/dev\//u);
   });
 
-  it("binds only the Cosmos environment to the switch and preserves Legacy backgrounds", () => {
+  it("binds each production environment to exactly one presenter layer", () => {
     expect(environmentSource).toContain('route.meta.environment === "cosmos"');
     expect(environmentSource).toContain("return h(CosmosPresenterView)");
-    expect(environmentSource).toContain("h(LegacyCosmosView, { backgroundOnly: true");
+    expect(environmentSource).toContain("return h(BasePresenterView)");
+    expect(environmentSource).toContain("return h(WorkspaceView)");
+    expect(environmentSource).not.toContain("LegacyCosmosView");
+    expect(environmentSource).not.toContain("backgroundOnly: true");
   });
 
   it("creates no second Runtime, graph engine, store, or selection state", () => {
