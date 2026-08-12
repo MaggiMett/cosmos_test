@@ -44,7 +44,7 @@ describe("controlled Base presenter rollout", () => {
     expect(presenterSource).not.toContain("configuredBaseRoomRenderer");
   });
 
-  it("compiles a narrow wrapper that keeps both presenters renderable", () => {
+  it("compiles a narrow production wrapper around the promoted Base presenter", () => {
     const descriptor = parse(presenterSource, { filename: presenterPath }).descriptor;
     compileScript(descriptor, { id: "base-presenter" });
     if (!descriptor.template) throw new Error("Presenter template missing.");
@@ -53,10 +53,10 @@ describe("controlled Base presenter rollout", () => {
       filename: presenterPath,
       source: descriptor.template.content,
     }).errors).toEqual([]);
-    expect(presenterSource).toContain("LegacyBaseView");
+    expect(presenterSource).not.toContain("LegacyBaseView");
     expect(presenterSource).toContain("BaseRuntimeView");
-    expect(presenterSource).toContain("presenter === 'legacy'");
-    expect(presenterSource).toContain("presenter: configuredBasePresenter");
+    expect(presenterSource).not.toContain("presenter === 'legacy'");
+    expect(presenterSource).not.toContain("configuredBasePresenter");
     expect(presenterSource).toContain('navigation-scope="production"');
   });
 
