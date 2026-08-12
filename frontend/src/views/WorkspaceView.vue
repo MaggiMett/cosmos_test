@@ -23,10 +23,7 @@
       >
         <span class="workspace-environment__identity">
           <i aria-hidden="true" />
-          <span>
-            <small>Workspace</small>
-            <strong>{{ session.definition.displayName }}</strong>
-          </span>
+          <strong>{{ session.definition.displayName }}</strong>
         </span>
         <button type="button" aria-label="Close Workspace" title="Close" @click="closeWorkspace">
           <span aria-hidden="true">×</span>
@@ -314,7 +311,6 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
 .workspace-environment__identity { display: flex; align-items: center; gap: 10px; }
 .workspace-environment__identity > i { width: 8px; height: 8px; transform: rotate(45deg); border: 1px solid color-mix(in srgb, var(--workspace-accent) 78%, white); background: color-mix(in srgb, var(--workspace-accent) 72%, #071018); box-shadow: 0 0 12px color-mix(in srgb, var(--workspace-accent) 54%, transparent); }
 .workspace-environment__identity > span { display: grid; gap: 1px; }
-.workspace-environment__identity small { color: var(--cosmos-color-faint); font-size: 0.49rem; letter-spacing: 0.2em; text-transform: uppercase; }
 .workspace-environment__identity strong { color: var(--cosmos-color-text); font-size: 0.77rem; font-weight: 560; letter-spacing: 0.035em; }
 
 .workspace-environment__header > button {
