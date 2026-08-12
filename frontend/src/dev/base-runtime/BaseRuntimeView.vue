@@ -39,8 +39,8 @@
       data-testid="base-runtime-state"
     >
       <span aria-hidden="true" />
-      <small>Base · Runtime</small>
-      <strong v-if="presentation.phase === 'loading'">Loading Base</strong>
+      <small>Base</small>
+      <strong v-if="presentation.phase === 'loading'">Opening Base</strong>
       <template v-else>
         <strong>{{ stateTitle }}</strong>
         <p>{{ presentation.message }}</p>
@@ -190,8 +190,8 @@ const themePresentationFallbackReason = computed(() =>
 );
 const viewLabel = computed(() =>
   presentation.value.phase === "success"
-    ? `${presentation.value.room.displayName} Runtime`
-    : "Base Runtime",
+    ? `${presentation.value.currentLocation}`
+    : "Base",
 );
 const stateTitle = computed(() => {
   if (presentation.value.phase === "error") return "Base is unavailable";

@@ -391,7 +391,8 @@ describe("Base Room Runtime visual slice", () => {
   it("contains quiet Loading, Error and Empty states", () => {
     const view = sourceFor("./BaseRuntimeView.vue");
 
-    expect(view).toContain("Loading Base");
+    expect(view).toContain("Opening Base");
+    expect(view).not.toContain("Base · Runtime");
     expect(view).toContain("Base is unavailable");
     expect(view).toContain("Base is quiet");
     expect(view).toContain("Room not found");
