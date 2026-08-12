@@ -23,27 +23,13 @@ import {
   resolveBaseRoomThemePresentation,
   type BaseRoomThemeParityGate,
 } from "./baseRoomThemePresentation";
-import {
-  configuredBaseThemeVisuals,
-  resolveBaseThemeVisuals,
-} from "./baseThemeVisuals";
-
 const activeThemeId = "max.theme.aurora";
 const activeSkinId = "max.skin.base.aurora";
 const coreSkinId = "core.skin.base.default";
 const backgroundSlot = "base.slot.background";
 const workspaceSlot = "base.slot.left-workspace";
 
-describe("controlled Base Room Theme presentation", () => {
-  it("uses Theme by default and keeps only exact Core as rollback", () => {
-    expect(resolveBaseThemeVisuals(undefined)).toBe("theme");
-    expect(resolveBaseThemeVisuals("core")).toBe("core");
-    expect(resolveBaseThemeVisuals("unexpected")).toBe("theme");
-    expect(resolveBaseThemeVisuals("THEME")).toBe("theme");
-    expect(resolveBaseThemeVisuals("theme")).toBe("theme");
-    expect(configuredBaseThemeVisuals).toBe("theme");
-  });
-
+describe("Base Room Theme presentation", () => {
   it("does not load Package or Catalog presentation while Core mode is active", async () => {
     const readPresentationSkinPacks = vi.fn();
     const list = vi.fn();

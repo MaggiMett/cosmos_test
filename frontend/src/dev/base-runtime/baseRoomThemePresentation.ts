@@ -16,7 +16,8 @@ import type {
   RoomCompositionThemePresentation,
   RoomCompositionThemeVisual,
 } from "../room-composition-preview/roomCompositionRenderProjection";
-import type { BaseThemeVisuals } from "./baseThemeVisuals";
+
+export type BaseThemeVisuals = "core" | "theme";
 
 export type BaseRoomThemeFallbackReason =
   | "disabled"

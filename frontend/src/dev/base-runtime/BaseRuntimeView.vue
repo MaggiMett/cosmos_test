@@ -93,10 +93,6 @@ import {
   type BaseRoomThemePresentationResult,
 } from "./baseRoomThemePresentation";
 import { forwardRoomCompositionTarget } from "./baseRoomCompositionInteractions";
-import {
-  configuredBaseThemeVisuals,
-  type BaseThemeVisuals,
-} from "./baseThemeVisuals";
 import type { BaseWorkspaceSlotPresentation } from "./baseRuntimeProjection";
 import type { RoomShadowInteractionTarget } from "../room-composition-preview/roomCompositionInteractionProjection";
 import {
@@ -115,11 +111,9 @@ import { scheduleBaseRoomShadowDiagnostics } from "./baseRoomShadowDiagnostics";
 const props = withDefaults(defineProps<{
   navigationScope?: BaseNavigationScope;
   backgroundOnly?: boolean;
-  themeVisuals?: BaseThemeVisuals;
 }>(), {
   navigationScope: "development",
   backgroundOnly: false,
-  themeVisuals: configuredBaseThemeVisuals,
 });
 
 const runtime = useCosmosRuntime();
@@ -262,10 +256,6 @@ function loadBase() {
 
 async function refreshThemePresentation(): Promise<void> {
   const generation = ++themeLoadGeneration;
-  if (props.themeVisuals !== "theme") {
-    themePresentationResult.value = coreBaseRoomThemePresentation("disabled");
-    return;
-  }
   const composition = compositionResult.value;
   if (!composition || composition.status !== "active") {
     themePresentationResult.value = coreBaseRoomThemePresentation(
@@ -277,7 +267,7 @@ async function refreshThemePresentation(): Promise<void> {
   }
   themePresentationResult.value = coreBaseRoomThemePresentation("loading");
   const result = await loadBaseRoomThemePresentation({
-    mode: props.themeVisuals,
+    mode: "theme",
     themeRuntime: runtime.themes,
     skinPackSource: runtime.themePackages,
     assetCatalog,
@@ -305,7 +295,6 @@ function themeFallbackForComposition(
 
 watch(
   [
-    () => props.themeVisuals,
     () => compositionResult.value?.status ?? "unavailable",
     () =>
       compositionResult.value?.status === "active"
