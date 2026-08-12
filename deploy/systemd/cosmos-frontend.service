@@ -1,0 +1,14 @@
+[Unit]
+Description=Cosmos Frontend Development Server
+After=network-online.target cosmos-backend.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/workspace/cosmos/frontend
+ExecStart=/usr/bin/env pnpm dev --host 0.0.0.0
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

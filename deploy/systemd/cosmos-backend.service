@@ -1,0 +1,17 @@
+[Unit]
+Description=Cosmos Backend Development Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/workspace/cosmos
+Environment=COSMOS_HOST=0.0.0.0
+Environment=COSMOS_PORT=8000
+Environment=COSMOS_EXTENSIONS_PATH=/workspace/cosmos/extensions
+ExecStart=/workspace/cosmos/.venv/bin/python -m cosmos
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
