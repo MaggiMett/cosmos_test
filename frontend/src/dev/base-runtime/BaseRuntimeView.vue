@@ -50,7 +50,6 @@
     <BaseRuntimeChrome
       v-if="!backgroundOnly"
       :current-location="presentation.currentLocation"
-      :room-count="presentation.roomCount"
       :companion="presentation.phase === 'success' ? presentation.room.companion : null"
       :right-neighbor="rightNeighbor"
       :scene-owns-function-controls="compositionActive"

@@ -28,8 +28,7 @@
       @travel="$emit('travel-room', $event)"
     />
 
-    <div class="base-runtime-chrome__status" aria-label="Room controls">
-      <span class="base-runtime-chrome__room-status">{{ roomStatus }}</span>
+    <div class="base-runtime-chrome__status" aria-label="Companion">
       <button
         v-if="!sceneOwnsFunctionControls"
         type="button"
@@ -61,7 +60,6 @@ import type { BaseCompanionPresentation } from "../baseRuntimeProjection";
 
 const props = withDefaults(defineProps<{
   currentLocation: string;
-  roomCount: number;
   companion: Readonly<BaseCompanionPresentation> | null;
   rightNeighbor: Readonly<{ objectId: string; displayName: string }> | null;
   sceneOwnsFunctionControls?: boolean;
@@ -75,9 +73,6 @@ defineEmits<{
   "close-base": [];
 }>();
 
-const roomStatus = computed(
-  () => `${props.roomCount} ${props.roomCount === 1 ? "room" : "rooms"} · Quiet mode`,
-);
 const companionLabel = computed(() =>
   props.companion ? `${props.companion.displayName} available` : "Companion unavailable",
 );
@@ -153,11 +148,6 @@ const companionLabel = computed(() =>
   font-size: 0.66rem;
   gap: 8px;
   backdrop-filter: blur(12px);
-}
-
-.base-runtime-chrome__room-status {
-  color: var(--cosmos-color-text-muted);
-  white-space: nowrap;
 }
 
 .base-runtime-chrome__status button {
