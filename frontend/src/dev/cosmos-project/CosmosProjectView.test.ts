@@ -63,7 +63,7 @@ describe("Project Cosmos visual slice", () => {
     expect(controls).toContain("zoomLabel");
     expect(controls).toContain("projectName");
     expect(controls).toContain("Fit");
-    expect(controls).toContain("Search / Focus");
+    expect(controls).not.toContain("Search / Focus");
     expect(controls).toContain("Themes");
     expect(controls).toContain("$emit('zoom-out')");
     expect(controls).toContain("$emit('zoom-in')");

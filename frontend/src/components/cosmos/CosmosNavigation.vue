@@ -12,6 +12,7 @@
     <span v-else class="cosmos-navigation__spacer" />
 
     <button
+      v-if="currentInteractive"
       class="cosmos-navigation__current"
       type="button"
       :aria-expanded="quickTravelOpen"
@@ -22,6 +23,11 @@
       <strong>{{ currentLocation }}</strong>
       <span class="cosmos-navigation__mark" aria-hidden="true" />
     </button>
+    <div v-else class="cosmos-navigation__current cosmos-navigation__current--passive">
+      <small>Current location</small>
+      <strong>{{ currentLocation }}</strong>
+      <span class="cosmos-navigation__mark" aria-hidden="true" />
+    </div>
 
     <button
       v-if="rightNeighbor"
@@ -42,6 +48,7 @@ defineProps<{
   leftNeighbor: Readonly<{ objectId: string; displayName: string }> | null;
   rightNeighbor: Readonly<{ objectId: string; displayName: string }> | null;
   quickTravelOpen: boolean;
+  currentInteractive?: boolean;
 }>();
 
 defineEmits<{
@@ -96,10 +103,14 @@ defineEmits<{
   backdrop-filter: blur(var(--cosmos-surface-blur));
 }
 
-.cosmos-navigation__current:hover,
-.cosmos-navigation__current:focus-visible {
+.cosmos-navigation__current:not(.cosmos-navigation__current--passive):hover,
+.cosmos-navigation__current:not(.cosmos-navigation__current--passive):focus-visible {
   border-color: color-mix(in srgb, var(--cosmos-color-accent) 42%, transparent);
   outline: none;
+}
+
+.cosmos-navigation__current--passive {
+  cursor: default;
 }
 
 .cosmos-navigation__current small {

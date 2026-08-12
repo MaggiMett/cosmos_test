@@ -6,10 +6,6 @@
       <button type="button" aria-label="Zoom in" @click="$emit('zoom-in')">+</button>
     </div>
     <button type="button" class="project-cosmos-controls__fit" @click="$emit('fit')">Fit</button>
-    <button type="button" class="project-cosmos-controls__search">
-      <span aria-hidden="true">⌕</span>
-      Search / Focus
-    </button>
     <p><span>Cosmos</span><i aria-hidden="true">/</i><strong>Project</strong><i aria-hidden="true">/</i>{{ projectName }}</p>
     <nav class="project-cosmos-controls__destinations" aria-label="Runtime destinations">
       <button type="button" @click="$emit('open-base')"><span aria-hidden="true">⌂</span>Base</button>

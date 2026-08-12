@@ -6,10 +6,6 @@
       <button type="button" aria-label="Zoom in" @click="$emit('zoom-in')">+</button>
     </div>
     <button type="button" @click="$emit('fit')">Fit</button>
-    <button type="button" class="global-cosmos-controls__search">
-      <span aria-hidden="true">⌕</span>
-      Search / Focus
-    </button>
 
     <p><span>Cosmos</span><i aria-hidden="true">/</i><strong>Global</strong></p>
 
@@ -17,7 +13,6 @@
       <button type="button" @click="$emit('open-base')"><span aria-hidden="true">⌂</span>Base</button>
       <button type="button" @click="$emit('open-companion')"><span aria-hidden="true">○</span>Companion</button>
       <button type="button" @click="$emit('open-themes')"><span aria-hidden="true">◇</span>Themes</button>
-      <button type="button" aria-label="Settings"><span aria-hidden="true">⚙</span></button>
     </nav>
   </div>
 </template>

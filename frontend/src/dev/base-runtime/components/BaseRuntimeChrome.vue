@@ -24,6 +24,7 @@
       :left-neighbor="null"
       :right-neighbor="sceneOwnsFunctionControls ? null : rightNeighbor"
       :quick-travel-open="false"
+      :current-interactive="false"
       @travel="$emit('travel-room', $event)"
     />
 
