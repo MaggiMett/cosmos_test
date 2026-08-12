@@ -212,7 +212,15 @@ function openWorkspaceContextMenu(event: MouseEvent) {
 }
 
 function onKeyDown(event: KeyboardEvent) {
-  if (event.key === "Escape" && !event.defaultPrevented) void closeWorkspace();
+  if (event.key !== "Escape" || event.defaultPrevented || !session.value) return;
+  const focusedTool = [...session.value.toolInstances]
+    .sort((left, right) => right.zIndex - left.zIndex)[0];
+  if (focusedTool) {
+    event.preventDefault();
+    closeTool(focusedTool.objectId);
+    return;
+  }
+  void closeWorkspace();
 }
 
 function workspaceBounds() {
