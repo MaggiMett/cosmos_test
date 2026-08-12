@@ -1,5 +1,6 @@
 <template>
   <section class="workspace-stage environment-view" aria-label="Workspace">
+    <BasePresenterView background-only />
     <div v-if="phase === 'opening'" class="workspace-status" role="status">
       <span aria-hidden="true" />
       <p>Preparing your Workspace…</p>
@@ -92,6 +93,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import ToolWindow from "../components/windows/ToolWindow.vue";
+import BasePresenterView from "./BasePresenterView.vue";
 import ObjectInteractionHost from "../components/windows/ObjectInteractionHost.vue";
 import type { WorkspaceSession } from "../runtime/workspaceRuntime";
 import { useCosmosRuntime } from "../runtime/plugin";
@@ -149,7 +151,8 @@ async function closeWorkspace() {
     await runtime.workspaces.close(session.value.objectId);
     runtime.objectInteractions.closeAll(session.value.objectId);
     session.value = null;
-    await router.push(roomId === "cosmos.room.main" ? "/base" : "/base/rooms/workshop");
+    const room = runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId);
+    await router.push(!room || room.slug === "main" ? "/base" : `/base/rooms/${room.slug}`);
   } catch (cause) {
     phase.value = "ready";
     error.value = cause instanceof Error ? cause.message : "Workspace state could not be preserved.";
@@ -254,10 +257,30 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
 .workspace-stage {
   z-index: 20;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at 50% 46%, rgba(31, 79, 102, 0.11), transparent 50%),
-    rgba(1, 3, 8, 0.46);
+  background: rgba(1, 3, 8, 0.38);
   pointer-events: auto;
+}
+
+.workspace-stage > :deep(.base-runtime-view) {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  filter: saturate(0.78) brightness(0.62);
+  transform: scale(1.012);
+}
+
+.workspace-stage::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: rgba(1, 4, 8, 0.32);
+  content: "";
+  pointer-events: none;
+}
+
+.workspace-status,
+.workspace-environment {
+  z-index: 2;
 }
 
 .workspace-environment {
