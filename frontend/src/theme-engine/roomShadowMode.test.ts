@@ -42,7 +42,7 @@ describe("Base Room Shadow Mode and legacy parity", () => {
     });
     expect(Object.isFrozen(baseMainRoomTemplate)).toBe(false);
     const result = runBaseMainRoomShadowMode({
-      legacy: {
+      compatibilityInput: {
         template: baseMainRoomTemplate,
         composition: coreDefaultBaseComposition,
         functionBindings: coreDefaultBaseFunctionBindings,

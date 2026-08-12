@@ -27,7 +27,7 @@ import {
 import type { BaseComposition } from "./roomCompositionTypes";
 
 export interface RunBaseRoomShadowModeInput {
-  legacy?: BaseRoomCompatibilityAdapterInput;
+  compatibilityInput?: BaseRoomCompatibilityAdapterInput;
   skins?: RoomSkinResolutionInput;
   baseSnapshot?: BaseRuntimeSnapshotReadModel;
   roomId?: string;
@@ -52,9 +52,9 @@ export function runBaseMainRoomShadowMode(
 export function runBaseRoomShadowMode(
   input: RunBaseRoomShadowModeInput = {},
 ): Readonly<RoomShadowModeResult> {
-  if (input.baseSnapshot && input.legacy) {
+  if (input.baseSnapshot && input.compatibilityInput) {
     throw new Error(
-      "Base Runtime and legacy fixture inputs cannot be combined in one Shadow run",
+      "Base Runtime and compatibility fixture inputs cannot be combined in one Shadow run",
     );
   }
   const runtimeProjection = input.baseSnapshot
@@ -62,7 +62,8 @@ export function runBaseRoomShadowMode(
       ? projectBaseRoomToRoomCompositionShadow(input.baseSnapshot, input.roomId)
       : projectBaseMainRoomToRoomCompositionShadow(input.baseSnapshot)
     : null;
-  const legacy = runtimeProjection?.compatibility ?? adaptBaseMainRoomV1(input.legacy);
+  const legacy =
+    runtimeProjection?.compatibility ?? adaptBaseMainRoomV1(input.compatibilityInput);
   const registries = createRoomCompositionRegistries();
   registerCompatibilityProjection(
     registries,
