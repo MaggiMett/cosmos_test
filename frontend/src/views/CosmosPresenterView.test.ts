@@ -13,10 +13,6 @@ const environmentSource = readFileSync(
   fileURLToPath(new URL("./EnvironmentView.ts", import.meta.url)),
   "utf8",
 );
-const legacySource = readFileSync(
-  fileURLToPath(new URL("./CosmosView.vue", import.meta.url)),
-  "utf8",
-);
 const globalSource = readFileSync(
   fileURLToPath(new URL("../dev/cosmos-global/CosmosGlobalView.vue", import.meta.url)),
   "utf8",
@@ -68,12 +64,9 @@ describe("controlled Cosmos presenter cutover", () => {
     expect(combined).not.toContain("selectedObjectId = ref");
   });
 
-  it("keeps Legacy intact and lets both presenters inject the same installed Runtime", () => {
-    expect(legacySource).toContain("useCosmosRuntime()");
+  it("lets both promoted presenters inject the same installed Runtime", () => {
     expect(globalSource).toContain("useCosmosRuntime()");
     expect(projectSource).toContain("useCosmosRuntime()");
-    expect(legacySource).toContain("moveNodeLocally");
-    expect(legacySource).toContain("persistNodePosition");
     expect(`${globalSource}\n${projectSource}`).not.toContain("createCosmosFrontendRuntime");
   });
 });

@@ -8,7 +8,6 @@ function source(path: string): string {
   return readFileSync(fileURLToPath(new URL(path, import.meta.url)), "utf8");
 }
 
-const legacy = source("../views/CosmosView.vue");
 const globalView = source("./cosmos-global/CosmosGlobalView.vue");
 const globalUniverse = source("./cosmos-global/components/GlobalCosmosUniverse.vue");
 const projectView = source("./cosmos-project/CosmosProjectView.vue");
@@ -18,8 +17,8 @@ const quickTravel = source(quickTravelPath);
 const contextMenu = source("../components/windows/ContextMenu.vue");
 const interactionHost = source("../components/windows/ObjectInteractionHost.vue");
 
-describe("New Cosmos Presenter Legacy interaction parity", () => {
-  it("compiles the shared Legacy Quick Travel surface", () => {
+describe("Cosmos interaction contract", () => {
+  it("compiles the shared Quick Travel surface", () => {
     const descriptor = parse(quickTravel, { filename: quickTravelPath }).descriptor;
     compileScript(descriptor, { id: "cosmos-quick-travel" });
     if (!descriptor.template) throw new Error("Quick Travel template missing.");
@@ -30,8 +29,7 @@ describe("New Cosmos Presenter Legacy interaction parity", () => {
     }).errors).toEqual([]);
   });
 
-  it("uses one Quick Travel component in Legacy, Global and Project presenters", () => {
-    expect(legacy).toContain("<CosmosQuickTravel");
+  it("uses one Quick Travel component in Global and Project presenters", () => {
     expect(globalView).toContain("<CosmosQuickTravel");
     expect(projectView).toContain("<CosmosQuickTravel");
     expect(quickTravel).toContain('aria-label="Quick Travel"');
