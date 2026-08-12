@@ -410,6 +410,13 @@ function openCompanion() {
 }
 
 function openNode(objectId: string) {
+  const node = snapshot.value?.projects
+    .flatMap((project) => project.nodes)
+    .find((candidate) => candidate.objectId === objectId);
+  if (node?.systemTags.includes("Workspace")) {
+    void router.push(`/workspaces/${encodeURIComponent(objectId)}`);
+    return;
+  }
   void objectInteractionHost.value?.openObject(objectId, "details").catch(() => undefined);
 }
 

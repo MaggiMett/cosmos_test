@@ -87,7 +87,7 @@ WORKSPACES = (
             "default_layout": {},
             "context_configuration": {},
             "assigned_tool_ids": [FILES_TOOL_ID, ARCHIVE_TOOL_ID, CAPTURE_TOOL_ID, REVIEW_TOOL_ID],
-            "tool_requirements": [],
+            "tool_requirements": [{"capabilities": ["design", "prototyping", "web"]}],
             "theme_override": "",
             "source_project_id": "cosmos.project.system.graphics",
         },

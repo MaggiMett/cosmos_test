@@ -1,0 +1,22 @@
+{
+  "id": "cosmos.penpot",
+  "display_name": "Penpot",
+  "version": "1.0.0",
+  "category": "user-tool",
+  "runtime_api_version": "1",
+  "runtime_kind": "web",
+  "runtime_configuration": {
+    "sandbox": ["forms", "modals", "popups", "same-origin", "scripts"]
+  },
+  "entry_points": {
+    "tool": "https://penpot.mettflix.eu/"
+  },
+  "capabilities": [
+    "design",
+    "prototyping",
+    "collaboration",
+    "web"
+  ],
+  "permissions": [],
+  "dependencies": []
+}
