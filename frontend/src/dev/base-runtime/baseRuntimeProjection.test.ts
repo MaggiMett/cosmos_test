@@ -32,7 +32,7 @@ describe("real Base Runtime projection", () => {
 
     expect(state.phase).toBe("success");
     if (state.phase !== "success") throw new Error("Expected Base success.");
-    expect(state.currentLocation).toBe("Home Base · Central Room");
+    expect(state.currentLocation).toBe("Home Base");
     expect(state.room.objectId).toBe("room.central.real");
     expect(state.room.baseObjectId).toBe("base.real");
     expect(state.room.atmosphere).toBe("Calm");

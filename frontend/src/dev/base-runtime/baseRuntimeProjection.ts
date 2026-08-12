@@ -169,7 +169,9 @@ export function projectBaseRuntimeState(
   return {
     phase: "success",
     roomCount: snapshot.rooms.length,
-    currentLocation: `${snapshot.base.displayName} · ${room.displayName}`,
+    currentLocation: room.slug === "main"
+      ? snapshot.base.displayName
+      : `${snapshot.base.displayName} · ${room.displayName}`,
     room: {
       baseObjectId: snapshot.base.objectId,
       baseName: snapshot.base.displayName,
