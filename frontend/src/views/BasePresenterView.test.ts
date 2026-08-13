@@ -10,6 +10,7 @@ const environmentSource = source("./EnvironmentView.ts");
 const newSource = source("../dev/base-runtime/BaseRuntimeView.vue");
 const roomSource = source("../dev/base-runtime/components/BaseRoomScene.vue");
 const workspaceSource = source("./WorkspaceView.vue");
+const toolWindowSource = source("../components/windows/ToolWindow.vue");
 describe("Base production presenter", () => {
   it("compiles a narrow production wrapper around the promoted Base presenter", () => {
     const descriptor = parse(presenterSource, { filename: presenterPath }).descriptor;
@@ -52,6 +53,8 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain(':aria-label="workspaceReturnLabel"');
     expect(workspaceSource).toContain('`Return to ${room.displayName}`');
     expect(workspaceSource).toContain('"Return to Base"');
+    expect(toolWindowSource).toContain(':aria-label="`Close ${title}`"');
+    expect(toolWindowSource).toContain(':title="`Close ${title}`"');
   });
 
   it("keeps all productive interactions on the prepared New presenter", () => {

@@ -9,7 +9,7 @@
   >
     <header class="tool-window__header" @pointerdown="startMove">
       <span>{{ title }}</span>
-      <button type="button" aria-label="Close" title="Close" @pointerdown.stop @click="$emit('close')">
+      <button type="button" :aria-label="`Close ${title}`" :title="`Close ${title}`" @pointerdown.stop @click="$emit('close')">
         <span aria-hidden="true">×</span>
       </button>
     </header>
