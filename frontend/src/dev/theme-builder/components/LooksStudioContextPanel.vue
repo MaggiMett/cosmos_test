@@ -25,14 +25,15 @@
           <BuilderIcon :name="slot.assetId ? 'check' : 'object'" />
         </button>
       </div>
-      <button v-if="selectedSlot?.bindingId && !selectedSlot.inherited" type="button" class="looks-context__clear" @click="$emit('clear-slot')">
-        Remove artwork from this part
-      </button>
     </section>
 
     <section class="looks-context__section looks-context__section--lined">
       <h2 class="builder-serif">Artwork</h2>
       <p class="looks-context__hint">Choose the artwork used by the selected part.</p>
+      <div v-if="selectedSlot && activeStateId !== 'default'" class="looks-context__inheritance" :class="{ 'looks-context__inheritance--custom': !selectedSlot.inherited }">
+        <span>{{ selectedSlot.inherited ? "Using Default artwork" : "Custom artwork for this interaction" }}</span>
+        <button v-if="!selectedSlot.inherited" type="button" @click="$emit('clear-slot')">Reset to Default</button>
+      </div>
       <p v-if="assets.length === 0" class="looks-context__empty">Add artwork to this theme from the Theme Board first.</p>
       <div v-else class="looks-swatch-grid">
         <button
@@ -130,6 +131,7 @@ const selectedSlot = computed(() => props.slots.find((slot) => slot.slotId === p
 .visual-slot-list__value { color: var(--builder-muted); text-align: right; }
 .visual-slot-list :deep(.builder-icon) { width: .8rem; height: .8rem; color: var(--builder-faint); }
 .looks-context__clear { min-height: 34px; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-control); background: transparent; color: var(--builder-muted); }
+.looks-context__inheritance{display:flex;padding:7px 9px;align-items:center;justify-content:space-between;border:1px solid var(--builder-border);border-radius:var(--builder-radius-control);background:rgba(120,149,177,.05);color:var(--builder-muted);font-size:.62rem;gap:8px}.looks-context__inheritance--custom{border-color:rgba(98,217,255,.28);background:rgba(98,217,255,.06);color:var(--builder-text)}.looks-context__inheritance button{padding:5px 8px;border:1px solid var(--builder-border);border-radius:var(--builder-radius-control);background:transparent;color:var(--builder-text);font-size:.58rem;cursor:pointer}
 .looks-swatch-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; }
 .looks-swatch-grid button { display: grid; min-width: 0; min-height: 94px; padding: 8px 4px 7px; grid-template-rows: 1fr auto; place-items: center; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-control); background: rgba(13,18,23,.34); color: var(--builder-text); cursor: pointer; gap: 5px; }
 .looks-swatch-grid button:disabled { cursor: default; opacity: .45; }
