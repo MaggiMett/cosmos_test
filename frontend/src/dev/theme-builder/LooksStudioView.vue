@@ -135,6 +135,7 @@ import {
   coreCosmosGraphSkinPack,
   coreCosmosMapSkinPack,
   coreDefaultBaseSkinPack,
+  coreWorkspaceUiSkinPack,
   coreTemplateCatalog,
   cosmosConnectionTemplate,
   cosmosMapTemplate,
@@ -142,6 +143,8 @@ import {
   domainNodeTemplate,
   objectNodeTemplate,
   projectRootNodeTemplate,
+  uiWindowTemplate,
+  workspaceEnvironmentTemplate,
   type CoreTemplateCatalogEntry,
   type ExactVersionedRef,
   type JsonValue,
@@ -167,6 +170,8 @@ const templates = new TemplateRegistry();
   objectNodeTemplate,
   detailNodeTemplate,
   cosmosConnectionTemplate,
+  workspaceEnvironmentTemplate,
+  uiWindowTemplate,
 ].forEach((template) => templates.register(template));
 const route = useRoute();
 const router = useRouter();
@@ -246,8 +251,12 @@ const materialTextureUrl = computed(() => assetItems.value.find((asset) =>
 const corePreviewSkin = computed(() => {
   const templateId = resolved.value?.template.templateId;
   if (!templateId) return undefined;
-  return [...coreCosmosMapSkinPack.skins, ...coreCosmosGraphSkinPack.skins, ...coreDefaultBaseSkinPack.skins]
-    .find((skin) => skin.target.templateRef.id === templateId);
+  return [
+    ...coreCosmosMapSkinPack.skins,
+    ...coreCosmosGraphSkinPack.skins,
+    ...coreDefaultBaseSkinPack.skins,
+    ...coreWorkspaceUiSkinPack.skins,
+  ].find((skin) => skin.target.templateRef.id === templateId);
 });
 function coreTokenValue(tokenId: string): JsonValue | undefined {
   const skin = corePreviewSkin.value;
@@ -260,20 +269,26 @@ function coreTokenValue(tokenId: string): JsonValue | undefined {
 const corePreviewFill = computed(() => {
   const value = coreTokenValue("cosmos.node.primary")
     ?? coreTokenValue("cosmos.map.background")
-    ?? coreTokenValue("core.token.base.background");
+    ?? coreTokenValue("core.token.base.background")
+    ?? coreTokenValue("cosmos.workspace.background")
+    ?? coreTokenValue("cosmos.window.surface");
   return typeof value === "string" ? value : "#081426";
 });
 const corePreviewStroke = computed(() => {
   const value = coreTokenValue("cosmos.node.accent")
     ?? coreTokenValue("cosmos.connection.core")
     ?? coreTokenValue("cosmos.map.node-cyan")
-    ?? coreTokenValue("core.token.base.border");
+    ?? coreTokenValue("core.token.base.border")
+    ?? coreTokenValue("cosmos.workspace.accent")
+    ?? coreTokenValue("cosmos.window.accent");
   return typeof value === "string" ? value : "#62d9ff";
 });
 const corePreviewOpacity = computed(() => {
   const value = coreTokenValue("cosmos.connection.opacity")
     ?? coreTokenValue("cosmos.node.glow-opacity")
-    ?? coreTokenValue("core.token.base.opacity");
+    ?? coreTokenValue("core.token.base.opacity")
+    ?? coreTokenValue("cosmos.workspace.opacity")
+    ?? coreTokenValue("cosmos.window.opacity");
   return typeof value === "number" ? value : 1;
 });
 

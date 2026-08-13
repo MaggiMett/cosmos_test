@@ -60,6 +60,10 @@ export {
   CORE_CLEAR_WINDOW_SKIN_ID,
 } from "./windowTemplate";
 export {
+  coreWorkspaceUiSkinPack,
+  CORE_WORKSPACE_UI_PACK_ID,
+} from "./coreWorkspaceUiSkin";
+export {
   clusterNodeTemplate,
   coreNodeTemplates,
   detailNodeTemplate,
