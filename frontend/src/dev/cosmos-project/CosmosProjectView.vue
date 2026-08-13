@@ -81,6 +81,7 @@
       :project-name="presentation.projectName"
       :phase="projectResources.state.phase"
       :items="projectResources.state.snapshot?.items ?? []"
+      :can-open-resources="Boolean(visibleProject?.workspaceObjectId)"
       @close="resourceLayerOpen = false"
       @open-resource="openProjectedResource"
     />

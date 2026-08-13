@@ -142,6 +142,8 @@ describe("Project Cosmos visual slice", () => {
     expect(layer).toContain('emit("open-resource", item.resourcePath)');
     expect(layer).toContain("item.editable ? 'Editable' : 'Read only'");
     expect(layer).toContain("title: item.resourcePath");
+    expect(source).toContain(':can-open-resources="Boolean(visibleProject?.workspaceObjectId)"');
+    expect(layer).toContain("this Project has no Workspace for opening them");
     expect(source).toContain("openTool: \"cosmos.tool.files\"");
     expect(source).toContain("resourcePath,");
   });

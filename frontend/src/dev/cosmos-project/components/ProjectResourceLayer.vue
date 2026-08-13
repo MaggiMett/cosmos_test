@@ -7,6 +7,7 @@
     <p v-if="phase === 'loading'" class="project-resource-layer__state">Loading resources…</p>
     <p v-else-if="phase === 'error'" class="project-resource-layer__state">Resources are temporarily unavailable.</p>
     <p v-else-if="!items.length" class="project-resource-layer__state">No user-facing resources found.</p>
+    <p v-else-if="!canOpenResources" class="project-resource-layer__state">Resources are available, but this Project has no Workspace for opening them.</p>
     <nav v-else aria-label="Projected project resources">
       <template v-for="item in items" :key="item.resourcePath">
         <div class="project-resource-layer__group" v-if="item.kind === 'group'">
@@ -28,6 +29,7 @@ const props = defineProps<{
   projectName: string;
   phase: "idle" | "loading" | "ready" | "error";
   items: ProjectResourceProjectionItem[];
+  canOpenResources: boolean;
 }>();
 void props;
 defineEmits<{ close: []; "open-resource": [resourcePath: string] }>();
