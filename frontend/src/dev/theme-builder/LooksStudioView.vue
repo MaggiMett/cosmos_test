@@ -18,8 +18,11 @@
       <template v-else-if="phase === 'error'"><h1 class="builder-serif">Looks Studio unavailable</h1><p role="alert">{{ loadError }}</p><button type="button" @click="loadProject">Try again</button></template>
       <template v-else-if="phase === 'missing-template'"><h1 class="builder-serif">Missing Target Template</h1><p role="alert">{{ commandError }}</p></template>
       <template v-else>
-        <p class="looks-studio-state__eyebrow">No Skin Selected</p>
-        <h1 class="builder-serif">Create or open a Skin Draft</h1>
+        <p class="looks-studio-state__eyebrow">{{ selectedTemplateEntry ? "Template selected" : "No Skin Selected" }}</p>
+        <h1 class="builder-serif">{{ selectedTemplateEntry ? `${selectedTemplateEntry.label} gestalten` : "Create or open a Skin Draft" }}</h1>
+        <p v-if="selectedTemplateEntry" class="looks-studio-state__template-flow">
+          Clear Template → Cosmos Core reference ({{ selectedTemplateEntry.visualReference }}) → dein Theme
+        </p>
         <p v-if="!projectId">Open Looks Studio with an explicit builderProjectId.</p>
         <template v-else-if="snapshot">
           <nav v-if="existingSkins.length" aria-label="Existing Skin Drafts">
@@ -104,6 +107,15 @@ import {
   BASE_MAIN_ROOM_TEMPLATE_ID,
   TemplateRegistry,
   baseMainRoomTemplate,
+  clusterNodeTemplate,
+  coreTemplateCatalog,
+  cosmosConnectionTemplate,
+  cosmosMapTemplate,
+  detailNodeTemplate,
+  domainNodeTemplate,
+  objectNodeTemplate,
+  projectRootNodeTemplate,
+  type CoreTemplateCatalogEntry,
   type ExactVersionedRef,
   type JsonValue,
 } from "../../theme-engine";
@@ -119,7 +131,16 @@ import { ThemeBuilderSession, type ThemeBuilderSessionSnapshot } from "./themeBu
 
 type Phase = "empty" | "loading" | "error" | "missing-template" | "success";
 const templates = new TemplateRegistry();
-templates.register(baseMainRoomTemplate);
+[
+  baseMainRoomTemplate,
+  cosmosMapTemplate,
+  projectRootNodeTemplate,
+  domainNodeTemplate,
+  clusterNodeTemplate,
+  objectNodeTemplate,
+  detailNodeTemplate,
+  cosmosConnectionTemplate,
+].forEach((template) => templates.register(template));
 const route = useRoute();
 const router = useRouter();
 const phase = shallowRef<Phase>("empty");
@@ -138,6 +159,10 @@ let session: ThemeBuilderSession | undefined;
 
 const projectId = computed(() => typeof route.query.builderProjectId === "string" ? route.query.builderProjectId.trim() : "");
 const requestedSkinId = computed(() => typeof route.query.skinId === "string" ? route.query.skinId.trim() : "");
+const requestedTemplateCatalogId = computed(() => typeof route.query.template === "string" ? route.query.template.trim() : "");
+const selectedTemplateEntry = computed<CoreTemplateCatalogEntry | undefined>(() =>
+  coreTemplateCatalog.find((entry) => entry.catalogId === requestedTemplateCatalogId.value),
+);
 const availableTemplates = computed(() => templates.list().filter((template) => (template.assetSlots?.length ?? 0) > 0));
 const existingSkins = computed(() => snapshot.value?.project.artifacts.skinPacks.flatMap((pack) => pack.skins) ?? []);
 const assetItems = computed(() => snapshot.value
@@ -161,6 +186,10 @@ const materialTextureUrl = computed(() => assetItems.value.find((asset) =>
 
 watch(projectId, loadProject, { immediate: true });
 watch(requestedSkinId, resolveRouteSkin);
+watch(requestedTemplateCatalogId, () => {
+  const templateId = selectedTemplateEntry.value?.templateId;
+  if (templateId && templates.get(templateId)) createTemplateId.value = templateId;
+}, { immediate: true });
 
 async function loadProject(): Promise<void> {
   session = undefined; snapshot.value = undefined; resolved.value = undefined; commandError.value = "";

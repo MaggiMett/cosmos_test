@@ -68,10 +68,8 @@ const groups = computed(() =>
 );
 
 function destinationFor(entry: CoreTemplateCatalogEntry): string | null {
-  if (entry.group === "base" && entry.kind === "environment") return "theme-builder-room-shell";
-  if (entry.kind === "object") return "theme-builder-object-studio";
-  if (entry.group === "cosmos" && entry.kind === "environment") return "theme-builder-looks-studio";
-  return null;
+  if (entry.status !== "implemented" || !entry.templateId) return null;
+  return "theme-builder-looks-studio";
 }
 
 function friendlyDescription(entry: CoreTemplateCatalogEntry): string {
