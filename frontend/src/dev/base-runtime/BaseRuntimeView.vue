@@ -237,13 +237,15 @@ function closeBase() {
 }
 
 function openGlobalCosmos(): void {
+  if (props.backgroundOnly) return;
   quickTravelOpen.value = false;
-  void navigateToGlobal(router);
+  void navigateToGlobal(router, props.navigationScope);
 }
 
 function openProjectCosmos(projectId: string): void {
+  if (props.backgroundOnly) return;
   quickTravelOpen.value = false;
-  void navigateToProject(router, projectId);
+  void navigateToProject(router, projectId, props.navigationScope);
 }
 
 function openWorkspace(slot: Readonly<BaseWorkspaceSlotPresentation>) {

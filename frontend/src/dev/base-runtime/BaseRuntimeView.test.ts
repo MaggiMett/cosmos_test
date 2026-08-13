@@ -328,6 +328,8 @@ describe("Base Room Runtime visual slice", () => {
     expect(view).toContain("<CosmosQuickTravel");
     expect(view).toContain('@global="openGlobalCosmos"');
     expect(view).toContain('@project="openProjectCosmos"');
+    expect(view).toContain("navigateToGlobal(router, props.navigationScope)");
+    expect(view).toContain("navigateToProject(router, projectId, props.navigationScope)");
     expect(room).toContain(':disabled="!slot.occupied"');
     expect(room).toContain('`Open ${slot.displayName} workspace`');
     expect(room).toContain('`Travel to ${door.targetRoomName}`');
