@@ -53,6 +53,8 @@ Example discussed:
 
 Long-term these nodes should also provide a user-friendly representation of the project's real directory/content hierarchy. The intent is **not** to expose every filesystem/internal file. A later filter/projection layer should show only user-relevant folders/files needed to extend or edit the project, hiding temp/internal/noise paths. The actual Project can remain a normal real path while Cosmos presents a simplified parallel projection.
 
+**Important Product Bible constraint:** this projection is a convenience/resource view, not Cosmos semantics. `00_Foundation/01_Vision.md` and `02_Principles.md` explicitly require Cosmos to organize meaning rather than derive meaning from folder/source layout. Project/Knowledge/Object relationships remain authoritative; physical files stay project-scoped resources. Do not turn the discussed folder mirroring into the semantic object model.
+
 Do not implement this filesystem projection as part of Theme Builder. Preserve the concept for the later Project/Cosmos navigation phase.
 
 ---
