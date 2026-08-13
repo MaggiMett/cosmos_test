@@ -476,6 +476,18 @@ async def visual_asset_content(request: Request) -> Response:
         return _service_error(error)
 
 
+async def project_resource_projection(request: Request) -> JSONResponse:
+    try:
+        runtime = request.app.state.runtime
+        project_id = request.path_params["project_id"]
+        context = _project_context(runtime, project_id)
+        from cosmos.services.project_resource_projection import project_resource_projection as project_resources
+
+        return JSONResponse(project_resources(runtime.resources.tree(context)))
+    except RuntimeServiceError as error:
+        return _service_error(error)
+
+
 async def project_files(request: Request) -> JSONResponse:
     try:
         context = _workspace_context(request)
@@ -741,6 +753,11 @@ def create_app(
                 methods=["PUT", "DELETE"],
             ),
             Route(
+                "/projects/{project_id:str}/resource-projection",
+                project_resource_projection,
+                methods=["GET"],
+            ),
+            Route(
                 "/workspace-sessions/{session_id:str}/files",
                 project_files,
                 methods=["GET", "POST"],
@@ -924,6 +941,16 @@ def _workspace_context(request: Request) -> RuntimeContext:
     return request.app.state.runtime.workspaces.context(
         request.path_params["session_id"], _local_owner_context()
     )
+
+
+def _project_context(runtime: CosmosRuntime, project_id: str) -> RuntimeContext:
+    context = _cosmos_context(runtime)
+    if project_id not in context.project_scope_ids:
+        raise RuntimeServiceError("object_not_found", "Project is outside the active Cosmos scope.")
+    project = runtime.objects.get(project_id, context)
+    if "Project" not in project.system_tags:
+        raise RuntimeServiceError("validation_failed", "Requested Object is not a Project.")
+    return replace(context, focused_project_id=project_id, object_id=project_id)
 
 
 def _object_context(request: Request, object_id: str) -> RuntimeContext:

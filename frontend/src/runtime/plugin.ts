@@ -8,6 +8,7 @@ import { CosmosMapRuntime } from "./cosmosMapRuntime";
 import { CoreToolsRuntime } from "./coreToolsRuntime";
 import { NotificationRuntime } from "./notificationRuntime";
 import { ObjectInteractionRuntime } from "./objectInteractionRuntime";
+import { ProjectResourceProjectionRuntime } from "./projectResourceProjectionRuntime";
 import { ThemeRegistry } from "./themeRegistry";
 import {
   ApiThemePackageRecordSource,
@@ -31,6 +32,7 @@ export interface CosmosFrontendRuntime {
   coreTools: CoreToolsRuntime;
   notifications: NotificationRuntime;
   objectInteractions: ObjectInteractionRuntime;
+  projectResources: ProjectResourceProjectionRuntime;
   themes: ThemeRuntime;
   themePackages: ThemePackageStartupLoader & ThemePackagePresentationSource;
   tools: ToolRuntime;
@@ -78,6 +80,7 @@ export function createCosmosFrontendRuntime(apiBaseUrl?: string): CosmosFrontend
     coreTools: new CoreToolsRuntime(api),
     notifications,
     objectInteractions: new ObjectInteractionRuntime(api, windows, cosmosMap),
+    projectResources: new ProjectResourceProjectionRuntime(api),
     themes,
     themePackages,
     tools,
