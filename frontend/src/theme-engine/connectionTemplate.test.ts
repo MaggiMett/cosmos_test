@@ -4,7 +4,7 @@ import { cosmosConnectionTemplate } from "./connectionTemplate";
 
 describe("Clear Cosmos Connection template", () => {
   it("models presentation without encoding relationship direction or hierarchy", () => {
-    expect(cosmosConnectionTemplate.targetRole).toBe("connection");
+    expect(cosmosConnectionTemplate.targetRole).toBe("connection.standard");
     expect(cosmosConnectionTemplate.anchors.map((anchor) => anchor.anchorId)).toEqual([
       "connection.start",
       "connection.center",

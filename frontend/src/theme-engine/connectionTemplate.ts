@@ -16,7 +16,7 @@ export const cosmosConnectionTemplate = {
   displayName: "Connection — Clear",
   description:
     "Themeable visual connection between two Core-owned Node endpoints. Direction and relationship semantics are intentionally outside the Theme contract.",
-  targetRole: "connection",
+  targetRole: "connection.standard",
   compatibility: { themeEngine: ">=1.0.0", cosmos: ">=1.0.0" },
   referenceViewport: { width: 512, height: 96 },
   coordinateMapping: {

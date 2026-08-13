@@ -30,6 +30,10 @@ export {
   coreTemplateCatalogByGroup,
 } from "./coreTemplateCatalog";
 export {
+  coreCosmosGraphSkinPack,
+  CORE_COSMOS_GRAPH_PACK_ID,
+} from "./coreCosmosNodeSkin";
+export {
   coreCosmosMapSkinPack,
   CORE_COSMOS_MAP_PACK_ID,
   CORE_COSMOS_MAP_SKIN_ID,
