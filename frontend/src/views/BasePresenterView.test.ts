@@ -45,6 +45,10 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain(':room-id="session?.context.roomId ?? null"');
     expect(presenterSource).toContain(':room-id="roomId"');
     expect(newSource).toContain("if (props.roomId) return props.roomId");
+    expect(workspaceSource).toContain("[...toolInstances.value]");
+    expect(workspaceSource).toContain('instance.window.state === "active"');
+    expect(workspaceSource).toContain("closeTool(focusedTool.instanceId)");
+    expect(workspaceSource).not.toContain("session.value.toolInstances");
   });
 
   it("keeps all productive interactions on the prepared New presenter", () => {

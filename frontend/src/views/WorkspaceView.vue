@@ -214,11 +214,12 @@ function openWorkspaceContextMenu(event: MouseEvent) {
 
 function onKeyDown(event: KeyboardEvent) {
   if (event.key !== "Escape" || event.defaultPrevented || !session.value) return;
-  const focusedTool = [...session.value.toolInstances]
-    .sort((left, right) => right.zIndex - left.zIndex)[0];
+  const focusedTool = [...toolInstances.value]
+    .filter((instance) => instance.window.state === "active")
+    .sort((left, right) => right.window.focusOrder - left.window.focusOrder)[0];
   if (focusedTool) {
     event.preventDefault();
-    closeTool(focusedTool.objectId);
+    closeTool(focusedTool.instanceId);
     return;
   }
   void closeWorkspace();
