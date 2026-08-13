@@ -312,7 +312,9 @@ watch(
 );
 
 onMounted(() => {
-  entryProjectId = runtime.cosmosMap.state.snapshot?.focusedProjectId ?? null;
+  entryProjectId = typeof route.query.fromProjectId === "string"
+    ? route.query.fromProjectId
+    : runtime.cosmosMap.state.snapshot?.focusedProjectId ?? null;
   unsubscribeActiveTheme = runtime.themes.subscribeActiveTheme(() => {
     void refreshThemePresentation();
   });

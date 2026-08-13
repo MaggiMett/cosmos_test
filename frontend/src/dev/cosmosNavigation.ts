@@ -51,8 +51,10 @@ export function globalCosmosRoute(
   return scope === "production" ? { name: "cosmos" } : { name: "dev-cosmos-global" };
 }
 
-export function baseRoute(): RouteLocationRaw {
-  return { name: "base" };
+export function baseRoute(sourceProjectId: string | null = null): RouteLocationRaw {
+  return sourceProjectId
+    ? { name: "base", query: { fromProjectId: sourceProjectId } }
+    : { name: "base" };
 }
 
 export function navigateToProject(
@@ -72,6 +74,7 @@ export function navigateToGlobal(
 
 export function navigateToBase(
   router: Readonly<Pick<Router, "push">>,
+  sourceProjectId: string | null = null,
 ): ReturnType<Router["push"]> {
-  return router.push(baseRoute());
+  return router.push(baseRoute(sourceProjectId));
 }

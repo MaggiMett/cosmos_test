@@ -137,7 +137,7 @@ describe("Project Cosmos visual slice", () => {
     expect(view).toContain("host.openContextMenu(objectId");
     expect(view).toContain("<CosmosQuickTravel");
     expect(view).toContain("<CompanionWindowHost");
-    expect(view).toContain("navigateToBase(router)");
+    expect(view).toContain("navigateToBase(router, visibleProject.value?.objectId ?? null)");
     expect(view).toContain('@open-themes="openThemes"');
     expect(view).toContain('router.push({ name: "theme-library" })');
     expect(view).not.toContain("selectedObjectId = ref");

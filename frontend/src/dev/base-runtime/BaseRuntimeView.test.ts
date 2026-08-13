@@ -131,7 +131,8 @@ describe("Base Room Runtime visual slice", () => {
     expect(view).toContain("loadBaseRuntimeSnapshot(runtime.base)");
     expect(view).toContain("navigateToBaseRoom(router, runtime.base");
     expect(view).toContain("navigateToBaseWorkspace(router, runtime.base");
-    expect(view).toContain("entryProjectId = runtime.cosmosMap.state.snapshot?.focusedProjectId ?? null");
+    expect(view).toContain('typeof route.query.fromProjectId === "string"');
+    expect(view).toContain("runtime.cosmosMap.state.snapshot?.focusedProjectId ?? null");
     expect(view).toContain("navigateFromBase(router, entryProjectId)");
     expect(view).toContain("<CompanionWindowHost");
     expect(view).toContain("companionWindowHost.value?.open()");

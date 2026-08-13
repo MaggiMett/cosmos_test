@@ -251,7 +251,7 @@ function openCompanion(): void {
 }
 
 function openBase(): void {
-  void navigateToBase(router);
+  void navigateToBase(router, visibleProject.value?.objectId ?? null);
 }
 
 function openThemes(): void {

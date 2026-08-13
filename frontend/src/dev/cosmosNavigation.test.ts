@@ -67,8 +67,12 @@ describe("Global to Project Cosmos navigation", () => {
     const navigationRouter = { push } as unknown as Pick<Router, "push">;
 
     expect(router.resolve(baseRoute()).fullPath).toBe("/base");
-    await navigateToBase(navigationRouter);
-    expect(push).toHaveBeenCalledWith({ name: "base" });
+    expect(router.resolve(baseRoute("project.real")).fullPath).toBe("/base?fromProjectId=project.real");
+    await navigateToBase(navigationRouter, "project.real");
+    expect(push).toHaveBeenCalledWith({
+      name: "base",
+      query: { fromProjectId: "project.real" },
+    });
   });
 
   it("uses the productive Cosmos route without Dev URLs for the New presenter", async () => {
