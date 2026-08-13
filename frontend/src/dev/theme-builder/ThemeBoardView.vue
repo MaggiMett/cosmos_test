@@ -69,6 +69,8 @@
           </p>
         </section>
 
+        <CoreTemplateKit />
+
         <ThemeBoardAssets :items="assetItems" @add="openAssetPicker" @remove="removeAsset" />
         <p v-if="assetCommandError" class="theme-board__error" role="alert">{{ assetCommandError }}</p>
 
@@ -120,6 +122,7 @@ import { assetCatalogApi, type PersistedAssetCatalogRecord } from "../../runtime
 import type { ExactVersionedRef } from "../../theme-engine";
 import BuilderAssetPicker from "./components/BuilderAssetPicker.vue";
 import ContinueWorking from "./components/ContinueWorking.vue";
+import CoreTemplateKit from "./components/CoreTemplateKit.vue";
 import HeroCard from "./components/HeroCard.vue";
 import MoodboardGrid from "./components/MoodboardGrid.vue";
 import ThemeBuilderShell from "./components/ThemeBuilderShell.vue";
