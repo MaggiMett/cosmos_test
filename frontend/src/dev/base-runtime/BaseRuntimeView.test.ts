@@ -319,6 +319,11 @@ describe("Base Room Runtime visual slice", () => {
     expect(chrome).toContain("`Return to ${props.returnProjectName} in Cosmos`");
     expect(view).toContain(':return-project-name="entryProjectName"');
     expect(chrome).toContain(':title="companionLabel"');
+    expect(chrome).toContain(':quick-travel-open="quickTravelOpen"');
+    expect(chrome).toContain('@toggle-quick-travel="$emit(\'toggle-quick-travel\')"');
+    expect(view).toContain("<CosmosQuickTravel");
+    expect(view).toContain('@global="openGlobalCosmos"');
+    expect(view).toContain('@project="openProjectCosmos"');
     expect(room).toContain(':disabled="!slot.occupied"');
     expect(room).toContain("Available workspace slot");
     expect(room).not.toContain("Opening Workspace");

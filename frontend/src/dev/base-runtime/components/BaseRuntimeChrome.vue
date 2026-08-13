@@ -15,9 +15,9 @@
       :current-location="currentLocation"
       :left-neighbor="null"
       :right-neighbor="sceneOwnsFunctionControls ? null : rightNeighbor"
-      :quick-travel-open="false"
-      :current-interactive="false"
+      :quick-travel-open="quickTravelOpen"
       @travel="$emit('travel-room', $event)"
+      @toggle-quick-travel="$emit('toggle-quick-travel')"
     />
 
     <div class="base-runtime-chrome__status" aria-label="Companion">
@@ -55,6 +55,7 @@ const props = withDefaults(defineProps<{
   currentLocation: string;
   companion: Readonly<BaseCompanionPresentation> | null;
   rightNeighbor: Readonly<{ objectId: string; displayName: string }> | null;
+  quickTravelOpen: boolean;
   returnProjectName?: string | null;
   sceneOwnsFunctionControls?: boolean;
 }>(), {
@@ -64,6 +65,7 @@ const props = withDefaults(defineProps<{
 
 defineEmits<{
   "travel-room": [roomId: string];
+  "toggle-quick-travel": [];
   "open-companion": [];
   "close-base": [];
 }>();

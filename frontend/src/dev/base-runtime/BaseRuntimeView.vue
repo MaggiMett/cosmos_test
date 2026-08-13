@@ -52,11 +52,21 @@
       :current-location="presentation.currentLocation"
       :companion="presentation.phase === 'success' ? presentation.room.companion : null"
       :right-neighbor="rightNeighbor"
+      :quick-travel-open="quickTravelOpen"
       :return-project-name="entryProjectName"
       :scene-owns-function-controls="compositionActive"
       @travel-room="travelToRoom"
+      @toggle-quick-travel="quickTravelOpen = !quickTravelOpen"
       @open-companion="openCompanion"
       @close-base="closeBase"
+    />
+    <CosmosQuickTravel
+      v-if="quickTravelOpen && runtime.cosmosMap.state.snapshot"
+      :projects="runtime.cosmosMap.state.snapshot.projects"
+      :current-project-id="entryProjectId"
+      @close="quickTravelOpen = false"
+      @global="openGlobalCosmos"
+      @project="openProjectCosmos"
     />
     <template v-if="presentation.phase === 'success'">
       <CompanionWindowHost
@@ -76,6 +86,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import CompanionWindowHost from "../../components/cosmos/CompanionWindowHost.vue";
+import CosmosQuickTravel from "../../components/cosmos/CosmosQuickTravel.vue";
 import ObjectInteractionHost from "../../components/windows/ObjectInteractionHost.vue";
 import { resolveRendererAssetResourceUrl } from "../../runtime/assetResourceUrl";
 import { AssetCatalogApi } from "../../runtime/assetCatalogApi";
@@ -101,6 +112,7 @@ import {
   projectBaseRuntimeState,
   routeRoomParameterToSnapshotId,
 } from "./baseRuntimeProjection";
+import { navigateToGlobal, navigateToProject } from "../cosmosNavigation";
 import {
   type BaseNavigationScope,
   navigateFromBase,
@@ -126,6 +138,7 @@ const router = useRouter();
 const baseState = runtime.base.state;
 const companionWindowHost = ref<InstanceType<typeof CompanionWindowHost> | null>(null);
 const objectInteractionHost = ref<InstanceType<typeof ObjectInteractionHost> | null>(null);
+const quickTravelOpen = ref(false);
 let entryProjectId: string | null = null;
 const themePresentationResult = ref<Readonly<BaseRoomThemePresentationResult>>(
   coreBaseRoomThemePresentation("disabled"),
@@ -214,6 +227,16 @@ function travelToRoom(targetRoomId: string) {
 function closeBase() {
   if (props.backgroundOnly) return;
   void navigateFromBase(router, entryProjectId);
+}
+
+function openGlobalCosmos(): void {
+  quickTravelOpen.value = false;
+  void navigateToGlobal(router);
+}
+
+function openProjectCosmos(projectId: string): void {
+  quickTravelOpen.value = false;
+  void navigateToProject(router, projectId);
 }
 
 function openWorkspace(slot: Readonly<BaseWorkspaceSlotPresentation>) {
