@@ -43,6 +43,8 @@ describe("Cosmos interaction contract", () => {
     expect(quickTravel).toContain(':aria-current="focusedProjectId === null"');
     expect(quickTravel).toContain(':aria-current="focusedProjectId === project.objectId"');
     expect(quickTravel).toContain('aria-label="Close Quick Travel"');
+    expect(quickTravel).toContain('title="Close Quick Travel"');
+    expect(quickTravel).toContain("<strong>Global Cosmos</strong><small>All Projects</small>");
     expect(quickTravel).toContain(":focus-visible");
   });
 

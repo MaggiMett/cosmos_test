@@ -2,11 +2,11 @@
   <aside id="quick-travel" class="quick-travel" aria-label="Quick Travel">
     <header>
       <span>Quick Travel</span>
-      <button type="button" aria-label="Close Quick Travel" @click="$emit('close')">×</button>
+      <button type="button" aria-label="Close Quick Travel" title="Close Quick Travel" @click="$emit('close')">×</button>
     </header>
     <button type="button" :aria-current="focusedProjectId === null" @click="$emit('travel-global')">
       <i class="quick-travel__cosmos" aria-hidden="true" />
-      <span><strong>Cosmos</strong><small>Global view</small></span>
+      <span><strong>Global Cosmos</strong><small>All Projects</small></span>
     </button>
     <button
       v-for="project in projects"
