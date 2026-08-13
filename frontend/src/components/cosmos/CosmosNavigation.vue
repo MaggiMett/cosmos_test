@@ -19,12 +19,10 @@
       aria-controls="quick-travel"
       @click="$emit('toggle-quick-travel')"
     >
-      <small>Current location</small>
       <strong>{{ currentLocation }}</strong>
       <span class="cosmos-navigation__mark" aria-hidden="true" />
     </button>
     <div v-else class="cosmos-navigation__current cosmos-navigation__current--passive">
-      <small>Current location</small>
       <strong>{{ currentLocation }}</strong>
       <span class="cosmos-navigation__mark" aria-hidden="true" />
     </div>
@@ -111,13 +109,6 @@ defineEmits<{
 
 .cosmos-navigation__current--passive {
   cursor: default;
-}
-
-.cosmos-navigation__current small {
-  color: var(--cosmos-color-muted);
-  font-size: 0.52rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
 }
 
 .cosmos-navigation__current strong {
