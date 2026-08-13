@@ -74,7 +74,13 @@ describe("Global Cosmos visual slice", () => {
     const controls = sourceFor("./components/GlobalCosmosControls.vue");
 
     expect(chrome).toContain('current-location="Global Cosmos"');
-    expect(sourceFor("./CosmosGlobalView.vue")).toContain('current-location="Global Cosmos"');
+    const view = sourceFor("./CosmosGlobalView.vue");
+    expect(view).toContain('current-location="Global Cosmos"');
+    expect(view).toContain('<GlobalCosmosChrome\n      v-if="!backgroundOnly"');
+    expect(view).toContain('v-if="!backgroundOnly && quickTravelOpen && mapState.snapshot"');
+    expect(view).toContain('<GlobalCosmosControls\n      v-if="!backgroundOnly"');
+    expect(view).toContain('<ObjectInteractionHost v-if="!backgroundOnly"');
+    expect(view).toContain("if (props.backgroundOnly) return;");
     expect(chrome).toContain("Local · Synced");
     expect(chrome).toContain("projectStatus");
     expect(chrome).toContain(':left-neighbor="leftNeighbor"');

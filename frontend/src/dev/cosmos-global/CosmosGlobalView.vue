@@ -47,6 +47,7 @@
     </div>
 
     <GlobalCosmosChrome
+      v-if="!backgroundOnly"
       :project-count="presentation.projectCount"
       :phase="presentation.phase"
       :left-neighbor="neighbors.left"
@@ -56,7 +57,7 @@
       @toggle-quick-travel="quickTravelOpen = !quickTravelOpen"
     />
     <CosmosQuickTravel
-      v-if="quickTravelOpen && mapState.snapshot"
+      v-if="!backgroundOnly && quickTravelOpen && mapState.snapshot"
       :projects="mapState.snapshot.projects"
       :focused-project-id="mapState.snapshot.focusedProjectId"
       @close="quickTravelOpen = false"
@@ -64,6 +65,7 @@
       @travel-project="openProject"
     />
     <GlobalCosmosControls
+      v-if="!backgroundOnly"
       :zoom-label="presentation.zoomLabel"
       @zoom-out="zoomBy(1 / 1.18)"
       @zoom-in="zoomBy(1.18)"
@@ -73,11 +75,12 @@
       @open-themes="openThemes"
     />
     <CompanionWindowHost
+      v-if="!backgroundOnly"
       ref="companionWindowHost"
       current-location="Global Cosmos"
       @destination="openObject"
     />
-    <ObjectInteractionHost ref="objectInteractionHost" />
+    <ObjectInteractionHost v-if="!backgroundOnly" ref="objectInteractionHost" />
   </section>
 </template>
 
@@ -148,6 +151,7 @@ const neighbors = computed(() => {
 });
 
 async function openProject(projectId: string): Promise<void> {
+  if (props.backgroundOnly) return;
   quickTravelOpen.value = false;
   focusProject(projectId);
   runtime.cosmosMap.select(projectId);
