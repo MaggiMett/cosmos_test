@@ -37,7 +37,14 @@ describe("Core Cosmos template catalog", () => {
       (entry) => entry.status === "implemented",
     );
 
-    expect(implemented).toHaveLength(6);
+    expect(implemented).toHaveLength(7);
+    expect(implemented).toContainEqual(
+      expect.objectContaining({
+        catalogId: "cosmos.map",
+        templateId: "cosmos.map.standard-v1",
+        targetRole: "map",
+      }),
+    );
     expect(implemented).toContainEqual(
       expect.objectContaining({
         catalogId: "base.room.main",

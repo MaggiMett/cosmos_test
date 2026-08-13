@@ -1,4 +1,5 @@
 import { baseMainRoomTemplate } from "./baseTemplate";
+import { cosmosMapTemplate } from "./cosmosMapTemplate";
 import {
   clusterNodeTemplate,
   detailNodeTemplate,
@@ -36,7 +37,8 @@ export const coreTemplateCatalog = [
     group: "cosmos",
     kind: "environment",
     targetRole: "map",
-    status: "clear-template-planned",
+    status: "implemented",
+    templateId: cosmosMapTemplate.templateId,
     visualReference: "CosmosMap.png",
   },
   {

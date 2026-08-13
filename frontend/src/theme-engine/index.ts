@@ -30,6 +30,12 @@ export {
   coreTemplateCatalogByGroup,
 } from "./coreTemplateCatalog";
 export {
+  cosmosMapTemplate,
+  COSMOS_MAP_SLOT_IDS,
+  COSMOS_MAP_TEMPLATE_ID,
+  CORE_CLEAR_COSMOS_MAP_SKIN_ID,
+} from "./cosmosMapTemplate";
+export {
   clusterNodeTemplate,
   coreNodeTemplates,
   detailNodeTemplate,
