@@ -45,6 +45,7 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain("runtime.workspaces.open");
     expect(workspaceSource).toContain('route.query.openTool === "cosmos.tool.files"');
     expect(workspaceSource).toContain(":initial-resource-path");
+    expect(workspaceSource).toContain("sessionProjectId === requestedProjectId.value");
     expect(workspaceSource).toContain(':room-id="session?.context.roomId ?? null"');
     expect(presenterSource).toContain(':room-id="roomId"');
     expect(newSource).toContain("if (props.roomId) return props.roomId");

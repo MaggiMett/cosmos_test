@@ -136,9 +136,14 @@ function toolActionLabel(definitionObjectId: string, displayName: string): strin
   return `Open ${displayName}`;
 }
 
-const requestedResourcePath = computed(() =>
-  typeof route.query.resourcePath === "string" ? route.query.resourcePath : null,
+const requestedProjectId = computed(() =>
+  typeof route.query.fromProjectId === "string" ? route.query.fromProjectId : null,
 );
+const requestedResourcePath = computed(() => {
+  if (typeof route.query.resourcePath !== "string") return null;
+  const sessionProjectId = session.value?.definition.sourceProjectId ?? null;
+  return requestedProjectId.value && sessionProjectId === requestedProjectId.value ? route.query.resourcePath : null;
+});
 
 const workspaceRoom = computed(() => {
   const roomId = session.value?.context.roomId;
