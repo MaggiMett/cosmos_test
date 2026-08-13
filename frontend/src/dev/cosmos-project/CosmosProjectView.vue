@@ -57,6 +57,7 @@
     </div>
 
     <ProjectCosmosChrome
+      v-if="!backgroundOnly"
       :project-name="presentation.projectName"
       :object-count="presentation.objectCount"
       :phase="presentation.phase"
@@ -68,7 +69,7 @@
       @toggle-quick-travel="quickTravelOpen = !quickTravelOpen"
     />
     <CosmosQuickTravel
-      v-if="quickTravelOpen && mapState.snapshot"
+      v-if="!backgroundOnly && quickTravelOpen && mapState.snapshot"
       :projects="mapState.snapshot.projects"
       :focused-project-id="mapState.snapshot.focusedProjectId"
       @close="quickTravelOpen = false"
@@ -76,6 +77,7 @@
       @travel-project="travelToProject"
     />
     <ProjectCosmosControls
+      v-if="!backgroundOnly"
       :project-name="presentation.projectName"
       :zoom-label="presentation.zoomLabel"
       @zoom-out="zoomBy(1 / 1.18)"
@@ -86,11 +88,12 @@
       @open-themes="openThemes"
     />
     <CompanionWindowHost
+      v-if="!backgroundOnly"
       ref="companionWindowHost"
       :current-location="presentation.projectName"
       @destination="openCompanionDestination"
     />
-    <ObjectInteractionHost ref="objectInteractionHost" />
+    <ObjectInteractionHost v-if="!backgroundOnly" ref="objectInteractionHost" />
   </section>
 </template>
 

@@ -57,6 +57,10 @@ describe("Project Cosmos visual slice", () => {
     expect(chrome).toContain("@travel=\"$emit('travel-project', $event)\"");
     expect(chrome).toContain('aria-label="Return to Global Cosmos"');
     expect(chrome).toContain('title="Return to Global Cosmos"');
+    expect(view).toContain('<ProjectCosmosChrome\n      v-if="!backgroundOnly"');
+    expect(view).toContain('v-if="!backgroundOnly && quickTravelOpen && mapState.snapshot"');
+    expect(view).toContain('<ProjectCosmosControls\n      v-if="!backgroundOnly"');
+    expect(view).toContain('<ObjectInteractionHost v-if="!backgroundOnly"');
     expect(view).toContain('@back-to-global="backToGlobal"');
     expect(view).toContain("navigateToGlobal(router, props.navigationScope)");
     expect(chrome).toContain("Local · Synced");
