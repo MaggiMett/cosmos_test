@@ -141,15 +141,16 @@ const coreLabel = computed(() => {
   vector-effect: non-scaling-stroke;
 }
 
-.project-connection--semantic {
+.project-connection--structural {
   stroke: rgba(var(--project-light), 0.48);
   stroke-width: 1.45;
   filter: drop-shadow(0 0 3px rgba(var(--project-light), 0.24));
 }
 
-.project-connection--structural,
+.project-connection--semantic,
 .project-connection--discovery {
   stroke: rgba(var(--project-light), 0.14);
+  stroke-width: 1;
   stroke-dasharray: 2 7;
 }
 

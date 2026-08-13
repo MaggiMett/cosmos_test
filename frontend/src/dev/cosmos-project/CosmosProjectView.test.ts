@@ -107,8 +107,9 @@ describe("Project Cosmos visual slice", () => {
     expect(constellation).toContain("<svg");
     expect(constellation).toContain('v-for="connection in project.connections"');
     expect(constellation).toContain(":d=\"connection.path\"");
-    expect(constellation).toContain("project-connection--semantic");
     expect(constellation).toContain("project-connection--structural");
+    expect(constellation).toContain(".project-connection--semantic,");
+    expect(constellation).toContain(".project-connection--discovery {");
     expect(constellation).toContain("@click");
     expect(constellation).toContain("@pointerdown.stop");
     expect(constellation).not.toContain("connection-edit");
