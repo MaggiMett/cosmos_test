@@ -4,6 +4,7 @@
       v-if="leftNeighbor"
       class="cosmos-navigation__neighbor"
       type="button"
+      :aria-label="`Travel to ${leftNeighbor.displayName}`"
       :title="`Travel to ${leftNeighbor.displayName}`"
       @click="$emit('travel', leftNeighbor.objectId)"
     >
@@ -17,6 +18,8 @@
       type="button"
       :aria-expanded="quickTravelOpen"
       aria-controls="quick-travel"
+      :aria-label="`Open quick travel from ${currentLocation}`"
+      :title="`Open quick travel from ${currentLocation}`"
       @click="$emit('toggle-quick-travel')"
     >
       <strong>{{ currentLocation }}</strong>
@@ -31,6 +34,7 @@
       v-if="rightNeighbor"
       class="cosmos-navigation__neighbor cosmos-navigation__neighbor--right"
       type="button"
+      :aria-label="`Travel to ${rightNeighbor.displayName}`"
       :title="`Travel to ${rightNeighbor.displayName}`"
       @click="$emit('travel', rightNeighbor.objectId)"
     >

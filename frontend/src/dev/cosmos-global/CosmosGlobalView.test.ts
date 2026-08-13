@@ -41,6 +41,10 @@ describe("Global Cosmos visual slice", () => {
 
     expect(chrome).toContain("<CosmosNavigation");
     expect(chrome).toContain("<CompanionAvatar");
+    const navigation = sourceFor("../../components/cosmos/CosmosNavigation.vue");
+    expect(navigation).toContain(':aria-label="`Travel to ${leftNeighbor.displayName}`"');
+    expect(navigation).toContain(':aria-label="`Travel to ${rightNeighbor.displayName}`"');
+    expect(navigation).toContain(':aria-label="`Open quick travel from ${currentLocation}`"');
     expect(combined).not.toContain("ThemeBuilderShell");
     expect(combined).not.toContain("StudioRail");
     expect(combined).not.toContain("BuilderTopNavigation");
