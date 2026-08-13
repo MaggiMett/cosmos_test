@@ -103,6 +103,10 @@ describe("Project Cosmos visual slice", () => {
     expect(constellation).toContain("node.hierarchyLevel.toLowerCase()");
     expect(constellation).toContain(".project-node--domain > i");
     expect(constellation).toContain(".project-node--cluster > i");
+    expect(constellation).toContain('class="project-node__label"');
+    expect(constellation).toContain(".project-node--domain > .project-node__label");
+    expect(constellation).toContain(".project-node:hover > .project-node__label");
+    expect(constellation).toContain(".project-node--selected > .project-node__label");
     expect(projection).toContain("hierarchyLevel: node.hierarchyLevel");
     expect(projection).toContain("`M${round(start.x)} ${round(start.y)} L${round(end.x)} ${round(end.y)}`");
     expect(projection).not.toContain(" C${controlX}");

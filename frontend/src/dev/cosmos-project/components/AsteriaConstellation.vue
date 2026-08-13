@@ -64,6 +64,7 @@
       >
         <span v-if="node.isSelected" class="project-node__focus-ring" aria-hidden="true" />
         <i aria-hidden="true" />
+        <strong class="project-node__label">{{ node.displayName }}</strong>
       </button>
       <aside v-if="node.isSelected" class="project-node-card">
         <strong>{{ node.displayName }}</strong>
@@ -278,6 +279,40 @@ const coreLabel = computed(() => {
 .project-node--detail > i {
   border-color: rgba(var(--project-light), 0.58);
   box-shadow: 0 0 8px rgba(var(--project-light), 0.18);
+}
+
+.project-node__label {
+  position: absolute;
+  top: calc(50% + var(--node-size) / 2 + 8px);
+  left: 50%;
+  max-width: 150px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  color: rgba(235, 242, 255, 0.72);
+  font-size: 0.67rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  opacity: 0;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  transition: opacity 120ms ease, color 120ms ease;
+  white-space: nowrap;
+}
+
+.project-node--domain > .project-node__label,
+.project-node--cluster > .project-node__label,
+.project-node:hover > .project-node__label,
+.project-node:focus-visible > .project-node__label,
+.project-node--selected > .project-node__label {
+  opacity: 1;
+}
+
+.project-node:hover > .project-node__label,
+.project-node:focus-visible > .project-node__label,
+.project-node--selected > .project-node__label {
+  color: #fff;
 }
 
 .project-node--core > strong {
