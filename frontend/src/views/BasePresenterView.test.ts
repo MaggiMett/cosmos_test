@@ -58,6 +58,9 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain("toolOpenState(tool.objectId)");
     expect(workspaceSource).toContain(':aria-pressed="toolOpenState(tool.objectId)"');
     expect(workspaceSource).toContain("workspace-tool--open");
+    expect(workspaceSource).toContain("toolFocusedState(tool.objectId)");
+    expect(workspaceSource).toContain("workspace-tool--focused");
+    expect(workspaceSource).toContain(':data-focused="toolFocusedState(tool.objectId) || undefined"');
     expect(workspaceSource).toContain("`Open another ${tool.displayName}`");
   });
 

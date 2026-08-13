@@ -35,7 +35,11 @@
             type="button"
             :aria-label="toolOpenState(tool.objectId) ? `Open another ${tool.displayName}` : `Open ${tool.displayName}`"
             :aria-pressed="toolOpenState(tool.objectId)"
-            :class="{ 'workspace-tool--open': toolOpenState(tool.objectId) }"
+            :class="{
+              'workspace-tool--open': toolOpenState(tool.objectId),
+              'workspace-tool--focused': toolFocusedState(tool.objectId),
+            }"
+            :data-focused="toolFocusedState(tool.objectId) || undefined"
             :title="`${toolOpenState(tool.objectId) ? 'Open another' : 'Open'} ${tool.displayName}: ${tool.description}`"
             @click="openTool(tool.objectId)"
           >
@@ -114,6 +118,12 @@ const toolInstances = computed(() =>
 );
 function toolOpenState(definitionObjectId: string): boolean {
   return toolInstances.value.some((instance) => instance.definition.objectId === definitionObjectId);
+}
+
+function toolFocusedState(definitionObjectId: string): boolean {
+  return toolInstances.value.some(
+    (instance) => instance.definition.objectId === definitionObjectId && instance.window.state === "active",
+  );
 }
 
 const workspaceReturnLabel = computed(() => {
@@ -371,6 +381,13 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
 }
 .tool-area button.workspace-tool--open i {
   box-shadow: 0 0 10px color-mix(in srgb, var(--workspace-accent) 18%, transparent);
+}
+.tool-area button.workspace-tool--focused {
+  border-color: color-mix(in srgb, var(--workspace-accent) 54%, transparent);
+  background: color-mix(in srgb, var(--workspace-accent) 18%, transparent);
+}
+.tool-area button.workspace-tool--focused i {
+  box-shadow: 0 0 14px color-mix(in srgb, var(--workspace-accent) 30%, transparent);
 }
 .tool-area button i { display: grid; width: 22px; height: 22px; place-items: center; border: 1px solid color-mix(in srgb, var(--workspace-accent) 18%, transparent); border-radius: 3px; background: color-mix(in srgb, var(--workspace-accent) 9%, #101b23); color: var(--workspace-accent); font-size: 0.59rem; font-style: normal; }
 .tool-area button span { font-size: 0.63rem; letter-spacing: 0.02em; }
