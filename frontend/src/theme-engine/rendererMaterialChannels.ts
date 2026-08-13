@@ -65,14 +65,21 @@ interface RendererMaterialChannelDefinition {
 const namespacedId = /^[a-z0-9]+(?:[._-][a-z0-9]+)+$/;
 const safeHexColor = /^#[0-9a-f]{3}(?:[0-9a-f]{3})?(?:[0-9a-f]{2})?$/i;
 
+const surfaceParameters = Object.freeze({
+  "core.material.fill": Object.freeze({ kind: "color" as const }),
+  "core.material.stroke": Object.freeze({ kind: "color" as const }),
+  "core.material.opacity": Object.freeze({ kind: "number" as const, minimum: 0, maximum: 1 }),
+  "core.material.texture-ref": Object.freeze({ kind: "asset-reference" as const }),
+});
+
 const DOM_SURFACE_CHANNEL = Object.freeze<RendererMaterialChannelDefinition>({
   channelId: "core.material.dom-surface",
-  parameters: Object.freeze({
-    "core.material.fill": Object.freeze({ kind: "color" }),
-    "core.material.stroke": Object.freeze({ kind: "color" }),
-    "core.material.opacity": Object.freeze({ kind: "number", minimum: 0, maximum: 1 }),
-    "core.material.texture-ref": Object.freeze({ kind: "asset-reference" }),
-  }),
+  parameters: surfaceParameters,
+});
+
+const PART_SURFACE_CHANNEL = Object.freeze<RendererMaterialChannelDefinition>({
+  channelId: "core.material.part-surface",
+  parameters: surfaceParameters,
 });
 
 /** A closed renderer-owned allowlist. It emits data only; it never writes CSS or DOM state. */
@@ -89,7 +96,7 @@ export class RendererMaterialChannelRegistry {
     material: Readonly<Material>,
     resolveAsset: MaterialAssetResolver,
   ): RendererMaterialResolution {
-    const channel = this.channels[material.channelId];
+    const channel = this.channelFor(material.channelId);
     if (!channel) return unavailable(material.channelId, "unknown-channel");
     const entries = Object.entries(material.parameters).sort(([left], [right]) =>
       left.localeCompare(right),
@@ -117,7 +124,7 @@ export class RendererMaterialChannelRegistry {
     material: Readonly<Material>,
     hasAsset: (assetId: string) => boolean,
   ): RendererMaterialValidation {
-    const channel = this.channels[material.channelId];
+    const channel = this.channelFor(material.channelId);
     if (!channel) return Object.freeze({ valid: false, reason: "unknown-channel" });
     const entries = Object.entries(material.parameters);
     if (entries.length === 0) return Object.freeze({ valid: false, reason: "empty-material" });
@@ -130,8 +137,13 @@ export class RendererMaterialChannelRegistry {
     return Object.freeze({ valid: true });
   }
 
+  private channelFor(channelId: string): Readonly<RendererMaterialChannelDefinition> | undefined {
+    if (channelId.startsWith(`${PART_SURFACE_CHANNEL.channelId}.`)) return PART_SURFACE_CHANNEL;
+    return this.channels[channelId];
+  }
+
   referencedAssetIds(material: Readonly<Material>): readonly string[] {
-    const channel = this.channels[material.channelId];
+    const channel = this.channelFor(material.channelId);
     if (!channel) return Object.freeze([]);
     return Object.freeze(
       Object.entries(material.parameters)
@@ -170,6 +182,7 @@ function validateParameter(
 
 export const rendererMaterialChannelRegistry = new RendererMaterialChannelRegistry([
   DOM_SURFACE_CHANNEL,
+  PART_SURFACE_CHANNEL,
 ]);
 
 function resolveParameter(

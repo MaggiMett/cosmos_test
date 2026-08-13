@@ -210,7 +210,8 @@ const slotItems = computed(() => resolved.value
 const activeStateLabel = computed(() => stateItems.value.find((state) => state.stateId === activeStateId.value)?.label ?? activeStateId.value);
 const selectedSlot = computed(() => slotItems.value.find((slot) => slot.slotId === selectedSlotId.value));
 const missingAssetCount = computed(() => slotItems.value.filter((slot) => slot.assetStatus === "missing").length);
-const material = computed(() => resolved.value?.skin.materials.find((item) => item.channelId === "core.material.dom-surface"));
+const selectedMaterialChannelId = computed(() => selectedSlotId.value ? `core.material.part-surface.${selectedSlotId.value}` : "core.material.dom-surface");
+const material = computed(() => resolved.value?.skin.materials.find((item) => item.channelId === selectedMaterialChannelId.value));
 const materialFill = computed(() => colorValue(material.value?.parameters["core.material.fill"], "#30343a"));
 const materialStroke = computed(() => colorValue(material.value?.parameters["core.material.stroke"], "#8b929c"));
 const materialOpacity = computed(() => typeof material.value?.parameters["core.material.opacity"] === "number" ? material.value.parameters["core.material.opacity"] : 1);
@@ -281,12 +282,12 @@ function clearSlot(): void {
 }
 function setMaterial(parameterId: string, value: JsonValue): void {
   if (value === null) {
-    execute({ type: "clear-skin-material-channel", skinId: requestedSkinId.value, channelId: "core.material.dom-surface", parameterId });
+    execute({ type: "clear-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value, parameterId });
     return;
   }
-  execute({ type: "set-skin-material-channel", skinId: requestedSkinId.value, channelId: "core.material.dom-surface", parameterId, value });
+  execute({ type: "set-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value, parameterId, value });
 }
-function clearMaterial(): void { execute({ type: "clear-skin-material-channel", skinId: requestedSkinId.value, channelId: "core.material.dom-surface" }); }
+function clearMaterial(): void { execute({ type: "clear-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value }); }
 
 function execute(command: Parameters<ThemeBuilderSession["execute"]>[0]): void {
   if (!session) return;
