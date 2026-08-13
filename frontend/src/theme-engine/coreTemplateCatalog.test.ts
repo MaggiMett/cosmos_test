@@ -38,11 +38,17 @@ describe("Core Cosmos template catalog", () => {
       (entry) => entry.status === "implemented",
     );
 
-    expect(implemented).toHaveLength(9);
+    expect(implemented).toHaveLength(10);
     expect(implemented).toContainEqual(
       expect.objectContaining({
         catalogId: "workspace.environment",
         templateId: "cosmos.environment-template.workspace.standard-v1",
+      }),
+    );
+    expect(implemented).toContainEqual(
+      expect.objectContaining({
+        catalogId: "ui.window",
+        templateId: "cosmos.object-template.window.standard-v1",
       }),
     );
     expect(implemented).toContainEqual(

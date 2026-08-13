@@ -2,6 +2,7 @@ import { baseMainRoomTemplate } from "./baseTemplate";
 import { cosmosMapTemplate } from "./cosmosMapTemplate";
 import { cosmosConnectionTemplate } from "./connectionTemplate";
 import { workspaceEnvironmentTemplate } from "./workspaceTemplate";
+import { uiWindowTemplate } from "./windowTemplate";
 import {
   clusterNodeTemplate,
   detailNodeTemplate,
@@ -165,7 +166,8 @@ export const coreTemplateCatalog = [
     group: "ui",
     kind: "object",
     targetRole: "window",
-    status: "clear-template-planned",
+    status: "implemented",
+    templateId: uiWindowTemplate.templateId,
     visualReference: "WorkspaceWindow.png",
   },
 ] as const satisfies readonly CoreTemplateCatalogEntry[];

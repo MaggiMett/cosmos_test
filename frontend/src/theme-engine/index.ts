@@ -55,6 +55,11 @@ export {
   CORE_CLEAR_WORKSPACE_SKIN_ID,
 } from "./workspaceTemplate";
 export {
+  uiWindowTemplate,
+  UI_WINDOW_TEMPLATE_ID,
+  CORE_CLEAR_WINDOW_SKIN_ID,
+} from "./windowTemplate";
+export {
   clusterNodeTemplate,
   coreNodeTemplates,
   detailNodeTemplate,
