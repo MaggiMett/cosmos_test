@@ -71,10 +71,16 @@ async function remove() { if (!selected.value || !window.confirm(`Delete ${selec
 function flatten(node: ResourceNode | null): ResourceNode[] { if (!node) return []; return node.type === "file" ? [node] : (node.children ?? []).flatMap(flatten); }
 function formatBytes(value: number) { return value < 1024 ? `${value} B` : `${(value / 1024).toFixed(1)} KB`; }
 function capture(cause: unknown) { error.value = cause instanceof Error ? cause.message : "Files could not complete the request."; }
-onMounted(() => {
-  loadTree();
-  if (props.initialResourcePath) void open(props.initialResourcePath);
+onMounted(async () => {
+  await loadTree();
+  if (props.initialResourcePath && root.value && containsFile(root.value, props.initialResourcePath)) {
+    await open(props.initialResourcePath);
+  }
 });
+function containsFile(node: ResourceNode, resourcePath: string): boolean {
+  if (node.type === "file") return node.path === resourcePath;
+  return node.children?.some((child) => containsFile(child, resourcePath)) ?? false;
+}
 </script>
 
 <style scoped>
