@@ -191,21 +191,21 @@ The next developer must rerun current checks before relying on these numbers.
 
 Before deep new architecture, open/use the actual Theme Builder and fix concrete UX breaks in the completed foundation. Verify that Workspace and Window are genuinely selectable/authorable through the user-facing flow, not only registered internally. Verify Clear / Cosmos Core / Your Theme comparisons for every implemented family. Keep normal UI beginner-friendly.
 
-### Phase B — Fundamental Cosmos navigation cleanup
+### Phase B — Fundamental Cosmos navigation cleanup — COMPLETE (2026-08-13)
 
-Return to the original product priority: make Cosmos itself easy to navigate.
+The live navigation/runtime audit is complete for the current implemented journey. The verified flow is now:
 
-Audit the live frontend against Product Bible + Experience + Visual Specs at a user-flow level, especially:
+`Global Cosmos -> Project Cosmos -> Base -> Room -> Workspace -> Tool Window`
 
-- Cosmos Map -> Project root -> hierarchical child nodes
-- connection-line clarity
-- entering/leaving Base
-- Base -> Rooms
-- Base/Room -> Workspace
-- Workspace -> Tool Windows
-- consistent Back/Home/navigation behavior
+The pass covered hierarchical Project nodes and connection hierarchy, Base/Room entry and return, Workspace origin preservation, Tool focus/close hierarchy, Quick Travel, Development-vs-Production navigation scope, Deep Link origin validation, and passive `backgroundOnly` embedding for Global Cosmos, Project Cosmos and Base. Workspace launchers now reflect open/focused runtime state and focus an existing Tool window rather than accidentally duplicating it.
 
-Do not redesign architecture without first inspecting the existing runtime because the implementation roadmap marks these systems as already implemented.
+The close of Phase B is a contract boundary, not a claim that every future Cosmos experience is implemented. New navigation behavior should preserve these established scope/origin/runtime rules.
+
+Verification at Phase-B close:
+
+- frontend tests: 89/89 test files, 657/657 tests
+- frontend production build: passing
+- `main` synchronized after the Phase-B audit commits
 
 ### Phase C — Project hierarchy / user-friendly project projection
 
