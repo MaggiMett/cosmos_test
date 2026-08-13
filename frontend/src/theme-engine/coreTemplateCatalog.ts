@@ -13,7 +13,7 @@ import {
 import type { EnvironmentTemplate, ObjectTemplate } from "./types";
 
 export type CoreTemplateKind = "object" | "environment";
-export type CoreTemplateStatus = "implemented" | "clear-template-planned";
+export type CoreTemplateStatus = "implemented" | "clear-template-planned" | "object-builder-planned";
 
 export interface CoreTemplateCatalogEntry {
   readonly catalogId: string;
@@ -120,7 +120,7 @@ export const coreTemplateCatalog = [
     group: "base",
     kind: "object",
     targetRole: "door",
-    status: "clear-template-planned",
+    status: "object-builder-planned",
     visualReference: "Base.png",
   },
   {
@@ -129,7 +129,7 @@ export const coreTemplateCatalog = [
     group: "base",
     kind: "object",
     targetRole: "workspace-entry",
-    status: "clear-template-planned",
+    status: "object-builder-planned",
     visualReference: "Base.png",
   },
   {
@@ -138,7 +138,7 @@ export const coreTemplateCatalog = [
     group: "base",
     kind: "object",
     targetRole: "companion",
-    status: "clear-template-planned",
+    status: "object-builder-planned",
     visualReference: "Base.png",
   },
   {
@@ -147,7 +147,7 @@ export const coreTemplateCatalog = [
     group: "base",
     kind: "object",
     targetRole: "decoration",
-    status: "clear-template-planned",
+    status: "object-builder-planned",
     visualReference: "Base.png",
   },
   {
