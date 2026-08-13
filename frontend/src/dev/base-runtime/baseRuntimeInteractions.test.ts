@@ -3,12 +3,23 @@ import { describe, expect, it, vi } from "vitest";
 import type { BaseRuntime, BaseSnapshot } from "../../runtime/baseRuntime";
 import type { BaseWorkspaceSlotPresentation } from "./baseRuntimeProjection";
 import {
+  baseRoomRoute,
   navigateFromBase,
   navigateToBaseRoom,
   navigateToBaseWorkspace,
 } from "./baseRuntimeInteractions";
 
 describe("Base Runtime existing interaction adapter", () => {
+  it("derives canonical Room routes for production and development", () => {
+    const rooms = snapshot().rooms;
+    expect(baseRoomRoute(rooms[0])).toEqual({ name: "base" });
+    expect(baseRoomRoute(rooms[1])).toEqual({ name: "base-room", params: { roomId: "workshop" } });
+    expect(baseRoomRoute(rooms[1], "development")).toEqual({
+      path: "/dev/base-runtime",
+      query: { roomId: "room.workshop.authoritative" },
+    });
+  });
+
   it("returns from Base through the productive Cosmos route", async () => {
     const { router, push } = interactionHarness();
 
@@ -36,7 +47,7 @@ describe("Base Runtime existing interaction adapter", () => {
     ).resolves.toBe(true);
 
     expect(select).toHaveBeenCalledWith(null);
-    expect(push).toHaveBeenCalledWith("/base/rooms/workshop");
+    expect(push).toHaveBeenCalledWith({ name: "base-room", params: { roomId: "workshop" } });
   });
 
   it("navigates the real Main Room target through the productive Base route", async () => {
@@ -44,7 +55,7 @@ describe("Base Runtime existing interaction adapter", () => {
 
     await navigateToBaseRoom(router, runtime, snapshot(), "room.main.authoritative");
 
-    expect(push).toHaveBeenCalledWith("/base");
+    expect(push).toHaveBeenCalledWith({ name: "base" });
   });
 
   it("navigates Main to Workshop inside the development presenter using the real Room ID", async () => {

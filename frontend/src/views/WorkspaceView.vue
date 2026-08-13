@@ -82,6 +82,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import ToolWindow from "../components/windows/ToolWindow.vue";
+import { baseRoomRoute } from "../dev/base-runtime/baseRuntimeInteractions";
 import BasePresenterView from "./BasePresenterView.vue";
 import ObjectInteractionHost from "../components/windows/ObjectInteractionHost.vue";
 import type { WorkspaceSession } from "../runtime/workspaceRuntime";
@@ -141,7 +142,7 @@ async function closeWorkspace() {
     runtime.objectInteractions.closeAll(session.value.objectId);
     session.value = null;
     const room = runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId);
-    await router.push(!room || room.slug === "main" ? "/base" : `/base/rooms/${room.slug}`);
+    await router.push(baseRoomRoute(room));
   } catch (cause) {
     phase.value = "ready";
     error.value = cause instanceof Error ? cause.message : "Workspace state could not be preserved.";

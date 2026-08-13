@@ -80,7 +80,7 @@ describe("Base Room Runtime visual slice", () => {
 
     expect(view).toContain("targetRoomId, props.navigationScope");
     expect(interactions).toContain('path: "/dev/base-runtime"');
-    expect(interactions).toContain("roomId: targetRoom.objectId");
+    expect(interactions).toContain("roomId: room.objectId");
     expect(interactions).not.toContain("room.workshop");
   });
 

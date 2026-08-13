@@ -8,6 +8,22 @@ type BaseSelectionRuntime = Readonly<Pick<BaseRuntime, "select">>;
 type BaseNavigationRouter = Readonly<Pick<Router, "push">>;
 export type BaseNavigationScope = "production" | "development";
 
+type BaseRoomDestination = Readonly<Pick<DeepReadonly<BaseSnapshot>["rooms"][number], "objectId" | "slug">>;
+
+export function baseRoomRoute(
+  room: BaseRoomDestination | null | undefined,
+  scope: BaseNavigationScope = "production",
+) {
+  if (scope === "development") {
+    return room
+      ? { path: "/dev/base-runtime", query: { roomId: room.objectId } }
+      : { path: "/dev/base-runtime" };
+  }
+  return !room || room.slug === "main"
+    ? { name: "base" }
+    : { name: "base-room", params: { roomId: room.slug } };
+}
+
 export async function navigateFromBase(
   router: BaseNavigationRouter,
   focusedProjectId: string | null = null,
@@ -28,11 +44,7 @@ export async function navigateToBaseRoom(
   if (!targetRoom) return false;
 
   runtime.select(null);
-  if (scope === "development") {
-    await router.push({ path: "/dev/base-runtime", query: { roomId: targetRoom.objectId } });
-    return true;
-  }
-  await router.push(targetRoom.slug === "main" ? "/base" : `/base/rooms/${targetRoom.slug}`);
+  await router.push(baseRoomRoute(targetRoom, scope));
   return true;
 }
 
