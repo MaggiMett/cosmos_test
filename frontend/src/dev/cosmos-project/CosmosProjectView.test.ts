@@ -130,6 +130,16 @@ describe("Project Cosmos visual slice", () => {
     expect(constellation).not.toContain("connection-edit");
   });
 
+  it("keeps projected physical resources in a distinct additive layer", () => {
+    const source = sourceFor("./CosmosProjectView.vue");
+    const layer = sourceFor("./components/ProjectResourceLayer.vue");
+    expect(source).toContain("<ProjectResourceLayer");
+    expect(source).toContain("projectResources.load(requestedProjectId.value)");
+    expect(source).toContain(':aria-pressed="resourceLayerOpen"');
+    expect(layer).toContain("Resource view · not Cosmos semantics");
+    expect(layer).toContain('aria-label="Projected project resources"');
+  });
+
   it("loads, selects, moves and opens through existing Runtime paths", () => {
     const combined = files.map(sourceFor).join("\n");
     const view = sourceFor("./CosmosProjectView.vue");

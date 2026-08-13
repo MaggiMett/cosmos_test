@@ -68,6 +68,21 @@
       @travel-project="travelToProject"
       @toggle-quick-travel="quickTravelOpen = !quickTravelOpen"
     />
+    <button
+      v-if="!backgroundOnly && presentation.phase === 'success'"
+      class="project-resource-toggle"
+      type="button"
+      :aria-pressed="resourceLayerOpen"
+      title="Toggle project resources"
+      @click="toggleResourceLayer"
+    >Resources</button>
+    <ProjectResourceLayer
+      v-if="!backgroundOnly && resourceLayerOpen"
+      :project-name="presentation.projectName"
+      :phase="projectResources.state.phase"
+      :items="projectResources.state.snapshot?.items ?? []"
+      @close="resourceLayerOpen = false"
+    />
     <CosmosQuickTravel
       v-if="!backgroundOnly && quickTravelOpen && mapState.snapshot"
       :projects="mapState.snapshot.projects"
@@ -117,6 +132,7 @@ import { useCosmosRuntime } from "../../runtime/plugin";
 import AsteriaConstellation from "./components/AsteriaConstellation.vue";
 import ProjectCosmosChrome from "./components/ProjectCosmosChrome.vue";
 import ProjectCosmosControls from "./components/ProjectCosmosControls.vue";
+import ProjectResourceLayer from "./components/ProjectResourceLayer.vue";
 import {
   beginProjectNodeMove,
   moveProjectNode,
@@ -154,7 +170,9 @@ const presentation = computed(() =>
 );
 const objectInteractionHost = ref<InstanceType<typeof ObjectInteractionHost> | null>(null);
 const companionWindowHost = ref<InstanceType<typeof CompanionWindowHost> | null>(null);
+const projectResources = runtime.projectResources;
 const quickTravelOpen = ref(false);
+const resourceLayerOpen = ref(false);
 const nodeMove = ref<ProjectNodeMoveGesture | null>(null);
 const {
   viewportElement,
@@ -315,12 +333,44 @@ function releasePointer(pointerId: number): void {
   }
 }
 
+function toggleResourceLayer(): void {
+  resourceLayerOpen.value = !resourceLayerOpen.value;
+  if (resourceLayerOpen.value && requestedProjectId.value) {
+    void projectResources.load(requestedProjectId.value);
+  }
+}
+
 onMounted(() => {
   void loadProjectCosmosSnapshot(runtime.cosmosMap).catch(() => undefined);
 });
 </script>
 
 <style scoped>
+.project-resource-toggle {
+  position: fixed;
+  z-index: 22;
+  top: 58px;
+  right: 28px;
+  padding: 7px 11px;
+  border: 1px solid rgba(126, 185, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(5, 10, 17, 0.72);
+  color: rgba(220, 232, 239, 0.72);
+  font: inherit;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.project-resource-toggle[aria-pressed="true"],
+.project-resource-toggle:hover,
+.project-resource-toggle:focus-visible {
+  border-color: rgba(126, 185, 255, 0.36);
+  background: rgba(20, 43, 57, 0.78);
+  color: #e4edf3;
+  outline: 0;
+}
+
 .cosmos-project-view {
   overflow: hidden;
   touch-action: none;
