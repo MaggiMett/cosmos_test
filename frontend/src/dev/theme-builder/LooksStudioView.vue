@@ -97,6 +97,8 @@
       <LooksStudioInspector
         v-if="phase === 'success' && resolved"
         :skin-name="resolved.skin.displayName"
+        :part-name="selectedSlot?.label ?? 'Overall Look'"
+        :part-id="selectedSlot?.slotId ?? ''"
         :state-label="activeStateLabel"
         :fill="materialFill"
         :stroke="materialStroke"
@@ -206,6 +208,7 @@ const slotItems = computed(() => resolved.value
   ? projectLooksSlots(resolved.value.skin, resolved.value.template, assetItems.value, activeStateId.value)
   : []);
 const activeStateLabel = computed(() => stateItems.value.find((state) => state.stateId === activeStateId.value)?.label ?? activeStateId.value);
+const selectedSlot = computed(() => slotItems.value.find((slot) => slot.slotId === selectedSlotId.value));
 const missingAssetCount = computed(() => slotItems.value.filter((slot) => slot.assetStatus === "missing").length);
 const material = computed(() => resolved.value?.skin.materials.find((item) => item.channelId === "core.material.dom-surface"));
 const materialFill = computed(() => colorValue(material.value?.parameters["core.material.fill"], "#30343a"));

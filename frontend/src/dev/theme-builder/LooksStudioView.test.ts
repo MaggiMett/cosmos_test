@@ -61,14 +61,14 @@ describe("Looks Studio vertical slice", () => {
     expect(canvas).toContain("slots");
     expect(canvas).not.toContain("Orbital Luminaire");
     expect(canvas).toContain("100%");
-    expect(inspector).toContain('title="Appearance"');
-    expect(inspector).toContain("Surface");
+    expect(inspector).toContain('title="Look"');
+    expect(inspector).toContain("Color & surface");
+    expect(inspector).toContain("Outline / glow");
     expect(inspector).toContain("Finish");
-    expect(inspector).toContain('title="Alignment"');
-    expect(inspector).toContain('title="Fit"');
-    expect(inspector).toContain('title="Overflow"');
-    expect(inspector).toContain('title="Variant"');
-    expect(inspector).toContain("Animate...");
+    expect(inspector).not.toContain('title="Placement"');
+    expect(inspector).toContain('title="Effects"');
+    expect(inspector).toContain("Advanced");
+    expect(inspector).toContain("Coming later");
   });
 
   it("uses the canonical Builder session and project APIs without Runtime activation", () => {
