@@ -56,7 +56,7 @@ describe("Looks Studio vertical slice", () => {
     expect(context).toContain("Current Template");
     expect(context).toContain("Parts");
     expect(context).toContain("Artwork");
-    expect(context).toContain("States");
+    expect(context).toContain("Interaction");
     expect(context).toContain("slot.slotId");
     expect(canvas).toContain("slots");
     expect(canvas).not.toContain("Orbital Luminaire");

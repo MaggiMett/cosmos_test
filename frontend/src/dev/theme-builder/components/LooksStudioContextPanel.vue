@@ -4,7 +4,7 @@
       <h2 class="builder-serif">Current Template</h2>
       <div class="current-template">
         <NeutralVisualPlaceholder :label="templateName" />
-        <span><strong class="builder-serif">{{ templateName }}</strong><small>{{ templateId }}@{{ templateVersion }}</small></span>
+        <span><strong class="builder-serif">{{ templateName }}</strong><small>Clear template · {{ slots.length }} editable parts</small></span>
       </div>
     </section>
 
@@ -32,6 +32,7 @@
 
     <section class="looks-context__section looks-context__section--lined">
       <h2 class="builder-serif">Artwork</h2>
+      <p class="looks-context__hint">Choose the artwork used by the selected part.</p>
       <p v-if="assets.length === 0" class="looks-context__empty">Add artwork to this theme from the Theme Board first.</p>
       <div v-else class="looks-swatch-grid">
         <button
@@ -50,8 +51,8 @@
     </section>
 
     <section class="looks-context__section looks-context__section--lined">
-      <h2 class="builder-serif">States</h2>
-      <p class="looks-context__hint">Preview how this part reacts without changing its Core behavior.</p>
+      <h2 class="builder-serif">Interaction</h2>
+      <p class="looks-context__hint">Preview how this part looks when the user interacts with it. Cosmos keeps the behavior itself.</p>
       <div class="state-button-grid">
         <button
           v-for="state in states"
@@ -64,6 +65,15 @@
         >{{ state.label }}</button>
       </div>
     </section>
+
+    <details class="looks-context__advanced">
+      <summary>Advanced</summary>
+      <dl>
+        <div><dt>Template</dt><dd>{{ templateId }}@{{ templateVersion }}</dd></div>
+        <div v-if="selectedSlot"><dt>Part ID</dt><dd>{{ selectedSlot.slotId }}</dd></div>
+        <div v-if="selectedSlot?.bindingId"><dt>Binding</dt><dd>{{ selectedSlot.bindingId }}</dd></div>
+      </dl>
+    </details>
   </aside>
 </template>
 
@@ -129,4 +139,5 @@ const selectedSlot = computed(() => props.slots.find((slot) => slot.slotId === p
 .state-button-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; }
 .state-button-grid button { min-height: 34px; padding: 0 7px; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-control); background: rgba(13,18,23,.34); color: var(--builder-text); cursor: pointer; font-size: .64rem; }
 .state-button-grid button:hover, .state-button-grid__active { border-color: rgba(120,149,177,.5)!important; background: var(--builder-accent-soft)!important; }
+.looks-context__advanced{margin-top:16px;padding-top:12px;border-top:1px solid var(--builder-border);color:var(--builder-muted);font-size:.62rem}.looks-context__advanced summary{cursor:pointer;color:var(--builder-faint);letter-spacing:.04em}.looks-context__advanced dl{display:grid;margin:10px 0 0;gap:7px}.looks-context__advanced dl div{display:grid;grid-template-columns:58px minmax(0,1fr);gap:8px}.looks-context__advanced dt{color:var(--builder-faint)}.looks-context__advanced dd{margin:0;overflow-wrap:anywhere;color:var(--builder-muted)}
 </style>
