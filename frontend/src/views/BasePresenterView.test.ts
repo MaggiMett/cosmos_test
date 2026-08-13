@@ -55,6 +55,7 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain('"Return to Base"');
     expect(toolWindowSource).toContain(':aria-label="`Close ${title}`"');
     expect(toolWindowSource).toContain(':title="`Close ${title}`"');
+    expect(workspaceSource).toContain(':title="`Open ${tool.displayName}: ${tool.description}`"');
   });
 
   it("keeps all productive interactions on the prepared New presenter", () => {

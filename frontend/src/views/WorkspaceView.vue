@@ -34,7 +34,7 @@
             :key="tool.objectId"
             type="button"
             :aria-label="`Open ${tool.displayName}`"
-            :title="tool.description"
+            :title="`Open ${tool.displayName}: ${tool.description}`"
             @click="openTool(tool.objectId)"
           >
             <i aria-hidden="true">{{ tool.icon.slice(0, 1) }}</i>

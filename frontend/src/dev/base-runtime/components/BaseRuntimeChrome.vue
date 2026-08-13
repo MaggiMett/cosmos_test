@@ -25,6 +25,7 @@
         v-if="!sceneOwnsFunctionControls"
         type="button"
         :aria-label="companionLabel"
+        :title="companionLabel"
         :disabled="!companion"
         @click="$emit('open-companion')"
       >
