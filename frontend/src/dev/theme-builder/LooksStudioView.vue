@@ -84,6 +84,9 @@
         :material-stroke="materialStroke"
         :material-opacity="materialOpacity"
         :material-texture-url="materialTextureUrl"
+        :core-fill="corePreviewFill"
+        :core-stroke="corePreviewStroke"
+        :core-opacity="corePreviewOpacity"
         @select-state="selectState"
         @select-slot="selectedSlotId = $event"
       />
@@ -129,6 +132,8 @@ import {
   TemplateRegistry,
   baseMainRoomTemplate,
   clusterNodeTemplate,
+  coreCosmosGraphSkinPack,
+  coreCosmosMapSkinPack,
   coreTemplateCatalog,
   cosmosConnectionTemplate,
   cosmosMapTemplate,
@@ -237,6 +242,34 @@ const materialTexture = computed(() => typeof material.value?.parameters["core.m
 const materialTextureUrl = computed(() => assetItems.value.find((asset) =>
   asset.reference.id === materialTexture.value && asset.status === "available",
 )?.previewUrl ?? "");
+const corePreviewSkin = computed(() => {
+  const templateId = resolved.value?.template.templateId;
+  if (!templateId) return undefined;
+  return [...coreCosmosMapSkinPack.skins, ...coreCosmosGraphSkinPack.skins]
+    .find((skin) => skin.target.templateRef.id === templateId);
+});
+function coreTokenValue(tokenId: string): JsonValue | undefined {
+  const skin = corePreviewSkin.value;
+  if (!skin) return undefined;
+  const stateOverride = activeStateId.value === "default"
+    ? undefined
+    : skin.stateVariants.find((variant) => variant.stateId === activeStateId.value)?.tokenOverrides?.[tokenId]?.value;
+  return stateOverride ?? skin.tokens[tokenId]?.value;
+}
+const corePreviewFill = computed(() => {
+  const value = coreTokenValue("cosmos.node.primary") ?? coreTokenValue("cosmos.map.background");
+  return typeof value === "string" ? value : "#081426";
+});
+const corePreviewStroke = computed(() => {
+  const value = coreTokenValue("cosmos.node.accent")
+    ?? coreTokenValue("cosmos.connection.core")
+    ?? coreTokenValue("cosmos.map.node-cyan");
+  return typeof value === "string" ? value : "#62d9ff";
+});
+const corePreviewOpacity = computed(() => {
+  const value = coreTokenValue("cosmos.connection.opacity") ?? coreTokenValue("cosmos.node.glow-opacity");
+  return typeof value === "number" ? value : 1;
+});
 
 watch(projectId, loadProject, { immediate: true });
 watch(requestedSkinId, resolveRouteSkin);

@@ -87,6 +87,9 @@ const props = defineProps<{
   materialStroke: string;
   materialOpacity: number;
   materialTextureUrl: string;
+  coreFill: string;
+  coreStroke: string;
+  coreOpacity: number;
 }>();
 const emit = defineEmits<{ "select-state": [stateId: string]; "select-slot": [slotId: string] }>();
 const previewModes = ["Clear", "Cosmos Core", "Your Theme"] as const;
@@ -105,7 +108,7 @@ const visibleAssetSlots = computed(() => {
 });
 const objectStyle = computed(() => {
   if (previewMode.value === "Clear") return { "--looks-fill": "#20262d", "--looks-stroke": "#8b98a6", "--looks-opacity": "1" };
-  if (previewMode.value === "Cosmos Core") return { "--looks-fill": "#081426", "--looks-stroke": "#62d9ff", "--looks-opacity": "1" };
+  if (previewMode.value === "Cosmos Core") return { "--looks-fill": props.coreFill, "--looks-stroke": props.coreStroke, "--looks-opacity": String(props.coreOpacity) };
   return {
     "--looks-fill": props.materialFill,
     "--looks-stroke": props.materialStroke,
