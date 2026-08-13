@@ -50,7 +50,7 @@ describe("AssetRegistry", () => {
     const resolved = registry.resolve("missing.asset");
     expect(resolved.usedFallback).toBe(true);
     expect(resolved.asset.metadata.assetId).toBe(CORE_DEFAULT_BASE_ASSET_ID);
-    expect(resolved.asset.read()).toHaveLength(264);
+    expect(resolved.asset.read()).toHaveLength(coreDefaultBaseAssetRegistration.metadata.byteSize);
   });
 
   it("rejects invalid MIME declarations", async () => {

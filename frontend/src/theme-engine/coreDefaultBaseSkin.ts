@@ -17,8 +17,8 @@ import type {
   ThemeManifest,
 } from "./types";
 
-const placeholderSvg =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900"><rect width="1600" height="900" fill="#30343a"/><path d="M0 0h1600v900H0z" fill="none" stroke="#8b929c" stroke-width="8"/><path d="M0 0l1600 900M1600 0L0 900" stroke="#555b64" stroke-width="4"/></svg>\n';
+const coreBaseSvg =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900"><defs><linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#18222b"/><stop offset="1" stop-color="#0c1218"/></linearGradient><linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#252a2c"/><stop offset="1" stop-color="#111619"/></linearGradient><radialGradient id="cosmos"><stop stop-color="#214d68"/><stop offset=".45" stop-color="#101f35"/><stop offset="1" stop-color="#050811"/></radialGradient></defs><rect width="1600" height="900" fill="#070b10"/><path d="M320 110h960v610H320z" fill="url(#wall)"/><path d="M0 125l320-15v610L0 790zM1600 125l-320-15v610l320 70z" fill="#111920"/><path d="M320 720h960l240 180H80z" fill="url(#floor)"/><path d="M320 110h960L1450 0H150z" fill="#0c1319"/><path d="M610 105h380v330H610z" fill="#080d13" stroke="#6e8997" stroke-width="6"/><path d="M640 130h320v275H640z" fill="url(#cosmos)"/><g fill="#d9f5ff"><circle cx="690" cy="190" r="2"/><circle cx="870" cy="165" r="2"/><circle cx="920" cy="270" r="1.5"/><circle cx="745" cy="315" r="1.5"/></g><path d="M105 265h245v425H105zM1250 265h245v425h-245z" fill="#121b22" stroke="#526874" stroke-width="5"/><path d="M405 455h285v225H405zM910 455h285v225H910z" fill="#1b252b" stroke="#40545f" stroke-width="4"/><path d="M430 485h235v115H430zM935 485h235v115H935z" fill="#0a1720" stroke="#62b9d0" stroke-width="3"/><ellipse cx="800" cy="725" rx="105" ry="24" fill="#05080b" opacity=".7"/><circle cx="800" cy="610" r="48" fill="#1b2930" stroke="#7bc7d6" stroke-width="4"/><path d="M770 610h60M800 580v60" stroke="#7bc7d6" stroke-width="3" opacity=".65"/><g fill="none" stroke="#b48b5b" stroke-width="5" opacity=".7"><path d="M365 735h870"/><path d="M465 760h670"/></g></svg>\n';
 
 export const CORE_DEFAULT_BASE_PACK_ID = "core.skin-pack.base.default";
 export const CORE_DEFAULT_BASE_ASSET_ID = "core.asset.base.placeholder";
@@ -30,14 +30,14 @@ const placeholderAsset = {
   kind: "vector",
   format: "svg",
   mimeType: "image/svg+xml",
-  path: "assets/base-placeholder.svg",
-  sha256: "cf0901eb0009ea56504f31d6084e112ae6adf7df4dd942166f8cc72292418aa2",
-  byteSize: 264,
+  path: "assets/base-core.svg",
+  sha256: "4b7666c674da453394918c11aeee30a53dcfbb5977656d40074da3cd807d1124",
+  byteSize: 1754,
   width: 1600,
   height: 900,
   colorSpace: "srgb",
   alpha: false,
-  accessibilityDescription: "Neutral internal Base fallback placeholder",
+  accessibilityDescription: "Cosmos Core Base interior with cockpit view, integrated workspaces and central Companion",
 } as const;
 
 export const coreDefaultBaseSkinPack = {
@@ -45,8 +45,8 @@ export const coreDefaultBaseSkinPack = {
   packId: CORE_DEFAULT_BASE_PACK_ID,
   version: "1.0.0",
   packageKind: "single-skin",
-  displayName: "Core Default Base",
-  description: "Minimal internal fallback for technical Base rendering and tests.",
+  displayName: "Cosmos Core Base",
+  description: "Canonical Cosmos Core presentation for the Base Main Room clear template.",
   compatibility: {
     themeEngine: "^1.0.0",
   },
@@ -55,7 +55,7 @@ export const coreDefaultBaseSkinPack = {
     {
       skinId: CORE_DEFAULT_BASE_SKIN_ID,
       version: "1.0.0",
-      displayName: "Core Default Base",
+      displayName: "Cosmos Core Base",
       target: {
         presentationGroup: "base-interior",
         templateRef: {
@@ -70,9 +70,9 @@ export const coreDefaultBaseSkinPack = {
         fit: "fill" as const,
       })),
       tokens: {
-        "core.token.base.background": { type: "color", value: "#30343a" },
-        "core.token.base.border": { type: "color", value: "#8b929c" },
-        "core.token.base.label": { type: "color", value: "#f3f4f6" },
+        "core.token.base.background": { type: "color", value: "#0c1218" },
+        "core.token.base.border": { type: "color", value: "#6e8997" },
+        "core.token.base.label": { type: "color", value: "#e8f2f4" },
         "core.token.base.opacity": { type: "opacity", value: 1 },
       },
       materials: [],
@@ -111,7 +111,7 @@ export const coreDefaultBaseThemeManifest = {
 
 export const coreDefaultBaseAssetRegistration: AssetRegistration = {
   metadata: placeholderAsset,
-  content: placeholderSvg,
+  content: coreBaseSvg,
 };
 
 export const coreDefaultBaseComposition = {
