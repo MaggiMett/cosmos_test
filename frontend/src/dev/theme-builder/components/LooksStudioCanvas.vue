@@ -1,12 +1,15 @@
 <template>
   <section class="looks-studio-canvas" aria-label="Looks canvas" data-testid="looks-studio-canvas">
     <header class="looks-studio-canvas__toolbar">
-      <BuilderSegmentedControl
-        label="Visual state"
-        :options="states.map((state) => state.label)"
-        :active-option="activeState?.label ?? ''"
-        @change="selectStateByLabel"
-      />
+      <div class="looks-studio-canvas__toolbar-group">
+        <BuilderSegmentedControl label="Preview source" :options="previewModes" :active-option="previewMode" @change="selectPreviewMode" />
+        <BuilderSegmentedControl
+          label="Visual state"
+          :options="states.map((state) => state.label)"
+          :active-option="activeState?.label ?? ''"
+          @change="selectStateByLabel"
+        />
+      </div>
       <div class="looks-studio-canvas__zoom" aria-label="Canvas zoom">
         <button type="button">Fit</button><span>100%</span>
       </div>
@@ -68,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import type { LooksSlotPresentation, LooksStatePresentation } from "../looksStudioProjection";
 import BuilderSegmentedControl from "./BuilderSegmentedControl.vue";
 import NeutralVisualPlaceholder from "./NeutralVisualPlaceholder.vue";
@@ -86,6 +89,8 @@ const props = defineProps<{
   materialTextureUrl: string;
 }>();
 const emit = defineEmits<{ "select-state": [stateId: string]; "select-slot": [slotId: string] }>();
+const previewModes = ["Clear", "Cosmos Core", "Your Theme"] as const;
+const previewMode = ref<(typeof previewModes)[number]>("Your Theme");
 const activeState = computed(() => props.states.find((state) => state.stateId === props.activeStateId));
 const previewKind = computed<"map" | "node" | "connection" | "generic">(() => {
   if (props.templateId.includes("cosmos.map.")) return "map";
@@ -98,15 +103,22 @@ const visibleAssetSlots = computed(() => {
   const selected = available.find((slot) => slot.slotId === props.selectedSlotId);
   return selected ? [selected] : available.slice(0, 1);
 });
-const objectStyle = computed(() => ({
-  "--looks-fill": props.materialFill,
-  "--looks-stroke": props.materialStroke,
-  "--looks-opacity": String(props.materialOpacity),
-}));
+const objectStyle = computed(() => {
+  if (previewMode.value === "Clear") return { "--looks-fill": "#20262d", "--looks-stroke": "#8b98a6", "--looks-opacity": "1" };
+  if (previewMode.value === "Cosmos Core") return { "--looks-fill": "#081426", "--looks-stroke": "#62d9ff", "--looks-opacity": "1" };
+  return {
+    "--looks-fill": props.materialFill,
+    "--looks-stroke": props.materialStroke,
+    "--looks-opacity": String(props.materialOpacity),
+  };
+});
 function starStyle(index: number): Record<string, string> {
   const positions = [[13,20],[28,68],[39,30],[51,77],[62,18],[71,55],[82,27],[88,73],[19,45]];
   const [left, top] = positions[index - 1] ?? [50, 50];
   return { left: `${left}%`, top: `${top}%` };
+}
+function selectPreviewMode(mode: string): void {
+  if (previewModes.includes(mode as (typeof previewModes)[number])) previewMode.value = mode as (typeof previewModes)[number];
 }
 function selectStateByLabel(label: string): void {
   const state = props.states.find((candidate) => candidate.label === label);
@@ -117,7 +129,7 @@ function selectStateByLabel(label: string): void {
 <style scoped>
 .looks-studio-canvas { display:grid; min-width:0; min-height:0; padding:8px 12px 6px; grid-template-rows:46px minmax(0,1fr); background:rgba(5,9,12,.24); }
 .looks-studio-canvas__toolbar { display:flex; min-width:0; align-items:center; justify-content:space-between; gap:20px; }
-.looks-studio-canvas__toolbar > :deep(.builder-segmented-control) { grid-auto-columns:minmax(74px,1fr); }
+.looks-studio-canvas__toolbar-group{display:flex;min-width:0;align-items:center;gap:10px}.looks-studio-canvas__toolbar-group > :deep(.builder-segmented-control){grid-auto-columns:minmax(74px,1fr)}
 .looks-studio-canvas__zoom { display:flex; align-items:center; color:var(--builder-muted); font-size:.7rem; gap:8px; }
 .looks-studio-canvas__zoom button { min-width:42px; height:32px; border:1px solid transparent; border-radius:var(--builder-radius-control); background:transparent; color:var(--builder-text); }
 .looks-studio-canvas__stage { position:relative; min-width:0; min-height:0; overflow:hidden; border:1px solid var(--builder-border); border-radius:var(--builder-radius-card); background:rgba(13,18,23,.52); }
