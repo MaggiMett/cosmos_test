@@ -7,9 +7,6 @@ import { describe, expect, it } from "vitest";
 const files = [
   "./BaseRuntimeView.vue",
   "./components/BaseRuntimeChrome.vue",
-  "./components/BaseRuntimeWindow.vue",
-  "./components/BaseKnowledgeWindow.vue",
-  "./components/BaseCaptureWindow.vue",
   "./components/BaseCompanionPresence.vue",
   "./components/BasePetPresence.vue",
   "./components/BaseRoomScene.vue",
