@@ -50,7 +50,10 @@
       <button
         type="button"
         class="project-node"
-        :class="{ 'project-node--selected': node.isSelected }"
+        :class="[
+          `project-node--${node.hierarchyLevel.toLowerCase()}`,
+          { 'project-node--selected': node.isSelected },
+        ]"
         :aria-label="`${node.displayName} node`"
         :aria-pressed="node.isSelected"
         :data-node-id="node.objectId"
@@ -260,6 +263,21 @@ const coreLabel = computed(() => {
 
 .project-node--selected > i {
   box-shadow: 0 0 8px #fff, 0 0 26px rgba(var(--project-light), 0.82), 0 0 58px rgba(var(--project-light), 0.36);
+}
+
+.project-node--domain > i {
+  border-width: 1.5px;
+  box-shadow: 0 0 18px rgba(var(--project-light), 0.34), inset 0 0 10px rgba(255,255,255,0.12);
+}
+
+.project-node--cluster > i {
+  box-shadow: 0 0 12px rgba(var(--project-light), 0.24), inset 0 0 8px rgba(255,255,255,0.09);
+}
+
+.project-node--object > i,
+.project-node--detail > i {
+  border-color: rgba(var(--project-light), 0.58);
+  box-shadow: 0 0 8px rgba(var(--project-light), 0.18);
 }
 
 .project-node--core > strong {

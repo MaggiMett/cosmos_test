@@ -92,6 +92,7 @@ describe("Project Cosmos visual slice", () => {
 
   it("uses native Node buttons for click and Enter/Space activation with distinct focus", () => {
     const constellation = sourceFor("./components/AsteriaConstellation.vue");
+    const projection = sourceFor("./projectCosmosProjection.ts");
 
     expect(constellation).toContain("<button");
     expect(constellation).toContain('type="button"');
@@ -99,6 +100,10 @@ describe("Project Cosmos visual slice", () => {
     expect(constellation).toContain(':aria-pressed="node.isSelected"');
     expect(constellation).toContain(".project-node:focus-visible::after");
     expect(constellation).toContain(".project-node--selected > i");
+    expect(constellation).toContain("node.hierarchyLevel.toLowerCase()");
+    expect(constellation).toContain(".project-node--domain > i");
+    expect(constellation).toContain(".project-node--cluster > i");
+    expect(projection).toContain("hierarchyLevel: node.hierarchyLevel");
   });
 
   it("projects real SVG connection paths and Node move gestures without connection editing", () => {

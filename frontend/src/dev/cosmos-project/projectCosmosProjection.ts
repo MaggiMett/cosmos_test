@@ -16,6 +16,7 @@ export interface ProjectCosmosNodePresentation {
   x: number;
   y: number;
   isSelected: boolean;
+  hierarchyLevel: MapNode["hierarchyLevel"];
   style: Readonly<Record<string, string>>;
 }
 
@@ -166,6 +167,7 @@ export function projectProjectCosmosSnapshot(
         x: node.x,
         y: node.y,
         isSelected: selectedObjectId === node.objectId,
+        hierarchyLevel: node.hierarchyLevel,
         style: {
           "--node-left": `${node.x}px`,
           "--node-top": `${node.y}px`,
