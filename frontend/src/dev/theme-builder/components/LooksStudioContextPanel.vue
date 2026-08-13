@@ -9,7 +9,7 @@
     </section>
 
     <section class="looks-context__section looks-context__section--lined">
-      <h2 class="builder-serif">Visual Slots</h2>
+      <h2 class="builder-serif">Parts</h2>
       <div class="visual-slot-list">
         <button
           v-for="slot in slots"
@@ -26,13 +26,13 @@
         </button>
       </div>
       <button v-if="selectedSlot?.bindingId && !selectedSlot.inherited" type="button" class="looks-context__clear" @click="$emit('clear-slot')">
-        Clear selected slot
+        Remove artwork from this part
       </button>
     </section>
 
     <section class="looks-context__section looks-context__section--lined">
-      <h2 class="builder-serif">Assigned Assets</h2>
-      <p v-if="assets.length === 0" class="looks-context__empty">Add assets to this Builder Draft from Theme Board first.</p>
+      <h2 class="builder-serif">Artwork</h2>
+      <p v-if="assets.length === 0" class="looks-context__empty">Add artwork to this theme from the Theme Board first.</p>
       <div v-else class="looks-swatch-grid">
         <button
           v-for="asset in assets"
@@ -50,7 +50,8 @@
     </section>
 
     <section class="looks-context__section looks-context__section--lined">
-      <h2 class="builder-serif">Variants / States</h2>
+      <h2 class="builder-serif">States</h2>
+      <p class="looks-context__hint">Preview how this part reacts without changing its Core behavior.</p>
       <div class="state-button-grid">
         <button
           v-for="state in states"
@@ -104,7 +105,8 @@ const selectedSlot = computed(() => props.slots.find((slot) => slot.slotId === p
 .current-template > :deep(.neutral-visual) { width: 78px; height: 72px; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-control); }
 .current-template > span { display: grid; min-width: 0; gap: 4px; }
 .current-template strong { overflow: hidden; font-size: .86rem; font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
-.current-template small, .visual-slot-list small, .looks-context__empty { color: var(--builder-muted); font-size: .62rem; overflow-wrap: anywhere; }
+.current-template small, .visual-slot-list small, .looks-context__empty, .looks-context__hint { color: var(--builder-muted); font-size: .62rem; overflow-wrap: anywhere; }
+.looks-context__hint { margin: -4px 0 0 4px; line-height: 1.45; }
 .visual-slot-list { display: grid; overflow: hidden; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-control); }
 .visual-slot-list button { display: grid; min-height: 46px; padding: 5px 8px; grid-template-columns: 28px minmax(0,1fr) minmax(74px,auto) 16px; align-items: center; border: 0; border-bottom: 1px solid var(--builder-border); background: rgba(13,18,23,.34); color: #c9c8c4; cursor: pointer; font-size: .66rem; text-align: left; gap: 8px; }
 .visual-slot-list button:last-child { border-bottom: 0; }

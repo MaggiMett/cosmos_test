@@ -54,9 +54,8 @@ describe("Looks Studio vertical slice", () => {
     const inspector = sourceFor("./components/LooksStudioInspector.vue");
 
     expect(context).toContain("Current Template");
-    expect(context).toContain("Visual Slots");
-    expect(context).toContain("Assigned Assets");
-    expect(context).toContain("Variants");
+    expect(context).toContain("Parts");
+    expect(context).toContain("Artwork");
     expect(context).toContain("States");
     expect(context).toContain("slot.slotId");
     expect(canvas).toContain("slots");
