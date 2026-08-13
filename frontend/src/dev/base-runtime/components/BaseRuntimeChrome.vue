@@ -1,7 +1,6 @@
 <template>
   <header class="base-runtime-chrome" data-testid="base-runtime-chrome">
     <button
-      v-if="!sceneOwnsFunctionControls"
       type="button"
       class="base-runtime-chrome__brand"
       aria-label="Return to Cosmos"
@@ -10,14 +9,6 @@
       <span aria-hidden="true">✦</span>
       <strong>COSMOS</strong>
     </button>
-    <div
-      v-else
-      class="base-runtime-chrome__brand base-runtime-chrome__brand--passive"
-      aria-hidden="true"
-    >
-      <span>✦</span>
-      <strong>COSMOS</strong>
-    </div>
 
     <CosmosNavigation
       :current-location="currentLocation"
@@ -107,11 +98,6 @@ const companionLabel = computed(() =>
   cursor: pointer;
   font: inherit;
   gap: 16px;
-}
-
-.base-runtime-chrome__brand--passive {
-  cursor: default;
-  pointer-events: none;
 }
 
 .base-runtime-chrome__brand:focus-visible {
