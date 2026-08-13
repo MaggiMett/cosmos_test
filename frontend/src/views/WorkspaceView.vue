@@ -22,7 +22,7 @@
         @contextmenu.prevent="openWorkspaceContextMenu"
       >
         <strong class="workspace-environment__identity">{{ session.definition.displayName }}</strong>
-        <button type="button" aria-label="Close Workspace" title="Close" @click="closeWorkspace">
+        <button type="button" :aria-label="workspaceReturnLabel" :title="workspaceReturnLabel" @click="closeWorkspace">
           <span aria-hidden="true">×</span>
         </button>
       </header>
@@ -110,6 +110,11 @@ const availableTools = computed(() => {
 const toolInstances = computed(() =>
   session.value ? runtime.tools.state.instances.filter((item) => item.workspaceSessionId === session.value?.objectId) : [],
 );
+const workspaceReturnLabel = computed(() => {
+  const roomId = session.value?.context.roomId;
+  const room = runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId);
+  return room ? `Return to ${room.displayName}` : "Return to Base";
+});
 
 async function openWorkspace() {
   if (phase.value === "opening" || session.value) return;

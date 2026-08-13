@@ -49,6 +49,9 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain('instance.window.state === "active"');
     expect(workspaceSource).toContain("closeTool(focusedTool.instanceId)");
     expect(workspaceSource).not.toContain("session.value.toolInstances");
+    expect(workspaceSource).toContain(':aria-label="workspaceReturnLabel"');
+    expect(workspaceSource).toContain('`Return to ${room.displayName}`');
+    expect(workspaceSource).toContain('"Return to Base"');
   });
 
   it("keeps all productive interactions on the prepared New presenter", () => {
