@@ -21,20 +21,37 @@
         <p class="looks-studio-state__eyebrow">{{ selectedTemplateEntry ? "Template selected" : "No Skin Selected" }}</p>
         <h1 class="builder-serif">{{ selectedTemplateEntry ? `${selectedTemplateEntry.label} gestalten` : "Create or open a Skin Draft" }}</h1>
         <p v-if="selectedTemplateEntry" class="looks-studio-state__template-flow">
-          Clear Template → Cosmos Core reference ({{ selectedTemplateEntry.visualReference }}) → dein Theme
+          {{ selectedTemplateDescription }}
         </p>
+        <section v-if="selectedTemplateEntry" class="looks-studio-state__template-guide" aria-label="Theme workflow">
+          <article>
+            <span>1</span>
+            <div><strong>Clear template</strong><small>Form, slots, states and safe interaction areas.</small></div>
+          </article>
+          <i aria-hidden="true" />
+          <article>
+            <span>2</span>
+            <div><strong>Cosmos Core</strong><small>Our first finished example · {{ selectedTemplateEntry.visualReference }}</small></div>
+          </article>
+          <i aria-hidden="true" />
+          <article>
+            <span>3</span>
+            <div><strong>Your theme</strong><small>Replace the visual layer without changing the Core contract.</small></div>
+          </article>
+        </section>
         <p v-if="!projectId">Open Looks Studio with an explicit builderProjectId.</p>
         <template v-else-if="snapshot">
-          <nav v-if="existingSkins.length" aria-label="Existing Skin Drafts">
-            <RouterLink v-for="skin in existingSkins" :key="skin.skinId" :to="{ name: 'theme-builder-looks', query: { builderProjectId: projectId, skinId: skin.skinId } }">{{ skin.displayName }}</RouterLink>
+          <nav v-if="matchingSkins.length" aria-label="Existing Skin Drafts">
+            <RouterLink v-for="skin in matchingSkins" :key="skin.skinId" :to="{ name: 'theme-builder-looks', query: { builderProjectId: projectId, skinId: skin.skinId, template: requestedTemplateCatalogId || undefined } }">Continue {{ skin.displayName }}</RouterLink>
           </nav>
           <div class="looks-studio-state__create">
-            <h2 class="builder-serif">Create Skin</h2>
-            <label>Target Template
+            <h2 class="builder-serif">{{ selectedTemplateEntry ? `Create ${selectedTemplateEntry.label} look` : "Create Skin" }}</h2>
+            <label v-if="!selectedTemplateEntry">Target Template
               <select v-model="createTemplateId"><option v-for="template in availableTemplates" :key="template.templateId" :value="template.templateId">{{ template.displayName }} · {{ template.templateId }}@{{ template.version }}</option></select>
             </label>
-            <label>Skin name <input v-model="createName" maxlength="120" placeholder="Optional" /></label>
-            <button type="button" :disabled="!createTemplateId" @click="createSkin">Create Skin Draft</button>
+            <p v-else class="looks-studio-state__target">Using <strong>{{ selectedTemplateEntry.label }}</strong> clear template.</p>
+            <label>Look name <input v-model="createName" maxlength="120" :placeholder="selectedTemplateEntry ? `${selectedTemplateEntry.label} — My Theme` : 'Optional'" /></label>
+            <button type="button" :disabled="!createTemplateId" @click="createSkin">Create Look</button>
             <p v-if="commandError" role="alert">{{ commandError }}</p>
           </div>
         </template>
@@ -163,8 +180,22 @@ const requestedTemplateCatalogId = computed(() => typeof route.query.template ==
 const selectedTemplateEntry = computed<CoreTemplateCatalogEntry | undefined>(() =>
   coreTemplateCatalog.find((entry) => entry.catalogId === requestedTemplateCatalogId.value),
 );
+const selectedTemplateDescription = computed(() => {
+  const entry = selectedTemplateEntry.value;
+  if (!entry) return "";
+  if (entry.catalogId === "cosmos.map") return "Style the map background and atmosphere around project constellations.";
+  if (entry.catalogId.startsWith("cosmos.node.")) return "Style this level of the project hierarchy while Core keeps its meaning and interaction.";
+  if (entry.catalogId === "cosmos.connection") return "Style the visual link between Nodes while Core owns both endpoints and their relationship.";
+  if (entry.catalogId === "base.room.main") return "Style the Base shell and its default theme presentation without changing runtime ownership.";
+  return "Style this Cosmos surface without changing its Core behavior.";
+});
 const availableTemplates = computed(() => templates.list().filter((template) => (template.assetSlots?.length ?? 0) > 0));
 const existingSkins = computed(() => snapshot.value?.project.artifacts.skinPacks.flatMap((pack) => pack.skins) ?? []);
+const matchingSkins = computed(() => {
+  const templateId = selectedTemplateEntry.value?.templateId;
+  if (!templateId) return existingSkins.value;
+  return existingSkins.value.filter((skin) => skin.target.templateRef.id === templateId);
+});
 const assetItems = computed(() => snapshot.value
   ? projectBuilderAssets(snapshot.value.project, catalogRecords.value, catalogLoaded.value)
   : []);
@@ -233,7 +264,7 @@ async function createSkin(): Promise<void> {
     session.execute({ type: "create-skin-draft", targetTemplateId: createTemplateId.value, name: createName.value });
     syncSnapshot();
     const created = existingSkins.value.find((skin) => !before.has(skin.skinId));
-    if (created) await router.replace({ name: "theme-builder-looks", query: { builderProjectId: projectId.value, skinId: created.skinId } });
+    if (created) await router.replace({ name: "theme-builder-looks", query: { builderProjectId: projectId.value, skinId: created.skinId, template: requestedTemplateCatalogId.value || undefined } });
   } catch (error) { showCommandError(error); }
 }
 
@@ -267,5 +298,5 @@ function colorValue(value: JsonValue | undefined, fallback: string): string { re
 </script>
 
 <style scoped>
-.looks-studio-workspace{position:relative;display:grid;width:100%;height:100%;min-width:0;min-height:0;grid-template-columns:286px minmax(0,1fr);grid-template-rows:minmax(0,1fr) 50px}.looks-studio-workspace>:deep(.looks-context){grid-row:1/-1}.looks-studio-workspace__shelf{min-width:0;padding:0 12px 6px}.looks-studio-workspace__message{position:absolute;right:24px;bottom:62px;max-width:360px;margin:0;padding:8px 11px;border:1px solid var(--builder-border-strong);border-radius:var(--builder-radius-control);background:rgba(12,16,20,.94);color:#c69b76;font-size:.68rem}.looks-studio-state{display:grid;width:min(680px,calc(100% - 56px));min-height:100%;margin:0 auto;align-content:center;gap:12px}.looks-studio-state h1,.looks-studio-state h2{margin:0}.looks-studio-state p{margin:0;color:var(--builder-muted)}.looks-studio-state__eyebrow{color:var(--builder-faint)!important;text-transform:uppercase;letter-spacing:.12em}.looks-studio-state nav{display:flex;flex-wrap:wrap;gap:8px}.looks-studio-state nav a,.looks-studio-state button{min-height:36px;padding:0 13px;border:1px solid var(--builder-border);border-radius:var(--builder-radius-control);background:rgba(120,149,177,.1);color:var(--builder-text);text-decoration:none}.looks-studio-state__create{display:grid;margin-top:14px;padding:18px;border:1px solid var(--builder-border);border-radius:var(--builder-radius-card);gap:12px}.looks-studio-state__create label{display:grid;color:var(--builder-muted);font-size:.7rem;gap:6px}.looks-studio-state__create input,.looks-studio-state__create select{min-height:38px;padding:0 10px;border:1px solid var(--builder-border);border-radius:var(--builder-radius-control);background:rgba(6,10,14,.55);color:var(--builder-text)}.looks-studio-context-state{display:grid;padding:46px 24px;align-content:start;gap:10px}.looks-studio-context-state h2,.looks-studio-context-state p{margin:0}.looks-studio-context-state p{color:var(--builder-muted);font-size:.72rem}.looks-studio-context-error{margin:0 24px;color:#c69b76;font-size:.7rem}@media(max-width:1280px){.looks-studio-workspace{grid-template-columns:250px minmax(0,1fr)}}
+.looks-studio-workspace{position:relative;display:grid;width:100%;height:100%;min-width:0;min-height:0;grid-template-columns:286px minmax(0,1fr);grid-template-rows:minmax(0,1fr) 50px}.looks-studio-workspace>:deep(.looks-context){grid-row:1/-1}.looks-studio-workspace__shelf{min-width:0;padding:0 12px 6px}.looks-studio-workspace__message{position:absolute;right:24px;bottom:62px;max-width:360px;margin:0;padding:8px 11px;border:1px solid var(--builder-border-strong);border-radius:var(--builder-radius-control);background:rgba(12,16,20,.94);color:#c69b76;font-size:.68rem}.looks-studio-state{display:grid;width:min(680px,calc(100% - 56px));min-height:100%;margin:0 auto;align-content:center;gap:12px}.looks-studio-state h1,.looks-studio-state h2{margin:0}.looks-studio-state p{margin:0;color:var(--builder-muted)}.looks-studio-state__eyebrow{color:var(--builder-faint)!important;text-transform:uppercase;letter-spacing:.12em}.looks-studio-state nav{display:flex;flex-wrap:wrap;gap:8px}.looks-studio-state nav a,.looks-studio-state button{min-height:36px;padding:0 13px;border:1px solid var(--builder-border);border-radius:var(--builder-radius-control);background:rgba(120,149,177,.1);color:var(--builder-text);text-decoration:none}.looks-studio-state__template-flow{max-width:620px;line-height:1.55}.looks-studio-state__template-guide{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) 28px minmax(0,1fr);align-items:center;margin:6px 0 2px;padding:14px;border:1px solid var(--builder-border);border-radius:var(--builder-radius-card);background:rgba(255,255,255,.012)}.looks-studio-state__template-guide article{display:flex;align-items:center;gap:9px}.looks-studio-state__template-guide article>span{display:grid;width:25px;height:25px;flex:0 0 25px;border:1px solid var(--builder-border-strong);border-radius:50%;place-items:center;color:var(--builder-text);font-size:.64rem}.looks-studio-state__template-guide article div{display:grid;gap:2px}.looks-studio-state__template-guide strong{color:var(--builder-text);font-size:.68rem}.looks-studio-state__template-guide small{color:var(--builder-faint);font-size:.59rem;line-height:1.35}.looks-studio-state__template-guide i{height:1px;background:var(--builder-border)}.looks-studio-state__target{padding:8px 10px;border-left:2px solid var(--builder-accent);background:rgba(120,149,177,.06);font-size:.68rem}.looks-studio-state__create{display:grid;margin-top:14px;padding:18px;border:1px solid var(--builder-border);border-radius:var(--builder-radius-card);gap:12px}.looks-studio-state__create label{display:grid;color:var(--builder-muted);font-size:.7rem;gap:6px}.looks-studio-state__create input,.looks-studio-state__create select{min-height:38px;padding:0 10px;border:1px solid var(--builder-border);border-radius:var(--builder-radius-control);background:rgba(6,10,14,.55);color:var(--builder-text)}.looks-studio-context-state{display:grid;padding:46px 24px;align-content:start;gap:10px}.looks-studio-context-state h2,.looks-studio-context-state p{margin:0}.looks-studio-context-state p{color:var(--builder-muted);font-size:.72rem}.looks-studio-context-error{margin:0 24px;color:#c69b76;font-size:.7rem}@media(max-width:1280px){.looks-studio-workspace{grid-template-columns:250px minmax(0,1fr)}}
 </style>
