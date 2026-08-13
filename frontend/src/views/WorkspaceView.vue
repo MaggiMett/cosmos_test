@@ -36,15 +36,15 @@
             v-for="tool in availableTools"
             :key="tool.objectId"
             type="button"
-            :aria-label="toolOpenState(tool.objectId) ? `Open another ${tool.displayName}` : `Open ${tool.displayName}`"
+            :aria-label="toolActionLabel(tool.objectId, tool.displayName)"
             :aria-pressed="toolOpenState(tool.objectId)"
             :class="{
               'workspace-tool--open': toolOpenState(tool.objectId),
               'workspace-tool--focused': toolFocusedState(tool.objectId),
             }"
             :data-focused="toolFocusedState(tool.objectId) || undefined"
-            :title="`${toolOpenState(tool.objectId) ? 'Open another' : 'Open'} ${tool.displayName}: ${tool.description}`"
-            @click="openTool(tool.objectId)"
+            :title="`${toolActionLabel(tool.objectId, tool.displayName)}: ${tool.description}`"
+            @click="activateTool(tool.objectId)"
           >
             <i aria-hidden="true">{{ tool.icon.slice(0, 1) }}</i>
             <span>{{ tool.displayName }}</span>
@@ -127,6 +127,12 @@ function toolFocusedState(definitionObjectId: string): boolean {
   return toolInstances.value.some(
     (instance) => instance.definition.objectId === definitionObjectId && instance.window.state === "active",
   );
+}
+
+function toolActionLabel(definitionObjectId: string, displayName: string): string {
+  if (toolFocusedState(definitionObjectId)) return `${displayName} focused`;
+  if (toolOpenState(definitionObjectId)) return `Focus ${displayName}`;
+  return `Open ${displayName}`;
 }
 
 const workspaceRoom = computed(() => {
@@ -214,6 +220,17 @@ function resolveRoomId(definitionObjectId: string): string {
       room.workspaceSlots.some((slot) => slot.workspace?.objectId === definitionObjectId),
     )?.objectId ?? "cosmos.room.main"
   );
+}
+
+function activateTool(definitionObjectId: string) {
+  const existing = [...toolInstances.value]
+    .filter((instance) => instance.definition.objectId === definitionObjectId)
+    .sort((left, right) => right.window.focusOrder - left.window.focusOrder)[0];
+  if (existing) {
+    focusTool(existing.instanceId);
+    return;
+  }
+  openTool(definitionObjectId);
 }
 
 function openTool(definitionObjectId: string) {

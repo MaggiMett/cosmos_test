@@ -66,7 +66,11 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain("toolFocusedState(tool.objectId)");
     expect(workspaceSource).toContain("workspace-tool--focused");
     expect(workspaceSource).toContain(':data-focused="toolFocusedState(tool.objectId) || undefined"');
-    expect(workspaceSource).toContain("`Open another ${tool.displayName}`");
+    expect(workspaceSource).toContain('@click="activateTool(tool.objectId)"');
+    expect(workspaceSource).toContain("if (existing)");
+    expect(workspaceSource).toContain("focusTool(existing.instanceId)");
+    expect(workspaceSource).toContain("`Focus ${displayName}`");
+    expect(workspaceSource).toContain("`${displayName} focused`");
   });
 
   it("keeps all productive interactions on the prepared New presenter", () => {
