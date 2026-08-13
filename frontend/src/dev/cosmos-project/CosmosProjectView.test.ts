@@ -140,6 +140,8 @@ describe("Project Cosmos visual slice", () => {
     expect(layer).toContain('aria-label="Projected project resources"');
     expect(layer).toContain("$emit('open-resource', item.resourcePath)");
     expect(layer).toContain('emit("open-resource", item.resourcePath)');
+    expect(layer).toContain("item.editable ? 'Editable' : 'Read only'");
+    expect(layer).toContain("title: item.resourcePath");
     expect(source).toContain("openTool: \"cosmos.tool.files\"");
     expect(source).toContain("resourcePath,");
   });
