@@ -170,6 +170,7 @@ export class ToolRuntime {
     this.mutableState.instances = this.mutableState.instances.filter(
       (candidate) => candidate.instanceId !== instanceId,
     );
+    this.refreshWorkspaceWindows(instance.workspaceSessionId);
     return snapshot(instance);
   }
 

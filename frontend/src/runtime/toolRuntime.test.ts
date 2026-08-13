@@ -67,6 +67,30 @@ describe("ToolRuntime", () => {
     ]);
   });
 
+  it("refreshes the promoted Tool focus state after closing the active instance", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(json({})));
+    const windows = new WindowRuntime();
+    windows.open({
+      objectId: "workspace-window",
+      role: "workspace_environment",
+      title: "Workspace",
+      bounds: { x: 0, y: 0, width: 1000, height: 700 },
+    });
+    const runtime = new ToolRuntime(windows, new CosmosApiClient("http://cosmos.test"));
+    runtime.register(definition("cosmos.tool.files", "Files"));
+    runtime.restore("session-a", "workspace-window", [
+      record("files-one", "cosmos.tool.files", "files-window-one", 1, 90),
+      record("files-two", "cosmos.tool.files", "files-window-two", 2, 420),
+    ]);
+
+    expect(runtime.list("session-a")[1]?.window.state).toBe("active");
+    await runtime.close("files-two");
+
+    expect(runtime.list("session-a")).toHaveLength(1);
+    expect(runtime.list("session-a")[0]?.instanceId).toBe("files-one");
+    expect(runtime.list("session-a")[0]?.window.state).toBe("active");
+  });
+
   it("isolates unavailable restored Tool definitions without failing the Workspace", () => {
     const windows = new WindowRuntime();
     windows.open({
