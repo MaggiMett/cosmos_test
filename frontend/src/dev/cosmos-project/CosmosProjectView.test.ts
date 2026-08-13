@@ -127,6 +127,7 @@ describe("Project Cosmos visual slice", () => {
     expect(view).toContain("persistProjectNodeMove(runtime.cosmosMap, gesture)");
     expect(view).toContain("useCosmosCameraPresenter(runtime.cosmosMap, requestedProjectId)");
     expect(view).toContain("mapState.selectedObjectId");
+    expect(view).toContain("if (objectId === project.objectId) fit()");
     expect(view).not.toContain(".setCamera(");
     expect(view).not.toContain(".moveNodeLocally(");
     expect(combined).not.toContain("localStorage");

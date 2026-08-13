@@ -209,7 +209,9 @@ async function travelToCosmos(): Promise<void> {
 
 function selectNode(objectId: string): void {
   const project = visibleProject.value;
-  if (!project || mapState.selectedObjectId === objectId) return;
+  if (!project) return;
+  if (objectId === project.objectId) fit();
+  if (mapState.selectedObjectId === objectId) return;
   void selectProjectCosmosNode(runtime.cosmosMap, project, objectId).catch(() => undefined);
 }
 

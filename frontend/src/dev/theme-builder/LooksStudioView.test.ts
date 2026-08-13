@@ -71,6 +71,21 @@ describe("Looks Studio vertical slice", () => {
     expect(inspector).toContain("Coming later");
   });
 
+  it("provides dedicated comparisons for every implemented visual family", () => {
+    const view = sourceFor("./LooksStudioView.vue");
+    const canvas = sourceFor("./components/LooksStudioCanvas.vue");
+
+    expect(canvas).toContain('"Clear", "Cosmos Core", "Your Theme"');
+    expect(canvas).toContain("previewKind === 'map'");
+    expect(canvas).toContain("previewKind === 'connection'");
+    expect(canvas).toContain("previewKind === 'base'");
+    expect(canvas).toContain("previewKind === 'workspace'");
+    expect(canvas).toContain("previewKind === 'window'");
+    expect(canvas).toContain('return "node"');
+    expect(view).toContain('entry.catalogId === "workspace.environment"');
+    expect(view).toContain('entry.catalogId === "ui.window"');
+  });
+
   it("uses the canonical Builder session and project APIs without Runtime activation", () => {
     const combined = files.map(sourceFor).join("\n");
 

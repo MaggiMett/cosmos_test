@@ -202,6 +202,8 @@ const selectedTemplateDescription = computed(() => {
   if (entry.catalogId.startsWith("cosmos.node.")) return "Style this level of the project hierarchy while Core keeps its meaning and interaction.";
   if (entry.catalogId === "cosmos.connection") return "Style the visual link between Nodes while Core owns both endpoints and their relationship.";
   if (entry.catalogId === "base.room.main") return "Style the Base shell and its default theme presentation without changing runtime ownership.";
+  if (entry.catalogId === "workspace.environment") return "Style the calm Workspace canvas and Tool Area presentation while tool identity and window state stay Runtime-owned.";
+  if (entry.catalogId === "ui.window") return "Style the window frame, header, content surface and controls while geometry, focus, drag, resize and close behavior stay Runtime-owned.";
   return "Style this Cosmos surface without changing its Core behavior.";
 });
 const availableTemplates = computed(() => templates.list().filter((template) => (template.assetSlots?.length ?? 0) > 0));
