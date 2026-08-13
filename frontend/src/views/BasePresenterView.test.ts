@@ -55,7 +55,10 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain('"Return to Base"');
     expect(toolWindowSource).toContain(':aria-label="`Close ${title}`"');
     expect(toolWindowSource).toContain(':title="`Close ${title}`"');
-    expect(workspaceSource).toContain(':title="`Open ${tool.displayName}: ${tool.description}`"');
+    expect(workspaceSource).toContain("toolOpenState(tool.objectId)");
+    expect(workspaceSource).toContain(':aria-pressed="toolOpenState(tool.objectId)"');
+    expect(workspaceSource).toContain("workspace-tool--open");
+    expect(workspaceSource).toContain("`Open another ${tool.displayName}`");
   });
 
   it("keeps all productive interactions on the prepared New presenter", () => {

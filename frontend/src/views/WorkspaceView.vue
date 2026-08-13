@@ -33,8 +33,10 @@
             v-for="tool in availableTools"
             :key="tool.objectId"
             type="button"
-            :aria-label="`Open ${tool.displayName}`"
-            :title="`Open ${tool.displayName}: ${tool.description}`"
+            :aria-label="toolOpenState(tool.objectId) ? `Open another ${tool.displayName}` : `Open ${tool.displayName}`"
+            :aria-pressed="toolOpenState(tool.objectId)"
+            :class="{ 'workspace-tool--open': toolOpenState(tool.objectId) }"
+            :title="`${toolOpenState(tool.objectId) ? 'Open another' : 'Open'} ${tool.displayName}: ${tool.description}`"
             @click="openTool(tool.objectId)"
           >
             <i aria-hidden="true">{{ tool.icon.slice(0, 1) }}</i>
@@ -110,6 +112,10 @@ const availableTools = computed(() => {
 const toolInstances = computed(() =>
   session.value ? runtime.tools.state.instances.filter((item) => item.workspaceSessionId === session.value?.objectId) : [],
 );
+function toolOpenState(definitionObjectId: string): boolean {
+  return toolInstances.value.some((instance) => instance.definition.objectId === definitionObjectId);
+}
+
 const workspaceReturnLabel = computed(() => {
   const roomId = session.value?.context.roomId;
   const room = runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId);
@@ -359,6 +365,13 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
 .tool-area button { display: flex; min-height: 30px; padding: 3px 8px 3px 5px; align-items: center; border: 1px solid transparent; border-radius: 4px; background: transparent; color: #d7e5eb; cursor: pointer; gap: 6px; }
 .tool-area button:hover,
 .tool-area button:focus-visible { border-color: color-mix(in srgb, var(--workspace-accent) 28%, transparent); background: color-mix(in srgb, var(--workspace-accent) 8%, transparent); outline: 0; }
+.tool-area button.workspace-tool--open {
+  border-color: color-mix(in srgb, var(--workspace-accent) 34%, transparent);
+  background: color-mix(in srgb, var(--workspace-accent) 12%, transparent);
+}
+.tool-area button.workspace-tool--open i {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--workspace-accent) 18%, transparent);
+}
 .tool-area button i { display: grid; width: 22px; height: 22px; place-items: center; border: 1px solid color-mix(in srgb, var(--workspace-accent) 18%, transparent); border-radius: 3px; background: color-mix(in srgb, var(--workspace-accent) 9%, #101b23); color: var(--workspace-accent); font-size: 0.59rem; font-style: normal; }
 .tool-area button span { font-size: 0.63rem; letter-spacing: 0.02em; }
 
