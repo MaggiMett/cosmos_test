@@ -3,7 +3,8 @@
     <button
       type="button"
       class="base-runtime-chrome__brand"
-      aria-label="Return to Cosmos"
+      :aria-label="returnLabel"
+      :title="returnLabel"
       @click="$emit('close-base')"
     >
       <span aria-hidden="true">✦</span>
@@ -53,8 +54,10 @@ const props = withDefaults(defineProps<{
   currentLocation: string;
   companion: Readonly<BaseCompanionPresentation> | null;
   rightNeighbor: Readonly<{ objectId: string; displayName: string }> | null;
+  returnProjectName?: string | null;
   sceneOwnsFunctionControls?: boolean;
 }>(), {
+  returnProjectName: null,
   sceneOwnsFunctionControls: false,
 });
 
@@ -66,6 +69,9 @@ defineEmits<{
 
 const companionLabel = computed(() =>
   props.companion ? `${props.companion.displayName} available` : "Companion unavailable",
+);
+const returnLabel = computed(() =>
+  props.returnProjectName ? `Return to ${props.returnProjectName} in Cosmos` : "Return to Cosmos",
 );
 </script>
 

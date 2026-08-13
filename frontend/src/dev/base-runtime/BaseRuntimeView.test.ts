@@ -315,7 +315,9 @@ describe("Base Room Runtime visual slice", () => {
     expect(view).toContain('presentation.phase === \'error\'');
     expect(view).toContain('@click="loadBase"');
     expect(view).toContain('@close-base="closeBase"');
-    expect(chrome).toContain('aria-label="Return to Cosmos"');
+    expect(chrome).toContain(':aria-label="returnLabel"');
+    expect(chrome).toContain("`Return to ${props.returnProjectName} in Cosmos`");
+    expect(view).toContain(':return-project-name="entryProjectName"');
     expect(room).toContain(':disabled="!slot.occupied"');
     expect(room).toContain("Available workspace slot");
     expect(room).not.toContain("Opening Workspace");

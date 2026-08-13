@@ -52,6 +52,7 @@
       :current-location="presentation.currentLocation"
       :companion="presentation.phase === 'success' ? presentation.room.companion : null"
       :right-neighbor="rightNeighbor"
+      :return-project-name="entryProjectName"
       :scene-owns-function-controls="compositionActive"
       @travel-room="travelToRoom"
       @open-companion="openCompanion"
@@ -187,6 +188,12 @@ const stateTitle = computed(() => {
   if (presentation.value.phase === "error") return "Base is unavailable";
   if (presentation.value.phase === "not-found") return "Room not found";
   return "Base is quiet";
+});
+const entryProjectName = computed(() => {
+  if (!entryProjectId) return null;
+  return runtime.cosmosMap.state.snapshot?.projects.find(
+    (project) => project.objectId === entryProjectId,
+  )?.displayName ?? null;
 });
 const rightNeighbor = computed(() => {
   const state = presentation.value;
