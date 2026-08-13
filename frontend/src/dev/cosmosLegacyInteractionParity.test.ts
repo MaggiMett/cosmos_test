@@ -74,7 +74,7 @@ describe("Cosmos interaction contract", () => {
 
   it("uses existing Base and Companion destinations without new routes or Runtime state", () => {
     const newPresenters = `${globalView}\n${projectView}`;
-    expect(newPresenters).toContain('router.push("/base")');
+    expect(newPresenters).toContain("navigateToBase(router)");
     expect(newPresenters).toContain("<CompanionWindowHost");
     expect(newPresenters).toContain("companionWindowHost.value?.open()");
     expect(newPresenters).not.toContain("createStore");

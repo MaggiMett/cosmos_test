@@ -3,8 +3,10 @@ import { describe, expect, it, vi } from "vitest";
 
 import { createCosmosRouter } from "../router";
 import {
+  baseRoute,
   cosmosProjectNeighbors,
   globalCosmosRoute,
+  navigateToBase,
   navigateToGlobal,
   navigateToProject,
   projectCosmosRoute,
@@ -57,6 +59,16 @@ describe("Global to Project Cosmos navigation", () => {
 
     await navigateToGlobal(router);
     expect(push).toHaveBeenLastCalledWith({ name: "dev-cosmos-global" });
+  });
+
+  it("uses the canonical Base route from Cosmos", async () => {
+    const router = createCosmosRouter({ history: createMemoryHistory() });
+    const push = vi.fn().mockResolvedValue(undefined);
+    const navigationRouter = { push } as unknown as Pick<Router, "push">;
+
+    expect(router.resolve(baseRoute()).fullPath).toBe("/base");
+    await navigateToBase(navigationRouter);
+    expect(push).toHaveBeenCalledWith({ name: "base" });
   });
 
   it("uses the productive Cosmos route without Dev URLs for the New presenter", async () => {

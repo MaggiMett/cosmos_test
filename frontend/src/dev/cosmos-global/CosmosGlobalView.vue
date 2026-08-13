@@ -87,6 +87,7 @@ import { useRouter } from "vue-router";
 
 import {
   cosmosProjectNeighbors,
+  navigateToBase,
   navigateToGlobal,
   navigateToProject,
   type CosmosNavigationScope,
@@ -187,7 +188,7 @@ function openCompanion(): void {
 }
 
 function openBase(): void {
-  void router.push("/base");
+  void navigateToBase(router);
 }
 
 function openThemes(): void {
