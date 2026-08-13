@@ -74,7 +74,7 @@
     />
     <CompanionWindowHost
       ref="companionWindowHost"
-      current-location="Cosmos"
+      current-location="Global Cosmos"
       @destination="openObject"
     />
     <ObjectInteractionHost ref="objectInteractionHost" />
