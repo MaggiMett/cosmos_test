@@ -21,7 +21,10 @@
         class="workspace-environment__header"
         @contextmenu.prevent="openWorkspaceContextMenu"
       >
-        <strong class="workspace-environment__identity">{{ session.definition.displayName }}</strong>
+        <span class="workspace-environment__identity-block">
+          <strong class="workspace-environment__identity">{{ session.definition.displayName }}</strong>
+          <small class="workspace-environment__context">{{ workspaceContextLabel }}</small>
+        </span>
         <button type="button" :aria-label="workspaceCloseLabel" :title="workspaceCloseLabel" @click="requestWorkspaceClose">
           <span aria-hidden="true">×</span>
         </button>
@@ -126,11 +129,16 @@ function toolFocusedState(definitionObjectId: string): boolean {
   );
 }
 
-const workspaceReturnLabel = computed(() => {
+const workspaceRoom = computed(() => {
   const roomId = session.value?.context.roomId;
-  const room = runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId);
-  return room ? `Return to ${room.displayName}` : "Return to Base";
+  return runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId) ?? null;
 });
+const workspaceContextLabel = computed(() =>
+  workspaceRoom.value ? `${workspaceRoom.value.displayName} · Base` : "Base",
+);
+const workspaceReturnLabel = computed(() =>
+  workspaceRoom.value ? `Return to ${workspaceRoom.value.displayName}` : "Return to Base",
+);
 const workspaceCloseLabel = computed(() =>
   toolInstances.value.length > 0 ? "Close active Tools before returning" : workspaceReturnLabel.value,
 );
@@ -332,11 +340,30 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
     linear-gradient(180deg, rgba(24, 36, 47, 0.88), rgba(11, 20, 28, 0.82));
 }
 
+.workspace-environment__identity-block {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
 .workspace-environment__identity {
+  overflow: hidden;
   color: var(--cosmos-color-text);
   font-size: 0.77rem;
   font-weight: 560;
   letter-spacing: 0.035em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace-environment__context {
+  overflow: hidden;
+  color: rgba(214, 224, 239, 0.48);
+  font-size: 0.6rem;
+  letter-spacing: 0.075em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .workspace-environment__header > button {

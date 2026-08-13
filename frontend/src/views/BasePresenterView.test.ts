@@ -54,7 +54,9 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain('@click="requestWorkspaceClose"');
     expect(workspaceSource).toContain('"Close active Tools before returning"');
     expect(workspaceSource).toContain("requestWorkspaceClose();");
-    expect(workspaceSource).toContain('`Return to ${room.displayName}`');
+    expect(workspaceSource).toContain('class="workspace-environment__context"');
+    expect(workspaceSource).toContain('`${workspaceRoom.value.displayName} · Base`');
+    expect(workspaceSource).toContain('`Return to ${workspaceRoom.value.displayName}`');
     expect(workspaceSource).toContain('"Return to Base"');
     expect(toolWindowSource).toContain(':aria-label="`Close ${title}`"');
     expect(toolWindowSource).toContain(':title="`Close ${title}`"');
