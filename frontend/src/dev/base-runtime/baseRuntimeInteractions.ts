@@ -21,7 +21,7 @@ export function baseRoomRoute(
   }
   return !room || room.slug === "main"
     ? { name: "base" }
-    : { name: "base-room", params: { roomId: room.slug } };
+    : { name: "room", params: { roomId: room.slug } };
 }
 
 export function workspaceRoute(workspaceObjectId: string) {
