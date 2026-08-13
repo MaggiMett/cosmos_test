@@ -82,6 +82,7 @@
       :phase="projectResources.state.phase"
       :items="projectResources.state.snapshot?.items ?? []"
       @close="resourceLayerOpen = false"
+      @open-resource="openProjectedResource"
     />
     <CosmosQuickTravel
       v-if="!backgroundOnly && quickTravelOpen && mapState.snapshot"
@@ -236,6 +237,19 @@ function selectNode(objectId: string): void {
   if (objectId === project.objectId) fit();
   if (mapState.selectedObjectId === objectId) return;
   void selectProjectCosmosNode(runtime.cosmosMap, project, objectId).catch(() => undefined);
+}
+
+function openProjectedResource(resourcePath: string): void {
+  const project = visibleProject.value;
+  if (!project?.workspaceObjectId) return;
+  void router.push({
+    ...workspaceRoute(project.workspaceObjectId),
+    query: {
+      fromProjectId: project.objectId,
+      openTool: "cosmos.tool.files",
+      resourcePath,
+    },
+  });
 }
 
 function openNode(objectId: string): void {

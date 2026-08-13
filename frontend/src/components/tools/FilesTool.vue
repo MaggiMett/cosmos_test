@@ -39,7 +39,7 @@ import { computed, onMounted, ref } from "vue";
 import type { ResourceContent, ResourceNode } from "../../runtime/coreToolsRuntime";
 import { useCosmosRuntime } from "../../runtime/plugin";
 
-const props = defineProps<{ workspaceSessionId: string }>();
+const props = defineProps<{ workspaceSessionId: string; initialResourcePath?: string | null }>();
 const runtime = useCosmosRuntime();
 const root = ref<ResourceNode | null>(null);
 const selected = ref<ResourceContent | null>(null);
@@ -71,7 +71,10 @@ async function remove() { if (!selected.value || !window.confirm(`Delete ${selec
 function flatten(node: ResourceNode | null): ResourceNode[] { if (!node) return []; return node.type === "file" ? [node] : (node.children ?? []).flatMap(flatten); }
 function formatBytes(value: number) { return value < 1024 ? `${value} B` : `${(value / 1024).toFixed(1)} KB`; }
 function capture(cause: unknown) { error.value = cause instanceof Error ? cause.message : "Files could not complete the request."; }
-onMounted(loadTree);
+onMounted(() => {
+  loadTree();
+  if (props.initialResourcePath) void open(props.initialResourcePath);
+});
 </script>
 
 <style scoped>

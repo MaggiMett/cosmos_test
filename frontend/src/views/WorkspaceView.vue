@@ -71,6 +71,7 @@
             :tool-instance-id="instance.instanceId"
             :entry-point="instance.definition.entryPoint"
             :runtime-configuration="instance.definition.runtimeConfiguration"
+            :initial-resource-path="instance.definition.objectId === 'cosmos.tool.files' ? requestedResourcePath : null"
             :title="instance.definition.displayName"
           />
         </ToolWindow>
@@ -135,6 +136,10 @@ function toolActionLabel(definitionObjectId: string, displayName: string): strin
   return `Open ${displayName}`;
 }
 
+const requestedResourcePath = computed(() =>
+  typeof route.query.resourcePath === "string" ? route.query.resourcePath : null,
+);
+
 const workspaceRoom = computed(() => {
   const roomId = session.value?.context.roomId;
   return runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId) ?? null;
@@ -170,6 +175,9 @@ async function openWorkspace() {
       environmentBounds: environmentBounds.value,
     });
     phase.value = "ready";
+    if (route.query.openTool === "cosmos.tool.files" && requestedResourcePath.value) {
+      openTool("cosmos.tool.files");
+    }
   } catch (cause) {
     phase.value = "idle";
     error.value = cause instanceof Error ? cause.message : "Workspace could not open.";

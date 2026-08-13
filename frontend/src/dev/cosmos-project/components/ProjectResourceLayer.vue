@@ -13,7 +13,7 @@
           <strong>{{ item.displayName }}</strong>
           <ResourceBranch :items="item.children" />
         </div>
-        <span v-else class="project-resource-layer__resource">{{ item.displayName }}</span>
+        <button v-else class="project-resource-layer__resource" type="button" @click="$emit('open-resource', item.resourcePath)">{{ item.displayName }}</button>
       </template>
     </nav>
     <footer>Resource view · not Cosmos semantics</footer>
@@ -30,7 +30,7 @@ const props = defineProps<{
   items: ProjectResourceProjectionItem[];
 }>();
 void props;
-defineEmits<{ close: [] }>();
+defineEmits<{ close: []; "open-resource": [resourcePath: string] }>();
 
 const ResourceBranch = defineComponent({
   name: "ResourceBranch",
