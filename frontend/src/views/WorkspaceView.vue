@@ -139,9 +139,14 @@ const workspaceRoom = computed(() => {
   const roomId = session.value?.context.roomId;
   return runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId) ?? null;
 });
-const workspaceContextLabel = computed(() =>
-  workspaceRoom.value ? `${workspaceRoom.value.displayName} · Base` : "Base",
-);
+const workspaceProject = computed(() => {
+  const projectId = session.value?.definition.sourceProjectId;
+  return runtime.cosmosMap.state.snapshot?.projects.find((candidate) => candidate.objectId === projectId) ?? null;
+});
+const workspaceContextLabel = computed(() => {
+  const room = workspaceRoom.value?.displayName ?? "Base";
+  return workspaceProject.value ? `${workspaceProject.value.displayName} · ${room}` : `${room} · Base`;
+});
 const workspaceReturnLabel = computed(() =>
   workspaceRoom.value ? `Return to ${workspaceRoom.value.displayName}` : "Return to Base",
 );
