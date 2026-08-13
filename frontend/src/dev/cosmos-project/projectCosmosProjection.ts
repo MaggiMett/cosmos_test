@@ -191,11 +191,10 @@ function projectConnection(
   const start = points.get(connection.endpointAId);
   const end = points.get(connection.endpointBId);
   if (!start || !end) return [];
-  const controlX = round((start.x + end.x) / 2);
   return [{
     objectId: connection.objectId,
     provenance: connection.provenance,
-    path: `M${round(start.x)} ${round(start.y)} C${controlX} ${round(start.y)} ${controlX} ${round(end.y)} ${round(end.x)} ${round(end.y)}`,
+    path: `M${round(start.x)} ${round(start.y)} L${round(end.x)} ${round(end.y)}`,
   }];
 }
 

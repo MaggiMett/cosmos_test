@@ -104,6 +104,8 @@ describe("Project Cosmos visual slice", () => {
     expect(constellation).toContain(".project-node--domain > i");
     expect(constellation).toContain(".project-node--cluster > i");
     expect(projection).toContain("hierarchyLevel: node.hierarchyLevel");
+    expect(projection).toContain("`M${round(start.x)} ${round(start.y)} L${round(end.x)} ${round(end.y)}`");
+    expect(projection).not.toContain(" C${controlX}");
   });
 
   it("projects real SVG connection paths and Node move gestures without connection editing", () => {
