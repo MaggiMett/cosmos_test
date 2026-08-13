@@ -35,7 +35,7 @@ export interface RunBaseRoomShadowModeInput {
 
 export interface RoomShadowModeResult {
   mode: "shadow";
-  authoritativeRuntime: "legacy-base" | "base-runtime";
+  authoritativeRuntime: "compatibility-fixture" | "base-runtime";
   snapshot: Readonly<ImmutableRoomSnapshot>;
   parity: Readonly<RoomParityResult>;
   diagnostics: readonly string[];
@@ -102,7 +102,7 @@ export function runBaseRoomShadowMode(
     mode: "shadow" as const,
     authoritativeRuntime: runtimeProjection
       ? ("base-runtime" as const)
-      : ("legacy-base" as const),
+      : ("compatibility-fixture" as const),
     snapshot,
     parity,
     diagnostics,

@@ -27,7 +27,7 @@ describe("Base Room Shadow Mode and legacy parity", () => {
   it("resolves the compatibility projection with exact legacy parity", () => {
     const result = runBaseMainRoomShadowMode();
     expect(result.mode).toBe("shadow");
-    expect(result.authoritativeRuntime).toBe("legacy-base");
+    expect(result.authoritativeRuntime).toBe("compatibility-fixture");
     expect(result.parity.status).toBe("equal");
     expect(result.parity.differences).toEqual([]);
     expect(result.parity.comparedFunctionalObjects).toBe(6);
