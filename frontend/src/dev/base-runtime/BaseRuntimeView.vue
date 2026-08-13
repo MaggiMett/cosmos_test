@@ -111,9 +111,11 @@ import { scheduleBaseRoomShadowDiagnostics } from "./baseRoomShadowDiagnostics";
 const props = withDefaults(defineProps<{
   navigationScope?: BaseNavigationScope;
   backgroundOnly?: boolean;
+  roomId?: string | null;
 }>(), {
   navigationScope: "development",
   backgroundOnly: false,
+  roomId: null,
 });
 
 const runtime = useCosmosRuntime();
@@ -129,6 +131,7 @@ const themePresentationResult = ref<Readonly<BaseRoomThemePresentationResult>>(
 let themeLoadGeneration = 0;
 let unsubscribeActiveTheme: (() => void) | null = null;
 const requestedRoomId = computed(() => {
+  if (props.roomId) return props.roomId;
   if (props.navigationScope === "development") {
     const value = route.query.roomId;
     return typeof value === "string" && value.length > 0 ? value : null;

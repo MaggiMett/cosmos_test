@@ -1,6 +1,6 @@
 <template>
   <section class="workspace-stage environment-view" aria-label="Workspace">
-    <BasePresenterView background-only />
+    <BasePresenterView background-only :room-id="session?.context.roomId ?? null" />
     <div v-if="phase === 'opening'" class="workspace-status" role="status">
       <span aria-hidden="true" />
       <p>Preparing your Workspace…</p>

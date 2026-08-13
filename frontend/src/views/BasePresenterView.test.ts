@@ -42,6 +42,9 @@ describe("Base production presenter", () => {
     expect(newSource).toContain('v-if="!backgroundOnly"');
     expect(newSource).toContain("if (props.backgroundOnly) return");
     expect(workspaceSource).toContain("runtime.workspaces.open");
+    expect(workspaceSource).toContain(':room-id="session?.context.roomId ?? null"');
+    expect(presenterSource).toContain(':room-id="roomId"');
+    expect(newSource).toContain("if (props.roomId) return props.roomId");
   });
 
   it("keeps all productive interactions on the prepared New presenter", () => {

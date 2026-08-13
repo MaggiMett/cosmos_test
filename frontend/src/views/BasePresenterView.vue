@@ -3,6 +3,7 @@
   <BaseRuntimeView
     navigation-scope="production"
     :background-only="backgroundOnly"
+    :room-id="roomId"
     data-base-presenter="new"
   />
 </template>
@@ -18,7 +19,9 @@ const BaseRuntimeView = defineAsyncComponent(
 
 withDefaults(defineProps<{
   backgroundOnly?: boolean;
+  roomId?: string | null;
 }>(), {
   backgroundOnly: false,
+  roomId: null,
 });
 </script>
