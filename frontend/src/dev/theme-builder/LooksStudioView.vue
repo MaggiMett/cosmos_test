@@ -211,7 +211,17 @@ const activeStateLabel = computed(() => stateItems.value.find((state) => state.s
 const selectedSlot = computed(() => slotItems.value.find((slot) => slot.slotId === selectedSlotId.value));
 const missingAssetCount = computed(() => slotItems.value.filter((slot) => slot.assetStatus === "missing").length);
 const selectedMaterialChannelId = computed(() => selectedSlotId.value ? `core.material.part-surface.${selectedSlotId.value}` : "core.material.dom-surface");
-const material = computed(() => resolved.value?.skin.materials.find((item) => item.channelId === selectedMaterialChannelId.value));
+const material = computed(() => {
+  const skin = resolved.value?.skin;
+  if (!skin) return undefined;
+  const base = skin.materials.find((item) => item.channelId === selectedMaterialChannelId.value);
+  if (activeStateId.value === "default") return base;
+  const override = skin.stateVariants
+    .find((variant) => variant.stateId === activeStateId.value)
+    ?.materialOverrides?.find((item) => item.channelId === selectedMaterialChannelId.value);
+  if (!override) return base;
+  return { channelId: override.channelId, parameters: { ...(base?.parameters ?? {}), ...override.parameters } };
+});
 const materialFill = computed(() => colorValue(material.value?.parameters["core.material.fill"], "#30343a"));
 const materialStroke = computed(() => colorValue(material.value?.parameters["core.material.stroke"], "#8b929c"));
 const materialOpacity = computed(() => typeof material.value?.parameters["core.material.opacity"] === "number" ? material.value.parameters["core.material.opacity"] : 1);
@@ -282,12 +292,12 @@ function clearSlot(): void {
 }
 function setMaterial(parameterId: string, value: JsonValue): void {
   if (value === null) {
-    execute({ type: "clear-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value, parameterId });
+    execute({ type: "clear-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value, parameterId, stateId: activeStateId.value });
     return;
   }
-  execute({ type: "set-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value, parameterId, value });
+  execute({ type: "set-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value, parameterId, value, stateId: activeStateId.value });
 }
-function clearMaterial(): void { execute({ type: "clear-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value }); }
+function clearMaterial(): void { execute({ type: "clear-skin-material-channel", skinId: requestedSkinId.value, channelId: selectedMaterialChannelId.value, stateId: activeStateId.value }); }
 
 function execute(command: Parameters<ThemeBuilderSession["execute"]>[0]): void {
   if (!session) return;

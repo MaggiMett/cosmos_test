@@ -35,12 +35,14 @@ export type SkinDraftCommand =
       channelId: string;
       parameterId: string;
       value: JsonValue;
+      stateId?: string;
     }>
   | Readonly<{
       type: "clear-skin-material-channel";
       skinId: string;
       channelId: string;
       parameterId?: string;
+      stateId?: string;
     }>;
 
 export type SkinDraftErrorCode =
@@ -110,12 +112,11 @@ export function applySkinDraftCommand(
     return replaceSkin(project, resolved.skin.skinId, (skin) => clearAsset(skin, command));
   }
   if (command.type === "set-skin-material-channel") {
-    const material = setMaterialParameter(
-      resolved.skin.materials,
-      command.channelId,
-      command.parameterId,
-      command.value,
-    );
+    if (command.stateId && command.stateId !== "default") assertState(resolved, command.stateId);
+    const sourceMaterials = command.stateId && command.stateId !== "default"
+      ? resolved.skin.stateVariants.find((variant) => variant.stateId === command.stateId)?.materialOverrides ?? []
+      : resolved.skin.materials;
+    const material = setMaterialParameter(sourceMaterials, command.channelId, command.parameterId, command.value);
     const validation = rendererMaterialChannelRegistry.validate(
       material,
       (assetId) => project.assetRefs.filter((reference) => reference.id === assetId).length === 1,
@@ -123,22 +124,14 @@ export function applySkinDraftCommand(
     if (!validation.valid) {
       throw new SkinDraftError("invalid-material", `Material value is invalid: ${validation.reason}.`);
     }
-    return replaceSkin(project, resolved.skin.skinId, (skin) => ({
-      ...skin,
-      materials: [
-        ...skin.materials.filter((candidate) => candidate.channelId !== command.channelId),
-        material,
-      ],
-    }));
+    return replaceSkin(project, resolved.skin.skinId, (skin) => command.stateId && command.stateId !== "default"
+      ? upsertStateMaterial(skin, command.stateId!, material)
+      : ({ ...skin, materials: upsertMaterial(skin.materials, material) }));
   }
-  return replaceSkin(project, resolved.skin.skinId, (skin) => ({
-    ...skin,
-    materials: clearMaterialParameter(
-      skin.materials,
-      command.channelId,
-      command.parameterId,
-    ),
-  }));
+  if (command.stateId && command.stateId !== "default") assertState(resolved, command.stateId);
+  return replaceSkin(project, resolved.skin.skinId, (skin) => command.stateId && command.stateId !== "default"
+    ? clearStateMaterial(skin, command.stateId!, command.channelId, command.parameterId)
+    : ({ ...skin, materials: clearMaterialParameter(skin.materials, command.channelId, command.parameterId) }));
 }
 
 export function resolveSkinDraft(
@@ -225,6 +218,12 @@ function presentationGroupFor(template: RegisteredTemplate): SkinDefinition["tar
   return match;
 }
 
+function assertState(resolved: Readonly<ResolvedSkinDraft>, stateId: string): void {
+  if (!resolved.template.states.some((candidate) => candidate.stateId === stateId)) {
+    throw new SkinDraftError("unknown-state", `State ${stateId} is not declared by template ${resolved.template.templateId}.`);
+  }
+}
+
 function assertSlotAndState(resolved: Readonly<ResolvedSkinDraft>, slotId: string, stateId: string): void {
   const slot = resolved.slots.find((candidate) => candidate.slotId === slotId);
   if (!slot) throw new SkinDraftError("unknown-slot", `Slot ${slotId} is not declared by the target template.`);
@@ -293,6 +292,28 @@ function setMaterialParameter(
 ): Readonly<Material> {
   const current = materials.find((material) => material.channelId === channelId);
   return { channelId, parameters: { ...(current?.parameters ?? {}), [parameterId]: value } };
+}
+
+function upsertMaterial(materials: readonly Readonly<Material>[], material: Readonly<Material>): readonly Readonly<Material>[] {
+  return [...materials.filter((candidate) => candidate.channelId !== material.channelId), material];
+}
+
+function upsertStateMaterial(skin: Readonly<SkinDefinition>, stateId: string, material: Readonly<Material>): SkinDefinition {
+  const existing = skin.stateVariants.find((variant) => variant.stateId === stateId);
+  const variant = existing
+    ? { ...existing, materialOverrides: upsertMaterial(existing.materialOverrides ?? [], material) }
+    : { stateId, materialOverrides: [material] };
+  return { ...skin, stateVariants: [...skin.stateVariants.filter((candidate) => candidate.stateId !== stateId), variant] };
+}
+
+function clearStateMaterial(skin: Readonly<SkinDefinition>, stateId: string, channelId: string, parameterId?: string): SkinDefinition {
+  return {
+    ...skin,
+    stateVariants: skin.stateVariants.map((variant) => variant.stateId !== stateId ? variant : {
+      ...variant,
+      materialOverrides: clearMaterialParameter(variant.materialOverrides ?? [], channelId, parameterId),
+    }),
+  };
 }
 
 function clearMaterialParameter(
