@@ -325,6 +325,9 @@ describe("Base Room Runtime visual slice", () => {
     expect(view).toContain('@global="openGlobalCosmos"');
     expect(view).toContain('@project="openProjectCosmos"');
     expect(room).toContain(':disabled="!slot.occupied"');
+    expect(room).toContain('`Open ${slot.displayName} workspace`');
+    expect(room).toContain('`Travel to ${door.targetRoomName}`');
+    expect(room).toContain(".base-room-scene__workspace:not(:disabled):hover::after");
     expect(room).toContain("Available workspace slot");
     expect(room).not.toContain("Opening Workspace");
   });

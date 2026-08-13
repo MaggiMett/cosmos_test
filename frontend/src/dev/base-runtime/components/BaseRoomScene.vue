@@ -35,6 +35,7 @@
       class="base-room-scene__door"
       :class="`base-room-scene__door--${door.side}`"
       :aria-label="door.targetRoomName ? `${door.displayName} to ${door.targetRoomName}` : `${door.displayName}, destination unavailable`"
+      :title="door.targetRoomName ? `Travel to ${door.targetRoomName}` : `${door.displayName}, destination unavailable`"
       :data-door-id="door.objectId"
       :data-target-room-id="door.targetRoomId"
       :disabled="!door.targetRoomId"
@@ -53,7 +54,8 @@
         `base-room-scene__workspace--${slot.side}`,
         `base-room-scene__workspace--${placementClass(slot.placement)}`,
       ]"
-      :aria-label="slot.displayName"
+      :aria-label="slot.occupied ? `Open ${slot.displayName} workspace` : `${slot.displayName}, workspace slot available`"
+      :title="slot.occupied ? `Open ${slot.displayName} workspace` : `${slot.displayName}, workspace slot available`"
       :data-slot-id="slot.slotObjectId"
       :data-workspace-id="slot.workspaceObjectId"
       :aria-pressed="selectedObjectId === slot.slotObjectId"
@@ -362,7 +364,18 @@ function placementClass(placement: string) {
 }
 
 .base-room-scene__workspace:not(:disabled):hover {
-  filter: brightness(1.08);
+  filter: brightness(1.08) drop-shadow(0 0 10px color-mix(in srgb, var(--cosmos-color-accent) 16%, transparent));
+}
+
+.base-room-scene__workspace:not(:disabled):hover::after,
+.base-room-scene__workspace:focus-visible::after {
+  position: absolute;
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--cosmos-color-accent) 34%, transparent);
+  border-radius: var(--cosmos-radius-window);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--cosmos-color-accent) 10%, transparent);
+  content: "";
+  pointer-events: none;
 }
 
 .base-room-scene__workspace[aria-pressed="true"] {
