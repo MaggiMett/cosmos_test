@@ -1,5 +1,7 @@
+import { createMemoryHistory, type Router } from "vue-router";
 import { describe, expect, it, vi } from "vitest";
 
+import { createCosmosRouter } from "../../router";
 import type { BaseRuntime, BaseSnapshot } from "../../runtime/baseRuntime";
 import type { BaseWorkspaceSlotPresentation } from "./baseRuntimeProjection";
 import {
@@ -13,12 +15,15 @@ import {
 describe("Base Runtime existing interaction adapter", () => {
   it("derives canonical Room routes for production and development", () => {
     const rooms = snapshot().rooms;
+    const router = createCosmosRouter({ history: createMemoryHistory() });
     expect(baseRoomRoute(rooms[0])).toEqual({ name: "base" });
     expect(baseRoomRoute(rooms[1])).toEqual({ name: "room", params: { roomId: "workshop" } });
     expect(baseRoomRoute(rooms[1], "development")).toEqual({
       path: "/dev/base-runtime",
       query: { roomId: "room.workshop.authoritative" },
     });
+    expect(router.resolve(baseRoomRoute(rooms[0])).fullPath).toBe("/base");
+    expect(router.resolve(baseRoomRoute(rooms[1])).fullPath).toBe("/base/rooms/workshop");
   });
 
   it("returns from Base through the productive Cosmos route", async () => {
@@ -104,10 +109,14 @@ describe("Base Runtime existing interaction adapter", () => {
   });
 
   it("derives the canonical Workspace route from the real Workspace ID", () => {
+    const router = createCosmosRouter({ history: createMemoryHistory() });
     expect(workspaceRoute("workspace.knowledge.authoritative")).toEqual({
       name: "workspace",
       params: { workspaceId: "workspace.knowledge.authoritative" },
     });
+    expect(router.resolve(workspaceRoute("workspace.knowledge.authoritative")).fullPath).toBe(
+      "/workspaces/workspace.knowledge.authoritative",
+    );
   });
 
   it("opens the existing Workspace route with the real Workspace ID", async () => {
