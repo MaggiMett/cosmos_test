@@ -98,6 +98,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { workspaceRoute } from "../base-runtime/baseRuntimeInteractions";
 import {
   cosmosProjectNeighbors,
   navigateToBase,
@@ -221,7 +222,7 @@ function openNode(objectId: string): void {
   const host = objectInteractionHost.value;
   if (!project) return;
   if (objectId === project.objectId && project.workspaceObjectId) {
-    void router.push(`/workspaces/${encodeURIComponent(project.workspaceObjectId)}`);
+    void router.push(workspaceRoute(project.workspaceObjectId));
     return;
   }
   if (!host) return;

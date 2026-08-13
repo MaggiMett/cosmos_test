@@ -35,6 +35,7 @@
 import { computed, onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
 
+import { workspaceRoute } from "../../dev/base-runtime/baseRuntimeInteractions";
 import type {
   ContextMenuState,
   ObjectAction,
@@ -81,7 +82,7 @@ function activateAction(action: ObjectAction) {
   if (!menu || !action.enabled) return;
   if (action.id === "open_workspace") {
     runtime.objectInteractions.closeContextMenu();
-    void router.push(`/workspaces/${menu.objectId}`);
+    void router.push(workspaceRoute(menu.objectId));
     return;
   }
   const section: ObjectWindowSection =

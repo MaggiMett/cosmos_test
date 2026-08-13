@@ -58,7 +58,7 @@ describe("Cosmos interaction contract", () => {
   it("retains server-driven Context Menu actions and their existing canonical destinations", () => {
     expect(interactionHost).toContain("runtime.objectInteractions.showContextMenu");
     expect(interactionHost).toContain('action.id === "open_workspace"');
-    expect(interactionHost).toContain('router.push(`/workspaces/${menu.objectId}`)');
+    expect(interactionHost).toContain("router.push(workspaceRoute(menu.objectId))");
     expect(interactionHost).toContain('action.id === "appearance"');
     expect(interactionHost).toContain('action.id === "connections"');
     expect(interactionHost).toContain('action.id === "open"');

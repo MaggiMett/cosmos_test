@@ -24,6 +24,10 @@ export function baseRoomRoute(
     : { name: "base-room", params: { roomId: room.slug } };
 }
 
+export function workspaceRoute(workspaceObjectId: string) {
+  return { name: "workspace", params: { workspaceId: workspaceObjectId } };
+}
+
 export async function navigateFromBase(
   router: BaseNavigationRouter,
   focusedProjectId: string | null = null,
@@ -56,6 +60,6 @@ export async function navigateToBaseWorkspace(
   runtime.select(slot.slotObjectId);
   if (!slot.workspaceObjectId) return false;
 
-  await router.push(`/workspaces/${encodeURIComponent(slot.workspaceObjectId)}`);
+  await router.push(workspaceRoute(slot.workspaceObjectId));
   return true;
 }

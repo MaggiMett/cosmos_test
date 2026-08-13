@@ -7,6 +7,7 @@ import {
   navigateFromBase,
   navigateToBaseRoom,
   navigateToBaseWorkspace,
+  workspaceRoute,
 } from "./baseRuntimeInteractions";
 
 describe("Base Runtime existing interaction adapter", () => {
@@ -102,6 +103,13 @@ describe("Base Runtime existing interaction adapter", () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it("derives the canonical Workspace route from the real Workspace ID", () => {
+    expect(workspaceRoute("workspace.knowledge.authoritative")).toEqual({
+      name: "workspace",
+      params: { workspaceId: "workspace.knowledge.authoritative" },
+    });
+  });
+
   it("opens the existing Workspace route with the real Workspace ID", async () => {
     const { router, runtime, push, select } = interactionHarness();
     const slot = workspaceSlot();
@@ -109,7 +117,10 @@ describe("Base Runtime existing interaction adapter", () => {
     await expect(navigateToBaseWorkspace(router, runtime, slot)).resolves.toBe(true);
 
     expect(select).toHaveBeenCalledWith("slot.knowledge.authoritative");
-    expect(push).toHaveBeenCalledWith("/workspaces/workspace.knowledge.authoritative");
+    expect(push).toHaveBeenCalledWith({
+      name: "workspace",
+      params: { workspaceId: "workspace.knowledge.authoritative" },
+    });
   });
 
   it("selects an empty Workspace Slot but keeps navigation unavailable like Legacy", async () => {
