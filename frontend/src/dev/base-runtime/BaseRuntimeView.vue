@@ -117,7 +117,7 @@ import {
   type BaseNavigationScope,
   navigateFromBase,
   navigateToBaseRoom,
-  navigateToBaseWorkspace,
+  workspaceRoute,
 } from "./baseRuntimeInteractions";
 import { scheduleBaseRoomShadowDiagnostics } from "./baseRoomShadowDiagnostics";
 
@@ -241,7 +241,9 @@ function openProjectCosmos(projectId: string): void {
 
 function openWorkspace(slot: Readonly<BaseWorkspaceSlotPresentation>) {
   if (props.backgroundOnly) return;
-  void navigateToBaseWorkspace(router, runtime.base, slot);
+  runtime.base.select(slot.slotObjectId);
+  if (!slot.workspaceObjectId) return;
+  void router.push(workspaceRoute(slot.workspaceObjectId, presentation.value.room?.objectId ?? null));
 }
 
 function activateCompositionTarget(

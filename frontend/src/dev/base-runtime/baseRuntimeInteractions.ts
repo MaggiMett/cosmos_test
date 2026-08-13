@@ -24,8 +24,12 @@ export function baseRoomRoute(
     : { name: "room", params: { roomId: room.slug } };
 }
 
-export function workspaceRoute(workspaceObjectId: string) {
-  return { name: "workspace", params: { workspaceId: workspaceObjectId } };
+export function workspaceRoute(workspaceObjectId: string, roomId?: string | null) {
+  return {
+    name: "workspace",
+    params: { workspaceId: workspaceObjectId },
+    ...(roomId ? { query: { fromRoomId: roomId } } : {}),
+  };
 }
 
 export async function navigateFromBase(

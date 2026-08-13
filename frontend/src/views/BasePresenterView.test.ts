@@ -77,7 +77,7 @@ describe("Base production presenter", () => {
 
   it("keeps all productive interactions on the prepared New presenter", () => {
     expect(newSource).toContain("navigateToBaseRoom");
-    expect(newSource).toContain("navigateToBaseWorkspace");
+    expect(newSource).toContain("workspaceRoute(slot.workspaceObjectId");
     expect(newSource).toContain("CompanionWindowHost");
     expect(roomSource).toContain("BasePetPresence");
     expect(newSource).toContain("openContextMenu");

@@ -220,6 +220,11 @@ function resolveDefinitionObjectId(value: string): string {
 }
 
 function resolveRoomId(definitionObjectId: string): string {
+  const requestedRoomId = typeof route.query.fromRoomId === "string" ? route.query.fromRoomId : null;
+  const requestedRoom = runtime.base.state.snapshot?.rooms.find((room) => room.objectId === requestedRoomId);
+  if (requestedRoom?.workspaceSlots.some((slot) => slot.workspace?.objectId === definitionObjectId)) {
+    return requestedRoom.objectId;
+  }
   return (
     runtime.base.state.snapshot?.rooms.find((room) =>
       room.workspaceSlots.some((slot) => slot.workspace?.objectId === definitionObjectId),
