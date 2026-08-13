@@ -55,7 +55,8 @@ describe("Project Cosmos visual slice", () => {
     expect(chrome).toContain(':left-neighbor="leftNeighbor"');
     expect(chrome).toContain(':right-neighbor="rightNeighbor"');
     expect(chrome).toContain("@travel=\"$emit('travel-project', $event)\"");
-    expect(chrome).toContain('aria-label="Back to Global"');
+    expect(chrome).toContain('aria-label="Return to Global Cosmos"');
+    expect(chrome).toContain('title="Return to Global Cosmos"');
     expect(view).toContain('@back-to-global="backToGlobal"');
     expect(view).toContain("navigateToGlobal(router, props.navigationScope)");
     expect(chrome).toContain("Local · Synced");

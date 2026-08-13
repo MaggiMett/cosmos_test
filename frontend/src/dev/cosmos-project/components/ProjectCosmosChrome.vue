@@ -17,7 +17,7 @@
     <div class="project-cosmos-chrome__status" aria-label="Project status">
       <span><i class="project-cosmos-chrome__dot project-cosmos-chrome__dot--synced" />Local · Synced</span>
       <span><i class="project-cosmos-chrome__dot" />{{ objectStatus }}</span>
-      <button type="button" aria-label="Back to Global" @click="$emit('back-to-global')">◎</button>
+      <button type="button" aria-label="Return to Global Cosmos" title="Return to Global Cosmos" @click="$emit('back-to-global')">◎</button>
     </div>
   </header>
 </template>
