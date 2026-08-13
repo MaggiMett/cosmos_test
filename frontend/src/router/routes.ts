@@ -173,15 +173,6 @@ export const routeRecords = [
     },
   },
   {
-    path: "/dev/theme-library",
-    name: "dev-theme-library",
-    component: ThemeLibraryView,
-    meta: {
-      title: "Theme Library",
-      environment: "cosmos",
-    },
-  },
-  {
     path: "/dev/base-runtime",
     name: "dev-base-runtime",
     component: () => import("../dev/base-runtime/BaseRuntimeView.vue"),

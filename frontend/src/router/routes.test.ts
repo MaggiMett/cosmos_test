@@ -207,40 +207,20 @@ describe("Cosmos routing", () => {
     expect(String(previewRecord?.component)).toContain("ReleaseStudioView.vue");
   });
 
-  it("resolves Theme Library inside the normal Cosmos runtime shell", () => {
-    const router = createCosmosRouter({ history: createMemoryHistory() });
-    const library = router.resolve("/dev/theme-library");
-    const libraryRecord = routeRecords.find(
-      (record) => record.name === "dev-theme-library",
-    );
-
-    expect(library.name).toBe("dev-theme-library");
-    expect(library.meta).toMatchObject({
-      title: "Theme Library",
-      environment: "cosmos",
-    });
-    expect(library.meta.developmentPreview).not.toBe(true);
-    expect(String(libraryRecord?.component)).toContain("ThemeLibraryView.vue");
-  });
-
-  it("promotes the same Theme Library component to the productive /themes route", () => {
+  it("exposes Theme Library only through the productive /themes route", () => {
     const router = createCosmosRouter({ history: createMemoryHistory() });
     const productive = router.resolve("/themes");
     const productiveRecord = routeRecords.find(
       (record) => record.name === "theme-library",
     );
-    const developmentRecord = routeRecords.find(
-      (record) => record.name === "dev-theme-library",
-    );
-
     expect(productive.name).toBe("theme-library");
     expect(productive.meta).toMatchObject({
       title: "Theme Library",
       environment: "cosmos",
     });
     expect(productive.meta.developmentPreview).not.toBe(true);
-    expect(productiveRecord?.component).toBe(developmentRecord?.component);
     expect(String(productiveRecord?.component)).toContain("ThemeLibraryView.vue");
+    expect(routeRecords.some((record) => record.name === "dev-theme-library")).toBe(false);
   });
 
   it("resolves Base Runtime inside the normal ApplicationShell boundary", () => {
