@@ -66,6 +66,9 @@ describe("Base Room Runtime visual slice", () => {
     expect(view).toContain("route.query.roomId");
     expect(view).toContain("requestedRoomId.value");
     expect(view).toContain('presentation.value.phase === "not-found"');
+    expect(view).toContain('presentation.phase === \'not-found\'');
+    expect(view).toContain("Open Main Room");
+    expect(view).toContain('room.slug === "main"');
     expect(view).toContain('return "Room not found"');
     expect(view).not.toContain("ref<string");
     expect(view).not.toContain("selectedRoomId");

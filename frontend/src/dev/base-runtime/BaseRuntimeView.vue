@@ -45,6 +45,7 @@
         <strong>{{ stateTitle }}</strong>
         <p>{{ presentation.message }}</p>
         <button v-if="presentation.phase === 'error'" type="button" @click="loadBase">Try again</button>
+        <button v-else-if="presentation.phase === 'not-found'" type="button" @click="openMainRoom">Open Main Room</button>
       </template>
     </div>
     <BaseRuntimeChrome
@@ -222,6 +223,12 @@ function travelToRoom(targetRoomId: string) {
   const snapshot = baseState.snapshot;
   if (!snapshot) return;
   void navigateToBaseRoom(router, runtime.base, snapshot, targetRoomId, props.navigationScope);
+}
+
+function openMainRoom(): void {
+  const mainRoom = baseState.snapshot?.rooms.find((room) => room.slug === "main");
+  if (!mainRoom) return;
+  travelToRoom(mainRoom.objectId);
 }
 
 function closeBase() {
