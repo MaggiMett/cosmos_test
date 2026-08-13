@@ -125,6 +125,7 @@ const router = useRouter();
 const baseState = runtime.base.state;
 const companionWindowHost = ref<InstanceType<typeof CompanionWindowHost> | null>(null);
 const objectInteractionHost = ref<InstanceType<typeof ObjectInteractionHost> | null>(null);
+let entryProjectId: string | null = null;
 const themePresentationResult = ref<Readonly<BaseRoomThemePresentationResult>>(
   coreBaseRoomThemePresentation("disabled"),
 );
@@ -205,7 +206,7 @@ function travelToRoom(targetRoomId: string) {
 
 function closeBase() {
   if (props.backgroundOnly) return;
-  void navigateFromBase(router, runtime.cosmosMap.state.snapshot?.focusedProjectId ?? null);
+  void navigateFromBase(router, entryProjectId);
 }
 
 function openWorkspace(slot: Readonly<BaseWorkspaceSlotPresentation>) {
@@ -311,6 +312,7 @@ watch(
 );
 
 onMounted(() => {
+  entryProjectId = runtime.cosmosMap.state.snapshot?.focusedProjectId ?? null;
   unsubscribeActiveTheme = runtime.themes.subscribeActiveTheme(() => {
     void refreshThemePresentation();
   });
