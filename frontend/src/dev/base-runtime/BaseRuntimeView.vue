@@ -205,7 +205,7 @@ function travelToRoom(targetRoomId: string) {
 
 function closeBase() {
   if (props.backgroundOnly) return;
-  void navigateFromBase(router);
+  void navigateFromBase(router, runtime.cosmosMap.state.snapshot?.focusedProjectId ?? null);
 }
 
 function openWorkspace(slot: Readonly<BaseWorkspaceSlotPresentation>) {

@@ -14,7 +14,18 @@ describe("Base Runtime existing interaction adapter", () => {
 
     await navigateFromBase(router);
 
-    expect(push).toHaveBeenCalledWith("/");
+    expect(push).toHaveBeenCalledWith({ path: "/" });
+  });
+
+  it("returns from Base to the focused Project Cosmos context", async () => {
+    const { router, push } = interactionHarness();
+
+    await navigateFromBase(router, "project.asteria");
+
+    expect(push).toHaveBeenCalledWith({
+      path: "/",
+      query: { projectId: "project.asteria" },
+    });
   });
 
   it("navigates a real Door target through the canonical Base Room route", async () => {

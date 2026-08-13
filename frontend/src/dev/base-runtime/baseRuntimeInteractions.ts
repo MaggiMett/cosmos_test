@@ -8,8 +8,13 @@ type BaseSelectionRuntime = Readonly<Pick<BaseRuntime, "select">>;
 type BaseNavigationRouter = Readonly<Pick<Router, "push">>;
 export type BaseNavigationScope = "production" | "development";
 
-export async function navigateFromBase(router: BaseNavigationRouter): Promise<void> {
-  await router.push("/");
+export async function navigateFromBase(
+  router: BaseNavigationRouter,
+  focusedProjectId: string | null = null,
+): Promise<void> {
+  await router.push(focusedProjectId
+    ? { path: "/", query: { projectId: focusedProjectId } }
+    : { path: "/" });
 }
 
 export async function navigateToBaseRoom(
