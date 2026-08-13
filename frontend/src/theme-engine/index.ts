@@ -49,6 +49,12 @@ export {
   CORE_CLEAR_COSMOS_MAP_SKIN_ID,
 } from "./cosmosMapTemplate";
 export {
+  workspaceEnvironmentTemplate,
+  WORKSPACE_ENVIRONMENT_TEMPLATE_ID,
+  WORKSPACE_SLOT_IDS,
+  CORE_CLEAR_WORKSPACE_SKIN_ID,
+} from "./workspaceTemplate";
+export {
   clusterNodeTemplate,
   coreNodeTemplates,
   detailNodeTemplate,

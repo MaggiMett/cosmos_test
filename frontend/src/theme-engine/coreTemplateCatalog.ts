@@ -1,6 +1,7 @@
 import { baseMainRoomTemplate } from "./baseTemplate";
 import { cosmosMapTemplate } from "./cosmosMapTemplate";
 import { cosmosConnectionTemplate } from "./connectionTemplate";
+import { workspaceEnvironmentTemplate } from "./workspaceTemplate";
 import {
   clusterNodeTemplate,
   detailNodeTemplate,
@@ -154,7 +155,8 @@ export const coreTemplateCatalog = [
     group: "workspace",
     kind: "environment",
     targetRole: "workspace",
-    status: "clear-template-planned",
+    status: "implemented",
+    templateId: workspaceEnvironmentTemplate.templateId,
     visualReference: "WorkspaceWindow.png",
   },
   {
