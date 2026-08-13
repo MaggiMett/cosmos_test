@@ -63,7 +63,7 @@ describe("Looks Studio vertical slice", () => {
     expect(canvas).not.toContain("Orbital Luminaire");
     expect(canvas).toContain("100%");
     expect(inspector).toContain('title="Appearance"');
-    expect(inspector).toContain("Material");
+    expect(inspector).toContain("Surface");
     expect(inspector).toContain("Finish");
     expect(inspector).toContain('title="Alignment"');
     expect(inspector).toContain('title="Fit"');

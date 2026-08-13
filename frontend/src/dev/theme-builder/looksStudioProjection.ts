@@ -48,7 +48,7 @@ export function projectLooksSlots(
     const assetStatus = reference?.status ?? (binding ? "missing" : null);
     return Object.freeze({
       slotId: slot.slotId,
-      label: slotLabel(slot.slotId),
+      label: friendlySlotLabel(slot.slotId),
       purpose: slot.purpose,
       required: slot.required,
       fallbackPolicy: slot.fallbackPolicy,
@@ -93,8 +93,21 @@ function fallbackLabel(slot: Readonly<TemplateAssetSlot>): string {
   return slot.required ? "Required visual unavailable" : "Optional Slot";
 }
 
-function slotLabel(slotId: string): string {
-  return titleCase(slotId.split(".").at(-1) ?? slotId);
+const friendlySlotLabels: Readonly<Record<string, string>> = Object.freeze({
+  "node.body": "Node Body",
+  "node.icon": "Node Icon",
+  "node.effect": "Glow & Effects",
+  "connection.beam": "Connection Line",
+  "connection.glow": "Connection Glow",
+  "cosmos.map.slot.background": "Map Background",
+  "cosmos.map.slot.constellation-field": "Constellation Field",
+  "cosmos.map.slot.connection-field": "Connection Field",
+  "cosmos.map.slot.ambient": "Atmosphere",
+  "cosmos.map.slot.foreground": "Foreground",
+});
+
+function friendlySlotLabel(slotId: string): string {
+  return friendlySlotLabels[slotId] ?? titleCase(slotId.split(".").at(-1) ?? slotId);
 }
 
 function titleCase(value: string): string {

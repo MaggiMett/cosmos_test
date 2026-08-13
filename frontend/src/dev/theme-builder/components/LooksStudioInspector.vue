@@ -3,7 +3,7 @@
     <header class="looks-studio-inspector__heading"><h1 class="builder-serif">{{ skinName }}</h1><p>Look <span aria-hidden="true">·</span> {{ stateLabel }}</p></header>
     <BuilderAccordionSection title="Appearance" :open="true">
       <div class="looks-appearance">
-        <span class="looks-appearance__label">Material · core.material.dom-surface</span>
+        <span class="looks-appearance__label">Surface</span>
         <label>Fill<input type="color" :value="fill" @change="emitValue('core.material.fill', $event)" /></label>
         <label>Stroke<input type="color" :value="stroke" @change="emitValue('core.material.stroke', $event)" /></label>
         <label>Opacity<input type="number" min="0" max="1" step="0.05" :value="opacity" @change="emitNumber('core.material.opacity', $event)" /></label>
