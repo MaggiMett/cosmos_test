@@ -1,5 +1,6 @@
 import { baseMainRoomTemplate } from "./baseTemplate";
 import { cosmosMapTemplate } from "./cosmosMapTemplate";
+import { cosmosConnectionTemplate } from "./connectionTemplate";
 import {
   clusterNodeTemplate,
   detailNodeTemplate,
@@ -89,6 +90,16 @@ export const coreTemplateCatalog = [
     targetRole: detailNodeTemplate.targetRole,
     status: "implemented",
     templateId: detailNodeTemplate.templateId,
+    visualReference: "CosmosMap.png",
+  },
+  {
+    catalogId: "cosmos.connection",
+    label: "Connection",
+    group: "cosmos",
+    kind: "object",
+    targetRole: cosmosConnectionTemplate.targetRole,
+    status: "implemented",
+    templateId: cosmosConnectionTemplate.templateId,
     visualReference: "CosmosMap.png",
   },
   {

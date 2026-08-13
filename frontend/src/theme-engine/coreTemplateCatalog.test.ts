@@ -12,6 +12,7 @@ describe("Core Cosmos template catalog", () => {
       "cosmos.node.cluster",
       "cosmos.node.object",
       "cosmos.node.detail",
+      "cosmos.connection",
       "base.room.main",
       "base.door",
       "base.workspace-entry",
@@ -37,7 +38,7 @@ describe("Core Cosmos template catalog", () => {
       (entry) => entry.status === "implemented",
     );
 
-    expect(implemented).toHaveLength(7);
+    expect(implemented).toHaveLength(8);
     expect(implemented).toContainEqual(
       expect.objectContaining({
         catalogId: "cosmos.map",
@@ -64,7 +65,7 @@ describe("Core Cosmos template catalog", () => {
   });
 
   it("provides stable product groups for Theme Builder navigation", () => {
-    expect(coreTemplateCatalogByGroup("cosmos")).toHaveLength(6);
+    expect(coreTemplateCatalogByGroup("cosmos")).toHaveLength(7);
     expect(coreTemplateCatalogByGroup("base")).toHaveLength(5);
     expect(coreTemplateCatalogByGroup("workspace")).toHaveLength(1);
     expect(coreTemplateCatalogByGroup("ui")).toHaveLength(1);

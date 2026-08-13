@@ -30,6 +30,10 @@ export {
   coreTemplateCatalogByGroup,
 } from "./coreTemplateCatalog";
 export {
+  cosmosConnectionTemplate,
+  COSMOS_CONNECTION_TEMPLATE_ID,
+} from "./connectionTemplate";
+export {
   cosmosMapTemplate,
   COSMOS_MAP_SLOT_IDS,
   COSMOS_MAP_TEMPLATE_ID,
