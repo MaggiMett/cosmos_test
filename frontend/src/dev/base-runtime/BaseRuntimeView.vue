@@ -62,7 +62,7 @@
       @close-base="closeBase"
     />
     <CosmosQuickTravel
-      v-if="quickTravelOpen && runtime.cosmosMap.state.snapshot"
+      v-if="!backgroundOnly && quickTravelOpen && runtime.cosmosMap.state.snapshot"
       :projects="runtime.cosmosMap.state.snapshot.projects"
       :current-project-id="entryProjectId"
       @close="quickTravelOpen = false"

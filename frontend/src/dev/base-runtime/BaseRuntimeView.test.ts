@@ -247,6 +247,7 @@ describe("Base Room Runtime visual slice", () => {
     const scene = sourceFor("./components/RoomCompositionRuntimeScene.vue");
 
     expect(view).toContain(':background-only="backgroundOnly"');
+    expect(view).toContain('v-if="!backgroundOnly && quickTravelOpen && runtime.cosmosMap.state.snapshot"');
     expect(scene).toContain(':aria-hidden="backgroundOnly ? \'true\' : undefined"');
     expect(scene).toContain(':inert="backgroundOnly || undefined"');
     expect(scene).toContain('v-if="!backgroundOnly"');
