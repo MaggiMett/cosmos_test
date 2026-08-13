@@ -22,7 +22,7 @@
         @contextmenu.prevent="openWorkspaceContextMenu"
       >
         <strong class="workspace-environment__identity">{{ session.definition.displayName }}</strong>
-        <button type="button" :aria-label="workspaceReturnLabel" :title="workspaceReturnLabel" @click="closeWorkspace">
+        <button type="button" :aria-label="workspaceCloseLabel" :title="workspaceCloseLabel" @click="requestWorkspaceClose">
           <span aria-hidden="true">×</span>
         </button>
       </header>
@@ -131,6 +131,9 @@ const workspaceReturnLabel = computed(() => {
   const room = runtime.base.state.snapshot?.rooms.find((candidate) => candidate.objectId === roomId);
   return room ? `Return to ${room.displayName}` : "Return to Base";
 });
+const workspaceCloseLabel = computed(() =>
+  toolInstances.value.length > 0 ? "Close active Tools before returning" : workspaceReturnLabel.value,
+);
 
 async function openWorkspace() {
   if (phase.value === "opening" || session.value) return;
@@ -154,8 +157,20 @@ async function openWorkspace() {
   }
 }
 
+function requestWorkspaceClose(): void {
+  const focusedTool = [...toolInstances.value]
+    .filter((instance) => instance.window.state === "active")
+    .sort((left, right) => right.window.focusOrder - left.window.focusOrder)[0];
+  if (focusedTool) {
+    closeTool(focusedTool.instanceId);
+    return;
+  }
+  if (toolInstances.value.length > 0) return;
+  void closeWorkspace();
+}
+
 async function closeWorkspace() {
-  if (!session.value || phase.value === "closing") return;
+  if (!session.value || phase.value === "closing" || toolInstances.value.length > 0) return;
   phase.value = "closing";
   const roomId = session.value.context.roomId;
   try {
@@ -235,15 +250,8 @@ function openWorkspaceContextMenu(event: MouseEvent) {
 
 function onKeyDown(event: KeyboardEvent) {
   if (event.key !== "Escape" || event.defaultPrevented || !session.value) return;
-  const focusedTool = [...toolInstances.value]
-    .filter((instance) => instance.window.state === "active")
-    .sort((left, right) => right.window.focusOrder - left.window.focusOrder)[0];
-  if (focusedTool) {
-    event.preventDefault();
-    closeTool(focusedTool.instanceId);
-    return;
-  }
-  void closeWorkspace();
+  event.preventDefault();
+  requestWorkspaceClose();
 }
 
 function workspaceBounds() {

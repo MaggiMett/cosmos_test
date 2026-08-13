@@ -50,7 +50,10 @@ describe("Base production presenter", () => {
     expect(workspaceSource).toContain('instance.window.state === "active"');
     expect(workspaceSource).toContain("closeTool(focusedTool.instanceId)");
     expect(workspaceSource).not.toContain("session.value.toolInstances");
-    expect(workspaceSource).toContain(':aria-label="workspaceReturnLabel"');
+    expect(workspaceSource).toContain(':aria-label="workspaceCloseLabel"');
+    expect(workspaceSource).toContain('@click="requestWorkspaceClose"');
+    expect(workspaceSource).toContain('"Close active Tools before returning"');
+    expect(workspaceSource).toContain("requestWorkspaceClose();");
     expect(workspaceSource).toContain('`Return to ${room.displayName}`');
     expect(workspaceSource).toContain('"Return to Base"');
     expect(toolWindowSource).toContain(':aria-label="`Close ${title}`"');
