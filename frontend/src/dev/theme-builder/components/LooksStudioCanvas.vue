@@ -13,9 +13,25 @@
     </header>
     <div class="looks-studio-canvas__stage">
       <NeutralVisualPlaceholder :label="templateName" variant="canvas" :show-label="true" />
-      <div class="looks-studio-canvas__podium" aria-hidden="true" />
+      <div v-if="previewKind === 'map'" class="looks-studio-canvas__map" :style="objectStyle" aria-hidden="true">
+        <span class="looks-studio-canvas__nebula" />
+        <span v-for="index in 9" :key="index" class="looks-studio-canvas__star" :style="starStyle(index)" />
+        <span class="looks-studio-canvas__map-line looks-studio-canvas__map-line--a" />
+        <span class="looks-studio-canvas__map-line looks-studio-canvas__map-line--b" />
+        <span class="looks-studio-canvas__map-node looks-studio-canvas__map-node--root" />
+        <span class="looks-studio-canvas__map-node looks-studio-canvas__map-node--a" />
+        <span class="looks-studio-canvas__map-node looks-studio-canvas__map-node--b" />
+      </div>
+      <div v-else-if="previewKind === 'connection'" class="looks-studio-canvas__connection" :style="objectStyle" aria-hidden="true">
+        <span class="looks-studio-canvas__connection-node" />
+        <span class="looks-studio-canvas__connection-beam" />
+        <span class="looks-studio-canvas__connection-node" />
+      </div>
+      <div v-else class="looks-studio-canvas__podium" aria-hidden="true" />
       <div
+        v-if="previewKind !== 'map' && previewKind !== 'connection'"
         class="looks-studio-canvas__object"
+        :class="{ 'looks-studio-canvas__object--node': previewKind === 'node' }"
         :style="objectStyle"
         aria-hidden="true"
       >
@@ -59,6 +75,7 @@ import NeutralVisualPlaceholder from "./NeutralVisualPlaceholder.vue";
 
 const props = defineProps<{
   templateName: string;
+  templateId: string;
   slots: readonly Readonly<LooksSlotPresentation>[];
   states: readonly Readonly<LooksStatePresentation>[];
   activeStateId: string;
@@ -70,6 +87,12 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ "select-state": [stateId: string]; "select-slot": [slotId: string] }>();
 const activeState = computed(() => props.states.find((state) => state.stateId === props.activeStateId));
+const previewKind = computed<"map" | "node" | "connection" | "generic">(() => {
+  if (props.templateId.includes("cosmos.map.")) return "map";
+  if (props.templateId.includes("connection")) return "connection";
+  if (props.templateId.includes("node")) return "node";
+  return "generic";
+});
 const visibleAssetSlots = computed(() => {
   const available = props.slots.filter((slot) => slot.previewUrl && slot.assetStatus === "available");
   const selected = available.find((slot) => slot.slotId === props.selectedSlotId);
@@ -80,6 +103,11 @@ const objectStyle = computed(() => ({
   "--looks-stroke": props.materialStroke,
   "--looks-opacity": String(props.materialOpacity),
 }));
+function starStyle(index: number): Record<string, string> {
+  const positions = [[13,20],[28,68],[39,30],[51,77],[62,18],[71,55],[82,27],[88,73],[19,45]];
+  const [left, top] = positions[index - 1] ?? [50, 50];
+  return { left: `${left}%`, top: `${top}%` };
+}
 function selectStateByLabel(label: string): void {
   const state = props.states.find((candidate) => candidate.label === label);
   if (state) emit("select-state", state.stateId);
@@ -97,6 +125,7 @@ function selectStateByLabel(label: string): void {
 .looks-studio-canvas__stage :deep(.neutral-visual__arch),.looks-studio-canvas__stage :deep(.neutral-visual__horizon),.looks-studio-canvas__stage :deep(.neutral-visual__floor){display:none}
 .looks-studio-canvas__podium { position:absolute; bottom:8%; left:50%; width:min(48%,440px); height:7%; border:1px solid rgba(212,220,225,.1); border-radius:50%; background:linear-gradient(180deg,#23292d,#0c1013); box-shadow:0 22px 40px rgba(0,0,0,.3); transform:translateX(-50%); }
 .looks-studio-canvas__object { position:absolute; inset:20% 34% 16%; overflow:hidden; border:2px solid var(--looks-stroke,#8b929c); border-radius:48% 48% 16% 16%; background:var(--looks-fill,#30343a); box-shadow:0 30px 70px rgba(0,0,0,.38); opacity:var(--looks-opacity,1); transition:border-color .14s ease,background .14s ease,opacity .14s ease; }
+.looks-studio-canvas__object--node{inset:29% 38% 25%;border-radius:50%;box-shadow:0 0 26px color-mix(in srgb,var(--looks-stroke,#8b929c) 34%,transparent),0 28px 60px rgba(0,0,0,.38)}.looks-studio-canvas__object--node .looks-studio-canvas__core{inset:24%;border-radius:50%}.looks-studio-canvas__object--node .looks-studio-canvas__base{display:none}.looks-studio-canvas__object--node .looks-studio-canvas__orbit{inset:9%;}.looks-studio-canvas__map{position:absolute;inset:12% 8%;overflow:hidden;border:1px solid var(--builder-border);border-radius:14px;background:radial-gradient(circle at 60% 42%,color-mix(in srgb,var(--looks-stroke,#62d9ff) 16%,transparent),transparent 26%),linear-gradient(145deg,#030711,#07162d 58%,#100a1b);opacity:var(--looks-opacity,1)}.looks-studio-canvas__nebula{position:absolute;inset:15% 12%;background:radial-gradient(ellipse at center,rgba(112,72,168,.16),transparent 58%);filter:blur(10px)}.looks-studio-canvas__star{position:absolute;width:3px;height:3px;border-radius:50%;background:#d8f4ff;box-shadow:0 0 8px #62d9ff}.looks-studio-canvas__map-node,.looks-studio-canvas__connection-node{position:absolute;width:22px;height:22px;border:2px solid var(--looks-stroke,#62d9ff);border-radius:50%;background:var(--looks-fill,#081426);box-shadow:0 0 18px color-mix(in srgb,var(--looks-stroke,#62d9ff) 55%,transparent)}.looks-studio-canvas__map-node--root{left:48%;top:43%;width:34px;height:34px}.looks-studio-canvas__map-node--a{left:25%;top:27%}.looks-studio-canvas__map-node--b{right:23%;bottom:25%}.looks-studio-canvas__map-line{position:absolute;height:2px;background:linear-gradient(90deg,transparent,var(--looks-stroke,#62d9ff),transparent);box-shadow:0 0 9px var(--looks-stroke,#62d9ff);transform-origin:left center}.looks-studio-canvas__map-line--a{left:28%;top:33%;width:25%;transform:rotate(24deg)}.looks-studio-canvas__map-line--b{left:52%;top:49%;width:27%;transform:rotate(27deg)}.looks-studio-canvas__connection{position:absolute;inset:36% 18%;display:flex;align-items:center}.looks-studio-canvas__connection-node{position:relative;flex:0 0 30px;width:30px;height:30px}.looks-studio-canvas__connection-beam{height:3px;flex:1;background:linear-gradient(90deg,var(--looks-stroke,#68cfff),#a67cff,var(--looks-stroke,#68cfff));box-shadow:0 0 12px var(--looks-stroke,#68cfff);opacity:var(--looks-opacity,1)}
 .looks-studio-canvas__texture,.looks-studio-canvas__slot-art { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.48; }
 .looks-studio-canvas__texture { opacity:.28; mix-blend-mode:soft-light; }
 .looks-studio-canvas__slot-art { opacity:.34; mix-blend-mode:screen; }

@@ -75,6 +75,7 @@
       />
       <LooksStudioCanvas
         :template-name="resolved.template.displayName"
+        :template-id="resolved.template.templateId"
         :slots="slotItems"
         :states="stateItems"
         :active-state-id="activeStateId"
