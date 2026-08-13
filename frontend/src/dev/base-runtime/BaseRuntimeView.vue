@@ -344,8 +344,11 @@ watch(
 );
 
 onMounted(() => {
-  entryProjectId = typeof route.query.fromProjectId === "string"
-    ? route.query.fromProjectId
+  const requestedProjectId = typeof route.query.fromProjectId === "string" ? route.query.fromProjectId : null;
+  entryProjectId = runtime.cosmosMap.state.snapshot?.projects.some(
+    (project) => project.objectId === requestedProjectId,
+  )
+    ? requestedProjectId
     : runtime.cosmosMap.state.snapshot?.focusedProjectId ?? null;
   unsubscribeActiveTheme = runtime.themes.subscribeActiveTheme(() => {
     void refreshThemePresentation();
