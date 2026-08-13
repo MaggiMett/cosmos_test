@@ -29,6 +29,14 @@ export {
   coreTemplateCatalog,
   coreTemplateCatalogByGroup,
 } from "./coreTemplateCatalog";
+export {
+  clusterNodeTemplate,
+  coreNodeTemplates,
+  detailNodeTemplate,
+  domainNodeTemplate,
+  objectNodeTemplate,
+  projectRootNodeTemplate,
+} from "./nodeTemplates";
 export type {
   CoreTemplateCatalogEntry,
   CoreTemplateKind,
