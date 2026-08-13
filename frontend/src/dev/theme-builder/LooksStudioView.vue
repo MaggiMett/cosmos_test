@@ -105,6 +105,7 @@
         :opacity="materialOpacity"
         :texture-ref="materialTexture"
         :assets="assetItems.filter((asset) => asset.status === 'available')"
+        :inherits-default="inheritsDefaultMaterial"
         @set-material="setMaterial"
         @clear-material="clearMaterial"
       />
@@ -211,6 +212,13 @@ const activeStateLabel = computed(() => stateItems.value.find((state) => state.s
 const selectedSlot = computed(() => slotItems.value.find((slot) => slot.slotId === selectedSlotId.value));
 const missingAssetCount = computed(() => slotItems.value.filter((slot) => slot.assetStatus === "missing").length);
 const selectedMaterialChannelId = computed(() => selectedSlotId.value ? `core.material.part-surface.${selectedSlotId.value}` : "core.material.dom-surface");
+const stateMaterialOverride = computed(() => {
+  if (activeStateId.value === "default") return undefined;
+  return resolved.value?.skin.stateVariants
+    .find((variant) => variant.stateId === activeStateId.value)
+    ?.materialOverrides?.find((item) => item.channelId === selectedMaterialChannelId.value);
+});
+const inheritsDefaultMaterial = computed(() => activeStateId.value !== "default" && !stateMaterialOverride.value);
 const material = computed(() => {
   const skin = resolved.value?.skin;
   if (!skin) return undefined;
