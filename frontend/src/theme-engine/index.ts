@@ -26,6 +26,15 @@ export {
   canonicalVisualAssets,
 } from "./assetCatalogFixtures";
 export {
+  coreTemplateCatalog,
+  coreTemplateCatalogByGroup,
+} from "./coreTemplateCatalog";
+export type {
+  CoreTemplateCatalogEntry,
+  CoreTemplateKind,
+  CoreTemplateStatus,
+} from "./coreTemplateCatalog";
+export {
   createCanonicalAssetImportFixtures,
 } from "./assetImportFixtures";
 export {
