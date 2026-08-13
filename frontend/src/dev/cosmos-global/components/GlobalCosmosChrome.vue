@@ -6,7 +6,7 @@
     </div>
 
     <CosmosNavigation
-      current-location="Global View"
+      current-location="Global Cosmos"
       :left-neighbor="leftNeighbor"
       :right-neighbor="rightNeighbor"
       :quick-travel-open="quickTravelOpen"

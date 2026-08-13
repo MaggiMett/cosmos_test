@@ -73,7 +73,7 @@ describe("Global Cosmos visual slice", () => {
     const chrome = sourceFor("./components/GlobalCosmosChrome.vue");
     const controls = sourceFor("./components/GlobalCosmosControls.vue");
 
-    expect(chrome).toContain('current-location="Global View"');
+    expect(chrome).toContain('current-location="Global Cosmos"');
     expect(chrome).toContain("Local · Synced");
     expect(chrome).toContain("projectStatus");
     expect(chrome).toContain(':left-neighbor="leftNeighbor"');
