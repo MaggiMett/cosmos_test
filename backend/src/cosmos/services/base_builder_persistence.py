@@ -29,6 +29,37 @@ class BaseBuilderPersistenceService:
             raise RuntimeServiceError("validation_failed", "Base Builder persistence target is not a Base Object.")
         self._validate_document(command.document)
 
+    def persist(self, command: BaseBuilderPersistCommand, context: RuntimeContext) -> dict[str, JSONValue]:
+        self.validate_target(command, context)
+        target = self._objects.get(command.base_object_id, context)
+        current = target.properties.get("builder_document", {})
+        if not isinstance(current, dict):
+            raise RuntimeServiceError("validation_failed", "Stored Base Builder document is malformed.")
+        current_revision = current.get("revisionId")
+        if current_revision is not None and not isinstance(current_revision, str):
+            raise RuntimeServiceError("validation_failed", "Stored Base Builder revision is malformed.")
+        if command.expected_revision_id != current_revision:
+            raise RuntimeServiceError("conflict", "Base Builder document changed since it was loaded.")
+
+        base = command.document.get("base")
+        revision = base.get("revision") if isinstance(base, dict) else None
+        revision_id = revision.get("revisionId") if isinstance(revision, dict) else None
+        if not isinstance(revision_id, str) or not revision_id:
+            raise RuntimeServiceError("validation_failed", "Base Builder document requires a revision id.")
+        envelope: dict[str, JSONValue] = {"revisionId": revision_id, "document": command.document}
+        properties = dict(target.properties)
+        properties["builder_document"] = envelope
+        updated = self._objects.contract.build(
+            target.identity,
+            target.system_tags,
+            properties,
+            user_tags=target.user_tags,
+            primary_project_id=target.primary_project_id,
+        )
+        if not self._objects.repository.compare_and_swap_property(updated, "builder_document", current):
+            raise RuntimeServiceError("conflict", "Base Builder document changed while it was being saved.")
+        return envelope
+
     @staticmethod
     def _validate_document(document: dict[str, JSONValue]) -> None:
         base = document.get("base")

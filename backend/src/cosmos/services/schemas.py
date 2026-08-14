@@ -65,7 +65,10 @@ def create_version_one_object_contract() -> ObjectContract:
         PropertySchema(
             "cosmos.schema.base",
             1,
-            (PropertyDefinition("main_room_id", PropertyKind.STRING, ""),),
+            (
+                PropertyDefinition("main_room_id", PropertyKind.STRING, ""),
+                PropertyDefinition("builder_document", PropertyKind.OBJECT, {}),
+            ),
         ),
     )
     contract.register_system_tag(

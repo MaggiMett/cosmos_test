@@ -12,7 +12,11 @@ from cosmos.services.errors import RuntimeServiceError
 def _document(room_id: str = "room.main") -> dict:
     return {
         "activeRoomId": room_id,
-        "base": {"rooms": [{"roomId": room_id}], "entryRoomId": room_id},
+        "base": {
+            "rooms": [{"roomId": room_id}],
+            "entryRoomId": room_id,
+            "revision": {"revisionId": "builder:1"},
+        },
     }
 
 
@@ -24,6 +28,27 @@ def test_validates_existing_base_target_and_document_references(tmp_path: Path) 
     owner = RuntimeContext(permissions=frozenset({"objects.read", "objects.write"}))
 
     service.validate_target(BaseBuilderPersistCommand(base.identity.object_id, _document()), owner)
+
+
+def test_persists_builder_document_with_compare_and_swap_revision(tmp_path: Path) -> None:
+    runtime = CosmosRuntime.build(RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0))
+    runtime.initialize()
+    service = BaseBuilderPersistenceService(runtime.objects)
+    base = runtime.objects.repository.list(system_tag="Base")[0]
+    owner = RuntimeContext(permissions=frozenset({"objects.read", "objects.write"}))
+
+    saved = service.persist(BaseBuilderPersistCommand(base.identity.object_id, _document()), owner)
+    assert saved["revisionId"] == "builder:1"
+    assert runtime.objects.get(base.identity.object_id, owner).properties["builder_document"] == saved
+
+    changed = _document()
+    changed["base"]["revision"]["revisionId"] = "builder:2"
+    with pytest.raises(RuntimeServiceError, match="changed since it was loaded"):
+        service.persist(BaseBuilderPersistCommand(base.identity.object_id, changed), owner)
+    saved_again = service.persist(
+        BaseBuilderPersistCommand(base.identity.object_id, changed, expected_revision_id="builder:1"), owner
+    )
+    assert saved_again["revisionId"] == "builder:2"
 
 
 def test_rejects_unknown_room_reference_before_persistence(tmp_path: Path) -> None:
