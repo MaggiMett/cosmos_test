@@ -18,17 +18,24 @@ def test_base_builder_document_api_persists_with_revision_conflicts(tmp_path: Pa
     }
 
     with TestClient(create_app(settings)) as client:
+        empty = client.get("/base-builder/cosmos.base.default/document")
         first = client.put(
             "/base-builder/cosmos.base.default/document",
             json={"document": document, "expectedRevisionId": None},
         )
+        loaded = client.get("/base-builder/cosmos.base.default/document")
         conflict = client.put(
             "/base-builder/cosmos.base.default/document",
             json={"document": document, "expectedRevisionId": None},
         )
 
+    assert empty.status_code == 200
+    assert empty.json() == {"revisionId": None, "document": None}
     assert first.status_code == 200
     assert first.json()["revisionId"] == "builder:1"
+    assert loaded.status_code == 200
+    assert loaded.json()["revisionId"] == "builder:1"
+    assert loaded.json()["document"] == document
     assert conflict.status_code == 409
     assert conflict.json()["code"] == "conflict"
 

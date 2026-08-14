@@ -58,6 +58,11 @@ async def base_snapshot(request: Request) -> JSONResponse:
 
 async def base_builder_document(request: Request) -> JSONResponse:
     try:
+        if request.method == "GET":
+            return JSONResponse(request.app.state.runtime.base_builder_persistence.load(
+                request.path_params["base_object_id"],
+                _object_context(request, request.path_params["base_object_id"]),
+            ))
         payload = await _json_object(request)
         document = payload.get("document")
         expected_revision_id = payload.get("expectedRevisionId")
@@ -725,7 +730,7 @@ def create_app(
             Route("/ready", readiness),
             Route("/cosmos/map", cosmos_map),
             Route("/base", base_snapshot),
-            Route("/base-builder/{base_object_id:str}/document", base_builder_document, methods=["PUT"]),
+            Route("/base-builder/{base_object_id:str}/document", base_builder_document, methods=["GET", "PUT"]),
             Route("/runtime-state/theme", theme_runtime_state, methods=["GET", "PUT"]),
             Route("/theme-packages", theme_packages, methods=["GET", "POST"]),
             Route("/theme-packages/import", theme_package_import, methods=["POST"]),

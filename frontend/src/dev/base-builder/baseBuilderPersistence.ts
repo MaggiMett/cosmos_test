@@ -16,6 +16,15 @@ export interface BaseBuilderPersistEnvelope {
   document: BaseBuilderDocument;
 }
 
+export async function loadBaseBuilderDocument(
+  api: CosmosApiClient,
+  baseObjectId: string,
+): Promise<ApiResult<BaseBuilderPersistEnvelope>> {
+  return api.get<BaseBuilderPersistEnvelope>(
+    `/base-builder/${encodeURIComponent(baseObjectId)}/document`,
+  );
+}
+
 export async function persistBaseBuilderDocument(
   api: CosmosApiClient,
   command: Readonly<BaseBuilderPersistCommand>,

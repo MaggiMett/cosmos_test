@@ -29,6 +29,20 @@ class BaseBuilderPersistenceService:
             raise RuntimeServiceError("validation_failed", "Base Builder persistence target is not a Base Object.")
         self._validate_document(command.document)
 
+    def load(self, base_object_id: str, context: RuntimeContext) -> dict[str, JSONValue]:
+        target = self._objects.get(base_object_id, context)
+        if "Base" not in target.system_tags:
+            raise RuntimeServiceError("validation_failed", "Base Builder persistence target is not a Base Object.")
+        current = target.properties.get("builder_document", {})
+        if not isinstance(current, dict):
+            raise RuntimeServiceError("validation_failed", "Stored Base Builder document is malformed.")
+        revision_id = current.get("revisionId")
+        document = current.get("document")
+        return {
+            "revisionId": revision_id if isinstance(revision_id, str) else None,
+            "document": document if isinstance(document, dict) else None,
+        }
+
     def persist(self, command: BaseBuilderPersistCommand, context: RuntimeContext) -> dict[str, JSONValue]:
         self.validate_target(command, context)
         target = self._objects.get(command.base_object_id, context)
