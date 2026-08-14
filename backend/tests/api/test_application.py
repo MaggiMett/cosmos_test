@@ -134,6 +134,36 @@ def test_workspace_api_opens_persists_and_closes_temporary_sessions(tmp_path: Pa
     assert missing.status_code == 404
 
 
+def test_project_resource_projection_api_is_project_scoped_and_filtered(tmp_path: Path) -> None:
+    settings = RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0)
+
+    with TestClient(create_app(settings)) as client:
+        opened = client.post(
+            "/workspaces/cosmos.workspace.creation/sessions",
+            json={"roomId": "cosmos.room.main"},
+        )
+        session_id = opened.json()["objectId"]
+        client.post(
+            f"/workspace-sessions/{session_id}/files",
+            json={"path": "Dwarfs.md", "content": "Stone and steel"},
+        )
+        client.post(
+            f"/workspace-sessions/{session_id}/files",
+            json={"path": ".cache/hidden.md", "content": "noise"},
+        )
+        project_id = opened.json()["definition"]["sourceProjectId"]
+        projection = client.get(f"/projects/{project_id}/resource-projection")
+        outside_scope = client.get("/projects/not-a-project/resource-projection")
+
+    assert projection.status_code == 200
+    assert projection.json()["projectId"] == project_id
+    resource = projection.json()["items"][0]
+    assert resource["displayName"] == "Dwarfs.md"
+    assert resource["resourcePath"] == "Dwarfs.md"
+    assert all(item["displayName"] != ".cache" for item in projection.json()["items"])
+    assert outside_scope.status_code == 404
+
+
 def test_core_tool_api_is_session_scoped_and_journeyman_is_its_own_tool(tmp_path: Path) -> None:
     settings = RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0)
 
