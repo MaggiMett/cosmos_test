@@ -9,21 +9,15 @@
     <p v-else-if="!items.length" class="project-resource-layer__state">No user-facing resources found.</p>
     <p v-else-if="!canOpenResources" class="project-resource-layer__state">Resources are available, but this Project has no Workspace for opening them.</p>
     <nav v-else aria-label="Projected project resources">
-      <template v-for="item in items" :key="item.resourcePath">
-        <div class="project-resource-layer__group" v-if="item.kind === 'group'">
-          <strong>{{ item.displayName }}</strong>
-          <ResourceBranch :items="item.children" @open-resource="$emit('open-resource', $event)" />
-        </div>
-        <button v-else class="project-resource-layer__resource" type="button" :title="item.resourcePath" @click="$emit('open-resource', item.resourcePath)">{{ item.displayName }}<small>{{ item.editable ? 'Editable' : 'Read only' }}</small></button>
-      </template>
+      <ProjectResourceBranch :items="items" @open-resource="$emit('open-resource', $event)" />
     </nav>
     <footer>Resource view · not Cosmos semantics</footer>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { defineComponent, h, type PropType } from "vue";
 import type { ProjectResourceProjectionItem } from "../../../runtime/projectResourceProjectionRuntime";
+import ProjectResourceBranch from "./ProjectResourceBranch.vue";
 
 const props = defineProps<{
   projectName: string;
@@ -34,24 +28,6 @@ const props = defineProps<{
 void props;
 defineEmits<{ close: []; "open-resource": [resourcePath: string] }>();
 
-const ResourceBranch = defineComponent({
-  name: "ResourceBranch",
-  props: { items: { type: Array as PropType<ProjectResourceProjectionItem[]>, required: true } },
-  emits: { "open-resource": (_resourcePath: string) => true },
-  setup(branchProps, { emit }) {
-    const renderItems = (items: ProjectResourceProjectionItem[]) => h("ul", items.map((item) =>
-      h("li", { key: item.resourcePath }, item.kind === "group"
-        ? [h("strong", item.displayName), renderItems(item.children)]
-        : h("button", {
-          type: "button",
-          class: "project-resource-layer__nested-resource",
-          title: item.resourcePath,
-          onClick: () => emit("open-resource", item.resourcePath),
-        }, [h("span", item.displayName), h("small", item.editable ? "Editable" : "Read only")])), 
-    ));
-    return () => renderItems(branchProps.items);
-  },
-});
 </script>
 
 <style scoped>

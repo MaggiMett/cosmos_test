@@ -138,10 +138,12 @@ describe("Project Cosmos visual slice", () => {
     expect(source).toContain(':aria-pressed="resourceLayerOpen"');
     expect(layer).toContain("Resource view · not Cosmos semantics");
     expect(layer).toContain('aria-label="Projected project resources"');
-    expect(layer).toContain("$emit('open-resource', item.resourcePath)");
-    expect(layer).toContain('emit("open-resource", item.resourcePath)');
-    expect(layer).toContain("item.editable ? 'Editable' : 'Read only'");
-    expect(layer).toContain("title: item.resourcePath");
+    expect(layer).toContain("@open-resource=\"$emit('open-resource', $event)\"");
+    const branch = sourceFor("./components/ProjectResourceBranch.vue");
+    expect(layer).toContain("<ProjectResourceBranch");
+    expect(branch).toContain("@click=\"$emit('open-resource', item.resourcePath)\"");
+    expect(branch).toContain("item.editable ? 'Editable' : 'Read only'");
+    expect(branch).toContain(':aria-expanded="isExpanded(item.resourcePath)"');
     expect(source).toContain(':can-open-resources="Boolean(visibleProject?.workspaceObjectId)"');
     expect(layer).toContain("this Project has no Workspace for opening them");
     expect(source).toContain("openTool: \"cosmos.tool.files\"");
