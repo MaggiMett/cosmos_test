@@ -62,7 +62,11 @@
 
     <section v-if="persistenceMessage" class="builder-persistence" :data-phase="lifecycle.phase" role="status">
       <span>{{ persistenceMessage }}</span>
-      <template v-if="lifecycle.phase === 'conflict'">
+      <template v-if="reloadConfirmationPending">
+        <button type="button" data-testid="builder-reload-confirm" @click="confirmLoadPersisted">Änderungen verwerfen & laden</button>
+        <button type="button" data-testid="builder-reload-cancel" @click="cancelLoadPersisted">Abbrechen</button>
+      </template>
+      <template v-else-if="lifecycle.phase === 'conflict'">
         <button type="button" data-testid="builder-conflict-reload" @click="reloadConflict">Remote laden</button>
         <button type="button" data-testid="builder-conflict-discard" @click="discardConflict">Lokale Änderungen verwerfen</button>
       </template>
@@ -553,16 +557,22 @@ const session = new BaseBuilderSession();
 const lifecycle = new BaseBuilderLifecycle(cosmosApiClient, "cosmos.base.default");
 const state = ref(session.snapshot());
 const persistenceTick = ref(0);
+const persistedFingerprint = ref<string | null>(null);
+const reloadConfirmationPending = ref(false);
+const currentFingerprint = computed(() => JSON.stringify(state.value.composition));
+const persistenceDirty = computed(() => persistedFingerprint.value !== currentFingerprint.value);
 const persistenceBusy = computed(() => {
   persistenceTick.value;
   return lifecycle.phase === "loading" || lifecycle.phase === "saving";
 });
 const persistenceMessage = computed(() => {
   persistenceTick.value;
+  if (reloadConfirmationPending.value) return "Ungespeicherte Änderungen würden beim Laden verworfen.";
   if (lifecycle.phase === "conflict") return "Speicherkonflikt: Remote-Stand laden oder lokale Änderungen verwerfen.";
   if (lifecycle.phase === "error") return lifecycle.error ?? "Persistenzfehler";
   if (lifecycle.phase === "saving") return "Base-Dokument wird gespeichert…";
   if (lifecycle.phase === "loading") return "Gespeichertes Base-Dokument wird geladen…";
+  if (persistenceDirty.value) return lifecycle.revisionId ? `Ungespeicherte Änderungen · Revision ${lifecycle.revisionId}` : "Ungespeicherte Änderungen";
   return lifecycle.revisionId ? `Gespeichert · Revision ${lifecycle.revisionId}` : "";
 });
 const search = ref("");
@@ -1165,16 +1175,37 @@ function syncPersistence(): void {
 }
 
 async function loadPersisted(): Promise<void> {
+  if (persistenceDirty.value) {
+    reloadConfirmationPending.value = true;
+    syncPersistence();
+    return;
+  }
+  await performLoadPersisted();
+}
+
+async function performLoadPersisted(): Promise<void> {
+  reloadConfirmationPending.value = false;
   const document = await lifecycle.load();
   syncPersistence();
   if (document) {
     session.loadBaseDocument(document);
     refresh();
+    persistedFingerprint.value = currentFingerprint.value;
   }
 }
 
+async function confirmLoadPersisted(): Promise<void> {
+  await performLoadPersisted();
+}
+
+function cancelLoadPersisted(): void {
+  reloadConfirmationPending.value = false;
+  syncPersistence();
+}
+
 async function savePersisted(): Promise<void> {
-  await lifecycle.save(session.baseDocument());
+  const saved = await lifecycle.save(session.baseDocument());
+  if (saved) persistedFingerprint.value = currentFingerprint.value;
   syncPersistence();
 }
 
@@ -1184,6 +1215,7 @@ async function reloadConflict(): Promise<void> {
   if (remote) {
     session.loadBaseDocument(remote);
     refresh();
+    persistedFingerprint.value = currentFingerprint.value;
   }
 }
 

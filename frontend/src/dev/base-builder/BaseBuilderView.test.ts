@@ -43,6 +43,14 @@ describe("Base Builder development view boundaries", () => {
     expect(viewSource).not.toContain('api.get(');
   });
 
+  it("guards persisted reloads when local edits are dirty", () => {
+    expect(viewSource).toContain("persistenceDirty");
+    expect(viewSource).toContain("reloadConfirmationPending");
+    expect(viewSource).toContain('data-testid="builder-reload-confirm"');
+    expect(viewSource).toContain('data-testid="builder-reload-cancel"');
+    expect(viewSource).toContain("if (persistenceDirty.value)");
+  });
+
   it("bypasses ApplicationShell only for explicitly marked development routes", () => {
     expect(appSource).toContain('v-if="route.meta.developmentPreview || route.meta.standaloneExperience"');
     expect(appSource).toContain("<ApplicationShell v-else");
