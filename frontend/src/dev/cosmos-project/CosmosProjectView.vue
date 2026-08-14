@@ -115,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { workspaceRoute } from "../base-runtime/baseRuntimeInteractions";
@@ -354,6 +354,14 @@ function toggleResourceLayer(): void {
     void projectResources.load(requestedProjectId.value);
   }
 }
+
+watch(requestedProjectId, (projectId, previousProjectId) => {
+  if (projectId === previousProjectId) return;
+  projectResources.clear();
+  if (resourceLayerOpen.value && projectId) {
+    void projectResources.load(projectId);
+  }
+});
 
 onMounted(() => {
   void loadProjectCosmosSnapshot(runtime.cosmosMap).catch(() => undefined);

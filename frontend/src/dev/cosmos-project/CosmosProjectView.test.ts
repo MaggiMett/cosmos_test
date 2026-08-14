@@ -135,6 +135,9 @@ describe("Project Cosmos visual slice", () => {
     const layer = sourceFor("./components/ProjectResourceLayer.vue");
     expect(source).toContain("<ProjectResourceLayer");
     expect(source).toContain("projectResources.load(requestedProjectId.value)");
+    expect(source).toContain("watch(requestedProjectId");
+    expect(source).toContain("projectResources.clear()");
+    expect(source).toContain("projectResources.load(projectId)");
     expect(source).toContain(':aria-pressed="resourceLayerOpen"');
     expect(layer).toContain("Resource view · not Cosmos semantics");
     expect(layer).toContain('aria-label="Projected project resources"');
