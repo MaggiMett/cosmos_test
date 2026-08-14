@@ -15,6 +15,15 @@ import {
 import { BaseBuilderSession } from "./baseBuilderSession";
 
 describe("isolated Base Builder prototype session", () => {
+  it("exports edits through an explicit Base Composition document boundary", () => {
+    const session = new BaseBuilderSession();
+    const document = session.baseDocument();
+
+    expect(document.activeRoomId).toBe(session.snapshot().composition.roomId);
+    expect(document.base.rooms[0]).toEqual(session.snapshot().composition);
+    expect(document.base.entryRoomId).toBe(session.snapshot().composition.roomId);
+  });
+
   it("keeps every Builder fixture valid under the production schemas", () => {
     expect(() =>
       baseBuilderCatalogObjects.forEach((object) =>

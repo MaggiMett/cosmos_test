@@ -23,6 +23,7 @@ import type {
   VersionedRef,
 } from "../../theme-engine/types";
 import { emptyRoomShellFixture } from "../../theme-engine/roomShadowFixtures";
+import { createBaseBuilderDocument, replaceBaseBuilderRoom } from "./baseBuilderDocument";
 import {
   BASE_BUILDER_SKINS,
   baseBuilderCatalogEntries,
@@ -157,6 +158,11 @@ export class BaseBuilderSession {
         ...(this.#redo.at(-1) ? { redoLabel: this.#redo.at(-1)!.label } : {}),
       },
     });
+  }
+
+  baseDocument() {
+    const initial = createBaseBuilderDocument(baseBuilderStandardCompositionFixture);
+    return replaceBaseBuilderRoom(initial, this.#document.composition);
   }
 
   select(instanceId: NamespacedId | null): void {
