@@ -325,7 +325,7 @@ Covered transactions:
 A new edit clears the redo stack. UI-only Test Mode and Bounds visibility do not
 pollute document History.
 
-There is no persistence, collaborative merge or cross-route history.
+History remains local and is not collaborative or cross-route. Persistence is now handled outside History by the dedicated Builder lifecycle: a saved revision establishes the persistence baseline, dirty local edits remain recoverable, and loading a saved revision requires explicit confirmation before discarding dirty work.
 
 ## 13. Test Mode
 
@@ -452,21 +452,47 @@ geometry jargon to normal users.
   structure, TypeScript, build output and domain behavior remain covered by
   automated verification.
 
-## 17. Recommended next step
+## 17. Phase-D contract freeze
 
-The next phase should remain non-persistent and focus on usability evidence:
+The prototype has since crossed the persistence and Runtime boundary under an
+explicit lifecycle contract:
 
-1. run moderated checks for catalog discovery, invalid-placement comprehension
-   and Anchor discoverability;
-2. add a reliable component-browser harness that starts and tears down its own
-   server;
-3. instrument local-only interaction timings and failed placement reasons;
-4. improve keyboard and touch interaction;
-5. add zoom/pan only if Room scale tests demonstrate a real need;
-6. define the explicit transaction boundary between a future Builder draft and
-   persistent Base Composition;
-7. require Shadow Mode functional parity before any Runtime preview can be
-   promoted.
+```text
+edit
+  -> save revision
+  -> activation candidate
+  -> explicit activation of that exact revision
+  -> Base Runtime snapshot exposes activeBuilder
+  -> Room Composition presenter consumes only activeBuilder
+```
 
-Persistence, Runtime activation and `BaseView.vue` migration should remain
-separate decisions after the Builder interaction model has been validated.
+The boundaries are intentional:
+
+- saving never activates;
+- dirty local edits cannot be activated;
+- stale saves and stale activation requests fail with conflicts;
+- the saved Builder document and `active_builder_document` remain separate Base
+  properties;
+- Runtime never reads the saved draft directly;
+- without an activated Builder Room, the existing Base Runtime projection is a
+  compatibility fallback;
+- the activated Room Composition overrides geometry while the established
+  Runtime projection continues to supply registry and binding context;
+- Builder persistence remains behind `BaseBuilderLifecycle`; the View does not
+  perform direct HTTP or browser-storage persistence.
+
+The lifecycle is covered end-to-end by service tests and the Runtime presenter
+has explicit coverage for activated-Builder precedence and inactive-draft
+isolation.
+
+## 18. Next phase boundary
+
+Phase D is frozen at the architecture boundary above. Further changes to the
+visual Theme experience should treat this lifecycle as infrastructure rather
+than reopening save/activation semantics. Remaining usability work such as
+keyboard/touch refinement, zoom/pan and broader accessibility can proceed as
+separate product slices when evidence requires it.
+
+The next planned phase may therefore begin the graphical Theme work, while the
+legacy Base Runtime projection remains a deliberate compatibility fallback
+until migration evidence supports removing it.
