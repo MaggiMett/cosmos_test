@@ -177,6 +177,16 @@ export class BaseBuilderSession {
     this.#document.selectedObjectId = instanceId;
   }
 
+  loadBaseDocument(document: Readonly<ReturnType<BaseBuilderSession["baseDocument"]>>): void {
+    const room = document.base.rooms.find((candidate) => candidate.roomId === document.activeRoomId);
+    if (!room) throw new Error(`Base Builder document is missing active Room: ${document.activeRoomId}`);
+    this.transact("Gespeichertes Base-Dokument laden", () => {
+      this.#document.composition = deepClone(room);
+      this.#document.selectedObjectId = null;
+    });
+    this.inform("valid", "Gespeichertes Base-Dokument geladen.");
+  }
+
   loadStandard(): void {
     this.transact("Standardlayout laden", () => {
       this.#document.composition = deepClone(

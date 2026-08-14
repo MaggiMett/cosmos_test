@@ -31,13 +31,16 @@ describe("Base Builder development view boundaries", () => {
     expect(viewSource).toContain('data-testid="builder-test-mode"');
   });
 
-  it("does not import BaseView, Runtime APIs, persistence or networking", () => {
+  it("keeps persistence behind the dedicated lifecycle boundary", () => {
     expect(viewSource).not.toContain("BaseView");
     expect(viewSource).not.toContain("useCosmosRuntime");
+    expect(viewSource).toContain("BaseBuilderLifecycle");
+    expect(viewSource).toContain("cosmosApiClient");
     expect(viewSource).not.toContain("localStorage");
     expect(viewSource).not.toContain("sessionStorage");
     expect(viewSource).not.toContain("fetch(");
-    expect(viewSource).not.toContain("/api");
+    expect(viewSource).not.toContain('api.put(');
+    expect(viewSource).not.toContain('api.get(');
   });
 
   it("bypasses ApplicationShell only for explicitly marked development routes", () => {

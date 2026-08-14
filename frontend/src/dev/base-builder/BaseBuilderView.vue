@@ -28,6 +28,8 @@
             ↷ Redo
           </button>
           <span class="builder-preview__toolbar-divider" aria-hidden="true" />
+          <button type="button" :disabled="persistenceBusy" data-testid="builder-save" @click="savePersisted">Speichern</button>
+          <button type="button" :disabled="persistenceBusy" data-testid="builder-reload" @click="loadPersisted">Gespeichert laden</button>
           <button type="button" @click="resetPreset">Preset zurücksetzen</button>
           <button type="button" data-testid="builder-load-empty" @click="loadEmpty">
             Leerer Raum
@@ -57,6 +59,14 @@
         </button>
       </nav>
     </header>
+
+    <section v-if="persistenceMessage" class="builder-persistence" :data-phase="lifecycle.phase" role="status">
+      <span>{{ persistenceMessage }}</span>
+      <template v-if="lifecycle.phase === 'conflict'">
+        <button type="button" data-testid="builder-conflict-reload" @click="reloadConflict">Remote laden</button>
+        <button type="button" data-testid="builder-conflict-discard" @click="discardConflict">Lokale Änderungen verwerfen</button>
+      </template>
+    </section>
 
     <section class="builder-preview__workspace">
       <aside v-if="!state.testMode" class="builder-panel builder-catalog">
@@ -503,6 +513,8 @@ import type {
   PropertyOverrideMode,
 } from "../../theme-engine/roomCompositionTypes";
 import type { BoundsShape, Point } from "../../theme-engine/types";
+import { cosmosApiClient } from "../../runtime/apiClient";
+import { BaseBuilderLifecycle } from "./baseBuilderLifecycle";
 import {
   baseBuilderCatalogEntries,
   type BaseBuilderCatalogCategory,
@@ -538,7 +550,21 @@ const OverrideBadge = defineComponent({
 });
 
 const session = new BaseBuilderSession();
+const lifecycle = new BaseBuilderLifecycle(cosmosApiClient, "cosmos.base.default");
 const state = ref(session.snapshot());
+const persistenceTick = ref(0);
+const persistenceBusy = computed(() => {
+  persistenceTick.value;
+  return lifecycle.phase === "loading" || lifecycle.phase === "saving";
+});
+const persistenceMessage = computed(() => {
+  persistenceTick.value;
+  if (lifecycle.phase === "conflict") return "Speicherkonflikt: Remote-Stand laden oder lokale Änderungen verwerfen.";
+  if (lifecycle.phase === "error") return lifecycle.error ?? "Persistenzfehler";
+  if (lifecycle.phase === "saving") return "Base-Dokument wird gespeichert…";
+  if (lifecycle.phase === "loading") return "Gespeichertes Base-Dokument wird geladen…";
+  return lifecycle.revisionId ? `Gespeichert · Revision ${lifecycle.revisionId}` : "";
+});
 const search = ref("");
 const selectedCategory = ref<BaseBuilderCatalogCategory | "all">("all");
 const placementPreview = ref<Readonly<BaseBuilderPlacementPreview> | null>(
@@ -1132,6 +1158,38 @@ function eventPoint(event: MouseEvent | PointerEvent | DragEvent): Point {
       ((event.clientY - rect.top) / rect.height) *
       session.shell.referenceViewport.height,
   };
+}
+
+function syncPersistence(): void {
+  persistenceTick.value += 1;
+}
+
+async function loadPersisted(): Promise<void> {
+  const document = await lifecycle.load();
+  syncPersistence();
+  if (document) {
+    session.loadBaseDocument(document);
+    refresh();
+  }
+}
+
+async function savePersisted(): Promise<void> {
+  await lifecycle.save(session.baseDocument());
+  syncPersistence();
+}
+
+async function reloadConflict(): Promise<void> {
+  const remote = await lifecycle.reloadAfterConflict();
+  syncPersistence();
+  if (remote) {
+    session.loadBaseDocument(remote);
+    refresh();
+  }
+}
+
+function discardConflict(): void {
+  lifecycle.discardPendingEdits();
+  syncPersistence();
 }
 
 function round(value: number, precision = 0): number {

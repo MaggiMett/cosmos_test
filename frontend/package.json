@@ -8,7 +8,7 @@
     "build:runtime": "vite build --config vite.build.config.ts --configLoader runner",
     "dev": "vite --host 127.0.0.1 --config vite.app.config.ts --configLoader runner",
     "preview": "vite preview --host 127.0.0.1 --config vite.app.config.ts --configLoader runner",
-    "test": "vitest run --environment node",
+    "test": "vitest run --environment node --reporter=dot",
     "theme:export-base-template": "node node_modules/tsx/dist/cli.mjs scripts/export-base-template.ts",
     "typecheck": "vue-tsc --noEmit"
   },

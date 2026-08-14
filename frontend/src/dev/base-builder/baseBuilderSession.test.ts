@@ -38,6 +38,18 @@ describe("isolated Base Builder prototype session", () => {
     ).toEqual(baseBuilderStandardCompositionFixture);
   });
 
+  it("loads the active Room from a persisted Base document", () => {
+    const source = new BaseBuilderSession();
+    source.loadEmpty();
+    const document = source.baseDocument();
+    const session = new BaseBuilderSession();
+
+    session.loadBaseDocument(document);
+
+    expect(session.snapshot().composition).toEqual(document.base.rooms[0]);
+    expect(session.snapshot().selectedObjectId).toBeNull();
+  });
+
   it("loads the canonical standard preset with the required functional objects", () => {
     const session = new BaseBuilderSession();
     const state = session.snapshot();
