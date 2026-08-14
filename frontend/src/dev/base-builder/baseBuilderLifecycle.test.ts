@@ -34,5 +34,39 @@ describe("Base Builder load/edit/save lifecycle", () => {
     expect(await lifecycle.save(document)).toBe(false);
     expect(lifecycle.phase).toBe("conflict");
     expect(lifecycle.revisionId).toBe("builder:old");
+    expect(lifecycle.pendingDocument).toEqual(document);
+  });
+
+  it("reloads the remote revision without losing conflicting local edits, then retries", async () => {
+    const local = createBaseBuilderDocument(baseBuilderStandardCompositionFixture);
+    const remote = structuredClone(local);
+    remote.base.revision.revisionId = "builder:remote";
+    vi.stubGlobal("fetch", vi.fn()
+      .mockResolvedValueOnce(response({ code: "conflict", message: "changed" }, 409))
+      .mockResolvedValueOnce(response({ revisionId: "builder:remote", document: remote }))
+      .mockResolvedValueOnce(response({ revisionId: "builder:merged", document: local })));
+    const lifecycle = new BaseBuilderLifecycle(new CosmosApiClient("http://cosmos.test"), "cosmos.base.default");
+    lifecycle.revisionId = "builder:old";
+
+    expect(await lifecycle.save(local)).toBe(false);
+    expect(await lifecycle.reloadAfterConflict()).toEqual(remote);
+    expect(lifecycle.revisionId).toBe("builder:remote");
+    expect(lifecycle.pendingDocument).toEqual(local);
+    expect(await lifecycle.retryPendingSave()).toBe(true);
+    expect(lifecycle.revisionId).toBe("builder:merged");
+    expect(lifecycle.pendingDocument).toBeNull();
+  });
+
+  it("can explicitly discard pending conflicting edits", async () => {
+    const document = createBaseBuilderDocument(baseBuilderStandardCompositionFixture);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ code: "conflict", message: "changed" }, 409)));
+    const lifecycle = new BaseBuilderLifecycle(new CosmosApiClient("http://cosmos.test"), "cosmos.base.default");
+
+    await lifecycle.save(document);
+    lifecycle.discardPendingEdits();
+
+    expect(lifecycle.pendingDocument).toBeNull();
+    expect(lifecycle.phase).toBe("ready");
+    expect(lifecycle.error).toBeNull();
   });
 });
