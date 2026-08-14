@@ -150,7 +150,7 @@ class BaseService:
                 "Base",
                 "The owner's permanent home inside Cosmos.",
                 frozenset({"Base", "System"}),
-                {"main_room_id": MAIN_ROOM_ID},
+                {"main_room_id": MAIN_ROOM_ID, "builder_document": {}, "active_builder_document": {}},
             ),
             context,
         )

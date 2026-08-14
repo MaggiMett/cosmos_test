@@ -18,7 +18,7 @@ from cosmos.bootstrap import CosmosRuntime
 from cosmos.config import RuntimeSettings
 from cosmos.runtime import RuntimeContext
 from cosmos.services import RuntimeServiceError, ThemePackageImportError
-from cosmos.services.base_builder_persistence import BaseBuilderPersistCommand
+from cosmos.services.base_builder_persistence import BaseBuilderActivateCommand, BaseBuilderPersistCommand
 
 THEME_RUNTIME_STATE_SCOPE = "cosmos.theme"
 THEME_RUNTIME_STATE_KEY = "activation"
@@ -79,6 +79,30 @@ async def base_builder_document(request: Request) -> JSONResponse:
             _object_context(request, request.path_params["base_object_id"]),
         )
         return JSONResponse(envelope)
+    except RuntimeServiceError as error:
+        return _service_error(error)
+
+
+async def base_builder_activation_candidate(request: Request) -> JSONResponse:
+    try:
+        return JSONResponse(request.app.state.runtime.base_builder_persistence.activation_candidate(
+            request.path_params["base_object_id"],
+            _object_context(request, request.path_params["base_object_id"]),
+        ))
+    except RuntimeServiceError as error:
+        return _service_error(error)
+
+
+async def base_builder_activate(request: Request) -> JSONResponse:
+    try:
+        payload = await _json_object(request)
+        revision_id = payload.get("revisionId")
+        if not isinstance(revision_id, str) or not revision_id:
+            raise RuntimeServiceError("validation_failed", "revisionId must be a non-empty string.")
+        return JSONResponse(request.app.state.runtime.base_builder_persistence.activate(
+            BaseBuilderActivateCommand(request.path_params["base_object_id"], revision_id),
+            _object_context(request, request.path_params["base_object_id"]),
+        ))
     except RuntimeServiceError as error:
         return _service_error(error)
 
@@ -731,6 +755,8 @@ def create_app(
             Route("/cosmos/map", cosmos_map),
             Route("/base", base_snapshot),
             Route("/base-builder/{base_object_id:str}/document", base_builder_document, methods=["GET", "PUT"]),
+            Route("/base-builder/{base_object_id:str}/activation-candidate", base_builder_activation_candidate),
+            Route("/base-builder/{base_object_id:str}/activate", base_builder_activate, methods=["POST"]),
             Route("/runtime-state/theme", theme_runtime_state, methods=["GET", "PUT"]),
             Route("/theme-packages", theme_packages, methods=["GET", "POST"]),
             Route("/theme-packages/import", theme_package_import, methods=["POST"]),

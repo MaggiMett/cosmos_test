@@ -29,6 +29,7 @@
           </button>
           <span class="builder-preview__toolbar-divider" aria-hidden="true" />
           <button type="button" :disabled="persistenceBusy" data-testid="builder-save" @click="savePersisted">Speichern</button>
+          <button type="button" :disabled="!activationAvailable" data-testid="builder-activate" @click="requestActivation">Aktivieren</button>
           <button type="button" :disabled="persistenceBusy" data-testid="builder-reload" @click="loadPersisted">Gespeichert laden</button>
           <button type="button" @click="resetPreset">Preset zurücksetzen</button>
           <button type="button" data-testid="builder-load-empty" @click="loadEmpty">
@@ -62,7 +63,11 @@
 
     <section v-if="persistenceMessage" class="builder-persistence" :data-phase="lifecycle.phase" role="status">
       <span>{{ persistenceMessage }}</span>
-      <template v-if="reloadConfirmationPending">
+      <template v-if="activationConfirmationPending">
+        <button type="button" data-testid="builder-activate-confirm" @click="confirmActivation">Gespeicherte Revision aktivieren</button>
+        <button type="button" data-testid="builder-activate-cancel" @click="cancelActivation">Abbrechen</button>
+      </template>
+      <template v-else-if="reloadConfirmationPending">
         <button type="button" data-testid="builder-reload-confirm" @click="confirmLoadPersisted">Änderungen verwerfen & laden</button>
         <button type="button" data-testid="builder-reload-cancel" @click="cancelLoadPersisted">Abbrechen</button>
       </template>
@@ -559,15 +564,20 @@ const state = ref(session.snapshot());
 const persistenceTick = ref(0);
 const persistedFingerprint = ref<string | null>(null);
 const reloadConfirmationPending = ref(false);
+const activationConfirmationPending = ref(false);
+const activationMessage = ref<string | null>(null);
 const currentFingerprint = computed(() => JSON.stringify(state.value.composition));
 const persistenceDirty = computed(() => persistedFingerprint.value !== currentFingerprint.value);
+const activationAvailable = computed(() => !persistenceBusy.value && !persistenceDirty.value && Boolean(lifecycle.revisionId));
 const persistenceBusy = computed(() => {
   persistenceTick.value;
   return lifecycle.phase === "loading" || lifecycle.phase === "saving";
 });
 const persistenceMessage = computed(() => {
   persistenceTick.value;
+  if (activationConfirmationPending.value) return `Revision ${lifecycle.revisionId} wirklich für die Runtime aktivieren?`;
   if (reloadConfirmationPending.value) return "Ungespeicherte Änderungen würden beim Laden verworfen.";
+  if (activationMessage.value) return activationMessage.value;
   if (lifecycle.phase === "conflict") return "Speicherkonflikt: Remote-Stand laden oder lokale Änderungen verwerfen.";
   if (lifecycle.phase === "error") return lifecycle.error ?? "Persistenzfehler";
   if (lifecycle.phase === "saving") return "Base-Dokument wird gespeichert…";
@@ -1206,6 +1216,26 @@ function cancelLoadPersisted(): void {
 async function savePersisted(): Promise<void> {
   const saved = await lifecycle.save(session.baseDocument());
   if (saved) persistedFingerprint.value = currentFingerprint.value;
+  syncPersistence();
+}
+
+function requestActivation(): void {
+  if (!activationAvailable.value) return;
+  activationMessage.value = null;
+  activationConfirmationPending.value = true;
+  syncPersistence();
+}
+
+async function confirmActivation(): Promise<void> {
+  activationConfirmationPending.value = false;
+  const revisionId = lifecycle.revisionId;
+  const activated = await lifecycle.activateSavedRevision();
+  activationMessage.value = activated ? `Revision ${revisionId} ist für die Runtime aktiviert.` : null;
+  syncPersistence();
+}
+
+function cancelActivation(): void {
+  activationConfirmationPending.value = false;
   syncPersistence();
 }
 

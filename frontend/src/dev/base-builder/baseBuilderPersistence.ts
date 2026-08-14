@@ -25,6 +25,21 @@ export async function loadBaseBuilderDocument(
   );
 }
 
+export interface BaseBuilderActivationEnvelope extends BaseBuilderPersistEnvelope {
+  baseObjectId: string;
+}
+
+export async function activateBaseBuilderDocument(
+  api: CosmosApiClient,
+  baseObjectId: string,
+  revisionId: string,
+): Promise<ApiResult<BaseBuilderActivationEnvelope>> {
+  return api.post<BaseBuilderActivationEnvelope>(
+    `/base-builder/${encodeURIComponent(baseObjectId)}/activate`,
+    { revisionId },
+  );
+}
+
 export async function persistBaseBuilderDocument(
   api: CosmosApiClient,
   command: Readonly<BaseBuilderPersistCommand>,

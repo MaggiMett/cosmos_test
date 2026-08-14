@@ -51,6 +51,14 @@ describe("Base Builder development view boundaries", () => {
     expect(viewSource).toContain("if (persistenceDirty.value)");
   });
 
+  it("requires a clean saved revision and explicit confirmation before activation", () => {
+    expect(viewSource).toContain('data-testid="builder-activate"');
+    expect(viewSource).toContain("activationAvailable");
+    expect(viewSource).toContain("!persistenceDirty.value");
+    expect(viewSource).toContain('data-testid="builder-activate-confirm"');
+    expect(viewSource).toContain("activateSavedRevision");
+  });
+
   it("bypasses ApplicationShell only for explicitly marked development routes", () => {
     expect(appSource).toContain('v-if="route.meta.developmentPreview || route.meta.standaloneExperience"');
     expect(appSource).toContain("<ApplicationShell v-else");

@@ -1,6 +1,7 @@
 import type { CosmosApiClient } from "../../runtime/apiClient";
 import type { BaseBuilderDocument } from "./baseBuilderDocument";
 import {
+  activateBaseBuilderDocument,
   createBaseBuilderPersistCommand,
   loadBaseBuilderDocument,
   persistBaseBuilderDocument,
@@ -47,6 +48,19 @@ export class BaseBuilderLifecycle {
     this.revisionId = result.data.revisionId;
     this.document = result.data.document;
     this.pendingDocument = null;
+    this.phase = "ready";
+    return true;
+  }
+
+  async activateSavedRevision(): Promise<boolean> {
+    if (!this.revisionId || !this.document) throw new Error("Base Builder has no saved revision to activate.");
+    this.error = null;
+    const result = await activateBaseBuilderDocument(this.api, this.baseObjectId, this.revisionId);
+    if (!result.ok) {
+      this.phase = result.error.code === "conflict" ? "conflict" : "error";
+      this.error = result.error.message;
+      return false;
+    }
     this.phase = "ready";
     return true;
   }

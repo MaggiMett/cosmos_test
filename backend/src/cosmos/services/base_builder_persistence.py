@@ -17,8 +17,14 @@ class BaseBuilderPersistCommand:
     expected_revision_id: str | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class BaseBuilderActivateCommand:
+    base_object_id: str
+    revision_id: str
+
+
 class BaseBuilderPersistenceService:
-    """Validated persistence boundary for Builder documents; activation remains separate."""
+    """Validated persistence boundary for Builder documents; activation is explicit and separate."""
 
     def __init__(self, objects: ObjectService) -> None:
         self._objects = objects
@@ -42,6 +48,35 @@ class BaseBuilderPersistenceService:
             "revisionId": revision_id if isinstance(revision_id, str) else None,
             "document": document if isinstance(document, dict) else None,
         }
+
+    def activation_candidate(self, base_object_id: str, context: RuntimeContext) -> dict[str, JSONValue]:
+        stored = self.load(base_object_id, context)
+        revision_id = stored.get("revisionId")
+        document = stored.get("document")
+        if not isinstance(revision_id, str) or not isinstance(document, dict):
+            raise RuntimeServiceError("validation_failed", "Base Builder has no saved document to activate.")
+        self._validate_document(document)
+        return {"baseObjectId": base_object_id, "revisionId": revision_id, "document": document}
+
+    def activate(self, command: BaseBuilderActivateCommand, context: RuntimeContext) -> dict[str, JSONValue]:
+        target = self._objects.get(command.base_object_id, context)
+        candidate = self.activation_candidate(command.base_object_id, context)
+        if candidate["revisionId"] != command.revision_id:
+            raise RuntimeServiceError("conflict", "The saved Base Builder revision changed before activation.")
+        current_active = target.properties.get("active_builder_document", {})
+        replacement = {"revisionId": command.revision_id, "document": candidate["document"]}
+        updated = self._objects.compare_and_swap_property(
+            command.base_object_id,
+            property_name="active_builder_document",
+            expected_value=current_active,
+            replacement_value=replacement,
+            display_name=target.identity.display_name,
+            description=target.identity.description,
+            conflict_code="conflict",
+            context=context,
+        )
+        active = updated.properties["active_builder_document"]
+        return {"baseObjectId": command.base_object_id, "revisionId": command.revision_id, "document": active["document"]}
 
     def persist(self, command: BaseBuilderPersistCommand, context: RuntimeContext) -> dict[str, JSONValue]:
         self.validate_target(command, context)

@@ -68,6 +68,7 @@ def create_version_one_object_contract() -> ObjectContract:
             (
                 PropertyDefinition("main_room_id", PropertyKind.STRING, ""),
                 PropertyDefinition("builder_document", PropertyKind.OBJECT, {}),
+                PropertyDefinition("active_builder_document", PropertyKind.OBJECT, {}),
             ),
         ),
     )

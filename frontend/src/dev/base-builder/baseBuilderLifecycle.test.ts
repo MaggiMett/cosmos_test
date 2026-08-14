@@ -25,6 +25,20 @@ describe("Base Builder load/edit/save lifecycle", () => {
     expect(lifecycle.phase).toBe("ready");
   });
 
+  it("activates only the currently tracked saved revision", async () => {
+    const document = createBaseBuilderDocument(baseBuilderStandardCompositionFixture);
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(response({ revisionId: "builder:1", document }))
+      .mockResolvedValueOnce(response({ baseObjectId: "cosmos.base.default", revisionId: "builder:1", document }));
+    vi.stubGlobal("fetch", fetchMock);
+    const lifecycle = new BaseBuilderLifecycle(new CosmosApiClient("http://cosmos.test"), "cosmos.base.default");
+
+    await lifecycle.load();
+    expect(await lifecycle.activateSavedRevision()).toBe(true);
+    expect(fetchMock.mock.calls[1][0]).toBe("http://cosmos.test/base-builder/cosmos.base.default/activate");
+    expect(fetchMock.mock.calls[1][1].method).toBe("POST");
+  });
+
   it("keeps local edits recoverable when CAS reports a conflict", async () => {
     const document = createBaseBuilderDocument(baseBuilderStandardCompositionFixture);
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ code: "conflict", message: "changed" }, 409)));
