@@ -24,6 +24,7 @@ interface ProjectResourceProjectionState {
 }
 
 export class ProjectResourceProjectionRuntime {
+  private requestGeneration = 0;
   private readonly mutableState = reactive<ProjectResourceProjectionState>({
     phase: "idle",
     snapshot: null,
@@ -35,11 +36,13 @@ export class ProjectResourceProjectionRuntime {
   constructor(private readonly api: CosmosApiClient) {}
 
   async load(projectId: string): Promise<ProjectResourceProjectionSnapshot | null> {
+    const generation = ++this.requestGeneration;
     this.mutableState.phase = "loading";
     this.mutableState.error = null;
     const result = await this.api.get<ProjectResourceProjectionSnapshot>(
       `/projects/${encodeURIComponent(projectId)}/resource-projection`,
     );
+    if (generation !== this.requestGeneration) return null;
     if (!result.ok) {
       this.mutableState.phase = "error";
       this.mutableState.snapshot = null;
@@ -52,6 +55,7 @@ export class ProjectResourceProjectionRuntime {
   }
 
   clear(): void {
+    this.requestGeneration += 1;
     this.mutableState.phase = "idle";
     this.mutableState.snapshot = null;
     this.mutableState.error = null;
