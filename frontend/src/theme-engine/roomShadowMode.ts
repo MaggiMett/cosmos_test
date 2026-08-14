@@ -24,13 +24,14 @@ import {
   type ImmutableRoomSnapshot,
   type RoomSkinResolutionInput,
 } from "./roomSnapshotResolver";
-import type { BaseComposition } from "./roomCompositionTypes";
+import type { BaseComposition, RoomComposition } from "./roomCompositionTypes";
 
 export interface RunBaseRoomShadowModeInput {
   compatibilityInput?: BaseRoomCompatibilityAdapterInput;
   skins?: RoomSkinResolutionInput;
   baseSnapshot?: BaseRuntimeSnapshotReadModel;
   roomId?: string;
+  roomCompositionOverride?: Readonly<RoomComposition>;
 }
 
 export interface RoomShadowModeResult {
@@ -62,8 +63,11 @@ export function runBaseRoomShadowMode(
       ? projectBaseRoomToRoomCompositionShadow(input.baseSnapshot, input.roomId)
       : projectBaseMainRoomToRoomCompositionShadow(input.baseSnapshot)
     : null;
-  const legacy =
+  const projectedLegacy =
     runtimeProjection?.compatibility ?? adaptBaseMainRoomV1(input.compatibilityInput);
+  const legacy = input.roomCompositionOverride
+    ? { ...projectedLegacy, roomComposition: cloneAndFreeze(input.roomCompositionOverride) }
+    : projectedLegacy;
   const registries = createRoomCompositionRegistries();
   registerCompatibilityProjection(
     registries,

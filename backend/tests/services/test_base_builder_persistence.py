@@ -86,6 +86,11 @@ def test_activation_requires_the_exact_saved_revision_and_is_separate_from_save(
     active = service.activate(BaseBuilderActivateCommand(base.identity.object_id, str(saved["revisionId"])), owner)
     assert active["revisionId"] == saved["revisionId"]
     assert active["document"] == saved["document"]
+    snapshot = runtime.base.snapshot(owner)
+    assert snapshot["activeBuilder"] == {
+        "revisionId": saved["revisionId"],
+        "document": saved["document"],
+    }
 
 
 def test_rejects_unknown_room_reference_before_persistence(tmp_path: Path) -> None:

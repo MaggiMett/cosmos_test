@@ -7,11 +7,43 @@ import type {
   WorkspaceSlot,
 } from "../../runtime/baseRuntime";
 import { runBaseRoomShadowMode } from "../../theme-engine";
+import { projectBaseRoomToRoomCompositionShadow } from "../../theme-engine/baseRuntimeRoomShadowProjection";
+import { createBaseBuilderDocument } from "../base-builder/baseBuilderDocument";
 import { createRoomCompositionInteractionDiagnostics } from "../room-composition-preview/roomCompositionInteractionProjection";
 import {
   resolveBaseRoomCompositionPresenter,
 } from "./baseRoomCompositionPresenter";
 describe("productive Room Composition renderer gate", () => {
+  it("prefers an activated Builder room over the legacy runtime projection", () => {
+    const baseSnapshot = snapshot();
+    const activeRoom = structuredClone(
+      projectBaseRoomToRoomCompositionShadow(baseSnapshot, "room.main.real").compatibility.roomComposition,
+    );
+    activeRoom.revision = { revisionId: "builder-active-room" };
+    baseSnapshot.activeBuilder = {
+      revisionId: "builder:active",
+      document: createBaseBuilderDocument(activeRoom),
+    };
+
+    const result = resolveBaseRoomCompositionPresenter(true, baseSnapshot, "room.main.real", {
+      createInteractionDiagnostics: () => ({ parity: { status: "equal", differences: [] } } as never),
+      compareVisualParity: () => ({ status: "equal", differences: [] } as never),
+    });
+    expect(result.status).toBe("active");
+    if (result.status !== "active") throw new Error("Expected active Builder Composition.");
+    expect(result.shadow.snapshot.objectInstances.map((entry) => entry.instanceId).sort())
+      .toEqual(activeRoom.objectInstances.map((entry) => entry.instanceId).sort());
+  });
+
+  it("ignores Builder drafts that are not active", () => {
+    const baseSnapshot = snapshot();
+    expect(baseSnapshot.activeBuilder.document).toBeNull();
+    const result = resolveBaseRoomCompositionPresenter(true, baseSnapshot, "room.main.real");
+    expect(result.status).toBe("active");
+    if (result.status !== "active") throw new Error("Expected legacy runtime Composition.");
+    expect(result.shadow.snapshot.roomId).toBe("room.main.real");
+  });
+
   it("keeps the previous presenter renderer when Composition is disabled", () => {
     expect(resolveBaseRoomCompositionPresenter(
       false,
@@ -237,6 +269,7 @@ describe("productive Room Composition renderer gate", () => {
 
 function snapshot(): BaseSnapshot {
   return {
+    activeBuilder: { revisionId: null, document: null },
     base: summary("base.real", "Home Base", ["Base"]),
     rooms: [
       room("room.main.real", "Main Room", "main", [

@@ -155,6 +155,7 @@ def test_base_uses_tagged_rooms_slots_workspaces_cockpit_companion_and_pet(tmp_p
     snapshot = runtime.base.snapshot(owner_context())
 
     assert snapshot["base"]["systemTags"] == ["Base", "System"]
+    assert snapshot["activeBuilder"] == {"revisionId": None, "document": None}
     assert [(room["slug"], len(room["workspaceSlots"])) for room in snapshot["rooms"]] == [
         ("main", 2),
         ("workshop", 4),

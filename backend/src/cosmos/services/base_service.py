@@ -265,8 +265,15 @@ class BaseService:
                     "workspaceSlots": room_slots,
                 }
             )
+        active_builder = base.properties.get("active_builder_document", {})
+        active_builder_revision = active_builder.get("revisionId") if isinstance(active_builder, dict) else None
+        active_builder_document = active_builder.get("document") if isinstance(active_builder, dict) else None
         return {
             "base": object_payload(base),
+            "activeBuilder": {
+                "revisionId": active_builder_revision if isinstance(active_builder_revision, str) else None,
+                "document": active_builder_document if isinstance(active_builder_document, dict) else None,
+            },
             "rooms": room_payloads,
             "door": {
                 **object_payload(door),

@@ -55,7 +55,13 @@ export function resolveBaseRoomCompositionPresenter(
     dependencies.createInteractionDiagnostics ??
     createRoomCompositionInteractionDiagnostics;
   try {
-    const shadow = runShadow({ baseSnapshot, roomId });
+    const activeDocument = baseSnapshot.activeBuilder?.document;
+    const activeRoom = activeDocument?.base.rooms.find((room) => room.roomId === roomId);
+    const shadow = runShadow({
+      baseSnapshot,
+      roomId,
+      ...(activeRoom ? { roomCompositionOverride: activeRoom } : {}),
+    });
     if (!shadow.snapshot.validationStatus.valid) {
       return Object.freeze({ status: "fallback", reason: "invalid-snapshot" });
     }

@@ -1,6 +1,7 @@
 import { reactive, readonly } from "vue";
 
 import type { CosmosApiClient } from "./apiClient";
+import type { BaseBuilderDocument } from "../dev/base-builder/baseBuilderDocument";
 
 export interface BaseObjectSummary {
   objectId: string;
@@ -31,6 +32,7 @@ export interface BaseRoom extends BaseObjectSummary {
 
 export interface BaseSnapshot {
   base: BaseObjectSummary;
+  activeBuilder: { revisionId: string | null; document: BaseBuilderDocument | null };
   rooms: BaseRoom[];
   door: BaseObjectSummary & { roomAId: string; roomBId: string };
   cockpit: BaseObjectSummary & { roomId: string };

@@ -4,6 +4,7 @@ import { CosmosApiClient } from "./apiClient";
 import { BaseRuntime, type BaseSnapshot } from "./baseRuntime";
 
 const snapshot: BaseSnapshot = {
+  activeBuilder: { revisionId: null, document: null },
   base: summary("cosmos.base.default", "Base", ["Base", "System"]),
   rooms: [
     {
