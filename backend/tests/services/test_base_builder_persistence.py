@@ -93,6 +93,42 @@ def test_activation_requires_the_exact_saved_revision_and_is_separate_from_save(
     }
 
 
+def test_full_builder_lifecycle_keeps_draft_active_and_runtime_revisions_separate(tmp_path: Path) -> None:
+    runtime = CosmosRuntime.build(RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0))
+    runtime.initialize()
+    service = BaseBuilderPersistenceService(runtime.objects)
+    base = runtime.objects.repository.list(system_tag="Base")[0]
+    owner = RuntimeContext(permissions=frozenset({"objects.read", "objects.write"}))
+
+    revision_one = service.persist(BaseBuilderPersistCommand(base.identity.object_id, _document()), owner)
+    loaded_one = service.load(base.identity.object_id, owner)
+    assert loaded_one == revision_one
+    service.activate(BaseBuilderActivateCommand(base.identity.object_id, "builder:1"), owner)
+
+    revision_two_document = _document()
+    revision_two_document["base"]["revision"]["revisionId"] = "builder:2"
+    revision_two = service.persist(
+        BaseBuilderPersistCommand(base.identity.object_id, revision_two_document, expected_revision_id="builder:1"), owner
+    )
+    assert service.load(base.identity.object_id, owner) == revision_two
+    assert runtime.base.snapshot(owner)["activeBuilder"]["revisionId"] == "builder:1"
+
+    competing_document = _document()
+    competing_document["base"]["revision"]["revisionId"] = "builder:3"
+    with pytest.raises(RuntimeServiceError, match="changed since it was loaded"):
+        service.persist(
+            BaseBuilderPersistCommand(base.identity.object_id, competing_document, expected_revision_id="builder:1"), owner
+        )
+    with pytest.raises(RuntimeServiceError, match="changed before activation"):
+        service.activate(BaseBuilderActivateCommand(base.identity.object_id, "builder:1"), owner)
+
+    service.activate(BaseBuilderActivateCommand(base.identity.object_id, "builder:2"), owner)
+    assert runtime.base.snapshot(owner)["activeBuilder"] == {
+        "revisionId": "builder:2",
+        "document": revision_two["document"],
+    }
+
+
 def test_rejects_unknown_room_reference_before_persistence(tmp_path: Path) -> None:
     runtime = CosmosRuntime.build(RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0))
     runtime.initialize()
