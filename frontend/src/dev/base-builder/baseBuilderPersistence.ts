@@ -1,3 +1,5 @@
+import type { CosmosApiClient } from "../../runtime/apiClient";
+import type { ApiResult } from "../../runtime/contracts";
 import type { BaseBuilderDocument } from "./baseBuilderDocument";
 
 export const BASE_BUILDER_DOCUMENT_KIND = "cosmos.base-composition.v1" as const;
@@ -7,6 +9,21 @@ export interface BaseBuilderPersistCommand {
   baseObjectId: string;
   expectedRevisionId: string | null;
   document: BaseBuilderDocument;
+}
+
+export interface BaseBuilderPersistEnvelope {
+  revisionId: string;
+  document: BaseBuilderDocument;
+}
+
+export async function persistBaseBuilderDocument(
+  api: CosmosApiClient,
+  command: Readonly<BaseBuilderPersistCommand>,
+): Promise<ApiResult<BaseBuilderPersistEnvelope>> {
+  return api.put<BaseBuilderPersistEnvelope>(
+    `/base-builder/${encodeURIComponent(command.baseObjectId)}/document`,
+    { document: command.document, expectedRevisionId: command.expectedRevisionId },
+  );
 }
 
 export function createBaseBuilderPersistCommand(

@@ -6,6 +6,33 @@ from cosmos.api import create_app
 from cosmos.config import RuntimeSettings
 
 
+def test_base_builder_document_api_persists_with_revision_conflicts(tmp_path: Path) -> None:
+    settings = RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0)
+    document = {
+        "activeRoomId": "room.main",
+        "base": {
+            "rooms": [{"roomId": "room.main"}],
+            "entryRoomId": "room.main",
+            "revision": {"revisionId": "builder:1"},
+        },
+    }
+
+    with TestClient(create_app(settings)) as client:
+        first = client.put(
+            "/base-builder/cosmos.base.default/document",
+            json={"document": document, "expectedRevisionId": None},
+        )
+        conflict = client.put(
+            "/base-builder/cosmos.base.default/document",
+            json={"document": document, "expectedRevisionId": None},
+        )
+
+    assert first.status_code == 200
+    assert first.json()["revisionId"] == "builder:1"
+    assert conflict.status_code == 409
+    assert conflict.json()["code"] == "conflict"
+
+
 def test_foundation_api_health_and_readiness(tmp_path: Path) -> None:
     settings = RuntimeSettings(runtime_path=tmp_path / "Runtime", port=0)
 

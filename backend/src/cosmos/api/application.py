@@ -18,6 +18,7 @@ from cosmos.bootstrap import CosmosRuntime
 from cosmos.config import RuntimeSettings
 from cosmos.runtime import RuntimeContext
 from cosmos.services import RuntimeServiceError, ThemePackageImportError
+from cosmos.services.base_builder_persistence import BaseBuilderPersistCommand
 
 THEME_RUNTIME_STATE_SCOPE = "cosmos.theme"
 THEME_RUNTIME_STATE_KEY = "activation"
@@ -51,6 +52,28 @@ async def cosmos_map(request: Request) -> JSONResponse:
 async def base_snapshot(request: Request) -> JSONResponse:
     try:
         return JSONResponse(request.app.state.runtime.base.snapshot(_local_owner_context()))
+    except RuntimeServiceError as error:
+        return _service_error(error)
+
+
+async def base_builder_document(request: Request) -> JSONResponse:
+    try:
+        payload = await _json_object(request)
+        document = payload.get("document")
+        expected_revision_id = payload.get("expectedRevisionId")
+        if not isinstance(document, dict):
+            raise RuntimeServiceError("validation_failed", "document must be an object.")
+        if expected_revision_id is not None and not isinstance(expected_revision_id, str):
+            raise RuntimeServiceError("validation_failed", "expectedRevisionId must be a string or null.")
+        envelope = request.app.state.runtime.base_builder_persistence.persist(
+            BaseBuilderPersistCommand(
+                base_object_id=request.path_params["base_object_id"],
+                document=document,
+                expected_revision_id=expected_revision_id,
+            ),
+            _object_context(request, request.path_params["base_object_id"]),
+        )
+        return JSONResponse(envelope)
     except RuntimeServiceError as error:
         return _service_error(error)
 
@@ -702,6 +725,7 @@ def create_app(
             Route("/ready", readiness),
             Route("/cosmos/map", cosmos_map),
             Route("/base", base_snapshot),
+            Route("/base-builder/{base_object_id:str}/document", base_builder_document, methods=["PUT"]),
             Route("/runtime-state/theme", theme_runtime_state, methods=["GET", "PUT"]),
             Route("/theme-packages", theme_packages, methods=["GET", "POST"]),
             Route("/theme-packages/import", theme_package_import, methods=["POST"]),
@@ -1047,7 +1071,7 @@ def _service_error(error: RuntimeServiceError) -> JSONResponse:
     elif error.code.endswith("_not_found"):
         status = 404
     elif (
-        error.code.endswith("_exists") or error.code.endswith("_conflict") or error.code == "review_resolved"
+        error.code.endswith("_exists") or error.code.endswith("_conflict") or error.code in {"conflict", "review_resolved"}
     ):
         status = 409
     else:

@@ -1,5 +1,6 @@
 """Authoritative business-service boundary."""
 
+from cosmos.services.base_builder_persistence import BaseBuilderPersistenceService
 from cosmos.services.base_service import BASE_ID, MAIN_ROOM_ID, WORKSHOP_ROOM_ID, BaseService
 from cosmos.services.companion_service import COMPANION_ID, CompanionReply, CompanionService
 from cosmos.services.core_tool_catalog import CoreToolCatalog
@@ -33,6 +34,7 @@ __all__ = [
     "MAIN_ROOM_ID",
     "PREPARED_AREAS",
     "WORKSHOP_ROOM_ID",
+    "BaseBuilderPersistenceService",
     "BaseService",
     "CompanionReply",
     "CompanionService",

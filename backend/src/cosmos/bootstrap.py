@@ -31,6 +31,7 @@ from cosmos.runtime import (
     WebToolAdapter,
 )
 from cosmos.services import (
+    BaseBuilderPersistenceService,
     BaseService,
     CompanionService,
     CoreToolCatalog,
@@ -91,6 +92,7 @@ class CosmosRuntime:
     theme_package_import: ThemePackageImportService
     theme_builder: ThemeBuilderService
     companion: CompanionService
+    base_builder_persistence: BaseBuilderPersistenceService
     base: BaseService
     tools: ToolService
     workspaces: WorkspaceService
@@ -176,6 +178,7 @@ class CosmosRuntime:
             theme_package_import=theme_package_import,
             theme_builder=theme_builder,
             companion=companion,
+            base_builder_persistence=BaseBuilderPersistenceService(objects),
             base=base,
             tools=tools,
             workspaces=workspaces,
