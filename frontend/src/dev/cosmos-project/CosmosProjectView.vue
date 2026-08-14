@@ -82,7 +82,8 @@
       :phase="projectResources.state.phase"
       :items="projectResources.state.snapshot?.items ?? []"
       :can-open-resources="Boolean(visibleProject?.workspaceObjectId)"
-      @close="resourceLayerOpen = false"
+      @close="closeResourceLayer"
+      @retry="reloadProjectResources"
       @open-resource="openProjectedResource"
     />
     <CosmosQuickTravel
@@ -348,11 +349,22 @@ function releasePointer(pointerId: number): void {
   }
 }
 
+function reloadProjectResources(): void {
+  if (requestedProjectId.value) void projectResources.load(requestedProjectId.value);
+}
+
+function closeResourceLayer(): void {
+  resourceLayerOpen.value = false;
+  projectResources.clear();
+}
+
 function toggleResourceLayer(): void {
-  resourceLayerOpen.value = !resourceLayerOpen.value;
-  if (resourceLayerOpen.value && requestedProjectId.value) {
-    void projectResources.load(requestedProjectId.value);
+  if (resourceLayerOpen.value) {
+    closeResourceLayer();
+    return;
   }
+  resourceLayerOpen.value = true;
+  reloadProjectResources();
 }
 
 watch(requestedProjectId, (projectId, previousProjectId) => {

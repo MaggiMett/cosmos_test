@@ -135,6 +135,10 @@ describe("Project Cosmos visual slice", () => {
     const layer = sourceFor("./components/ProjectResourceLayer.vue");
     expect(source).toContain("<ProjectResourceLayer");
     expect(source).toContain("projectResources.load(requestedProjectId.value)");
+    expect(source).toContain('@retry="reloadProjectResources"');
+    expect(source).toContain('@close="closeResourceLayer"');
+    expect(source).toContain("projectResources.clear()");
+    expect(layer).toContain("@click=\"$emit('retry')\"");
     expect(source).toContain("watch(requestedProjectId");
     expect(source).toContain("projectResources.clear()");
     expect(source).toContain("projectResources.load(projectId)");

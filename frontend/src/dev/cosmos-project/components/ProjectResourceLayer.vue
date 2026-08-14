@@ -5,7 +5,10 @@
       <button type="button" aria-label="Close project resources" title="Close project resources" @click="$emit('close')">×</button>
     </header>
     <p v-if="phase === 'loading'" class="project-resource-layer__state">Loading resources…</p>
-    <p v-else-if="phase === 'error'" class="project-resource-layer__state">Resources are temporarily unavailable.</p>
+    <div v-else-if="phase === 'error'" class="project-resource-layer__state">
+      <p>Resources are temporarily unavailable.</p>
+      <button type="button" @click="$emit('retry')">Retry</button>
+    </div>
     <p v-else-if="!items.length" class="project-resource-layer__state">No user-facing resources found.</p>
     <p v-else-if="!canOpenResources" class="project-resource-layer__state">Resources are available, but this Project has no Workspace for opening them.</p>
     <nav v-else aria-label="Projected project resources">
@@ -26,7 +29,7 @@ const props = defineProps<{
   canOpenResources: boolean;
 }>();
 void props;
-defineEmits<{ close: []; "open-resource": [resourcePath: string] }>();
+defineEmits<{ close: []; retry: []; "open-resource": [resourcePath: string] }>();
 
 </script>
 
