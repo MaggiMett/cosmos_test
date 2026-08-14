@@ -38,6 +38,7 @@ export class ProjectResourceProjectionRuntime {
   async load(projectId: string): Promise<ProjectResourceProjectionSnapshot | null> {
     const generation = ++this.requestGeneration;
     this.mutableState.phase = "loading";
+    this.mutableState.snapshot = null;
     this.mutableState.error = null;
     const result = await this.api.get<ProjectResourceProjectionSnapshot>(
       `/projects/${encodeURIComponent(projectId)}/resource-projection`,

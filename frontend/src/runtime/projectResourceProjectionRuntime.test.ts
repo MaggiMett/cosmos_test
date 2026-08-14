@@ -24,6 +24,24 @@ describe("ProjectResourceProjectionRuntime", () => {
     );
   });
 
+  it("clears the previous Project snapshot while a new Project is loading", async () => {
+    let resolveSecond!: (response: Response) => void;
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ projectId: "project.alpha", items: [] }), { status: 200 }))
+      .mockReturnValueOnce(new Promise<Response>((resolve) => { resolveSecond = resolve; }));
+    vi.stubGlobal("fetch", fetchMock);
+    const runtime = new ProjectResourceProjectionRuntime(new CosmosApiClient("http://cosmos.test"));
+
+    await runtime.load("project.alpha");
+    const pending = runtime.load("project.beta");
+    expect(runtime.state.phase).toBe("loading");
+    expect(runtime.state.snapshot).toBeNull();
+
+    resolveSecond(new Response(JSON.stringify({ projectId: "project.beta", items: [] }), { status: 200 }));
+    await pending;
+    expect(runtime.state.snapshot?.projectId).toBe("project.beta");
+  });
+
   it("ignores a stale response after the projection is cleared", async () => {
     let resolveFetch!: (response: Response) => void;
     vi.stubGlobal("fetch", vi.fn().mockReturnValue(new Promise<Response>((resolve) => { resolveFetch = resolve; })));

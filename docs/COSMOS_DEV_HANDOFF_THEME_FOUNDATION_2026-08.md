@@ -209,7 +209,11 @@ Verification at Phase-B close:
 
 ### Phase C — Project hierarchy / user-friendly project projection
 
-Once navigation is stable, align Project nodes with the intended user-facing project hierarchy. Design the filtered projection from real project paths/content so internal/temp/noise files are hidden while user-editable structure is visible. This needs a proper contract rather than ad-hoc filesystem exposure.
+**Functional projection milestone implemented; completion audit in progress.** Project Cosmos now has an additive, visually distinct Resource layer backed only by the Project `Files` root through `ResourceService`. The projection filters implementation/noise entries, preserves physical nesting as navigation convenience without promoting files/folders to Cosmos semantics, exposes editable/read-only capability, supports recursive collapsible groups, and degrades independently when resources are unavailable.
+
+Resource opening follows the established runtime boundary rather than coupling Project Cosmos to Workspace sessions: `Project resource -> Project Workspace -> Files Tool -> validated resource path`. The handoff validates Project origin against the opened Workspace and validates the requested resource against the loaded Files tree. Project changes clear/reload projection state, and stale async responses cannot overwrite the active Project.
+
+Before Phase C is closed, finish the remaining functional audit around reload/project-switch/error/empty-state behavior and keep API/runtime integration coverage current. Do not fold the resource projection into Cosmos Map persistence or semantic Node hierarchy.
 
 ### Phase D — Base/Room Builder + Object Builder
 
