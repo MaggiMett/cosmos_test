@@ -108,9 +108,9 @@ const selectedSlot = computed(() => props.slots.find((slot) => slot.slotId === p
 </script>
 
 <style scoped>
-.looks-context { min-width: 0; min-height: 0; overflow: auto; padding: 18px 12px 28px; border-right: 1px solid var(--builder-border); background: rgba(8,13,17,.38); scrollbar-color: rgba(154,164,172,.18) transparent; }
-.looks-context__section { display: grid; gap: 11px; }
-.looks-context__section--lined { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--builder-border); }
+.looks-context { min-width: 0; min-height: 0; overflow: auto; padding: 22px 16px 32px; border-right: 1px solid var(--builder-border); background: linear-gradient(180deg,rgba(13,19,24,.62),rgba(7,11,15,.36)); scrollbar-color: rgba(154,164,172,.18) transparent; }
+.looks-context__section { display: grid; gap: 13px; }
+.looks-context__section--lined { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--builder-border); }
 .looks-context h2 { margin: 0 4px; font-size: .9rem; }
 .current-template { display: grid; min-height: 78px; grid-template-columns: 78px minmax(0,1fr); align-items: center; gap: 12px; }
 .current-template > :deep(.neutral-visual) { width: 78px; height: 72px; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-control); }
@@ -118,8 +118,8 @@ const selectedSlot = computed(() => props.slots.find((slot) => slot.slotId === p
 .current-template strong { overflow: hidden; font-size: .86rem; font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
 .current-template small, .visual-slot-list small, .looks-context__empty, .looks-context__hint { color: var(--builder-muted); font-size: .62rem; overflow-wrap: anywhere; }
 .looks-context__hint { margin: -4px 0 0 4px; line-height: 1.45; }
-.visual-slot-list { display: grid; overflow: hidden; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-control); }
-.visual-slot-list button { display: grid; min-height: 46px; padding: 5px 8px; grid-template-columns: 28px minmax(0,1fr) minmax(74px,auto) 16px; align-items: center; border: 0; border-bottom: 1px solid var(--builder-border); background: rgba(13,18,23,.34); color: #c9c8c4; cursor: pointer; font-size: .66rem; text-align: left; gap: 8px; }
+.visual-slot-list { display: grid; overflow: hidden; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-card); background:rgba(7,11,15,.22); }
+.visual-slot-list button { display: grid; min-height: 50px; padding: 7px 9px; grid-template-columns: 28px minmax(0,1fr) minmax(74px,auto) 16px; align-items: center; border: 0; border-bottom: 1px solid var(--builder-border); background: rgba(13,18,23,.34); color: #c9c8c4; cursor: pointer; font-size: .66rem; text-align: left; gap: 8px; }
 .visual-slot-list button:last-child { border-bottom: 0; }
 .visual-slot-list button:hover, .visual-slot-list__active { background: var(--builder-accent-soft) !important; }
 .visual-slot-list__swatch { width: 24px; height: 24px; border: 1px solid var(--builder-border-strong); border-radius: 50%; }

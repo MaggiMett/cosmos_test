@@ -81,9 +81,9 @@ const perspectives = [
   min-width: 0;
   min-height: 0;
   overflow: auto;
-  padding: 18px 12px 28px;
+  padding: 22px 16px 32px;
   border-right: 1px solid var(--builder-border);
-  background: rgba(8, 13, 17, 0.38);
+  background: linear-gradient(180deg, rgba(13,19,24,.62), rgba(7,11,15,.36));
   scrollbar-color: rgba(154, 164, 172, 0.18) transparent;
 }
 

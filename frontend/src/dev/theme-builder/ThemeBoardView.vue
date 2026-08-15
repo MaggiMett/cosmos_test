@@ -54,8 +54,23 @@
           <p>{{ snapshot.project.description || "No description" }}</p>
         </header>
 
-        <section class="theme-board__metadata" aria-labelledby="theme-metadata-title">
-          <h2 id="theme-metadata-title" class="builder-serif">Theme metadata</h2>
+        <section class="theme-board__hero-grid" aria-label="Theme overview">
+          <HeroCard unavailable />
+          <div class="theme-board__hero-side">
+            <ContinueWorking :items="workingItems" />
+            <ThemeCoverage :items="coverageItems" />
+          </div>
+        </section>
+
+        <MoodboardGrid :items="[]" />
+
+        <ThemeBoardAssets :items="assetItems" @add="openAssetPicker" @remove="removeAsset" />
+        <p v-if="assetCommandError" class="theme-board__error" role="alert">{{ assetCommandError }}</p>
+
+        <CoreTemplateKit />
+
+        <details class="theme-board__metadata">
+          <summary>Theme details</summary>
           <div class="theme-board__form theme-board__form--metadata">
             <label>Theme name<input v-model="form.name" maxlength="120" @input="updateMetadata" /></label>
             <label>Description<textarea v-model="form.description" maxlength="2000" @input="updateMetadata" /></label>
@@ -67,15 +82,7 @@
           <p v-else-if="snapshot.saveError" class="theme-board__error" role="alert">
             {{ snapshot.saveError.message }}
           </p>
-        </section>
-
-        <CoreTemplateKit />
-
-        <ThemeBoardAssets :items="assetItems" @add="openAssetPicker" @remove="removeAsset" />
-        <p v-if="assetCommandError" class="theme-board__error" role="alert">{{ assetCommandError }}</p>
-
-        <HeroCard unavailable />
-        <MoodboardGrid :items="[]" />
+        </details>
       </template>
     </div>
 
@@ -103,9 +110,7 @@
           </dl>
         </section>
         <div class="theme-board-context__divider" />
-        <ContinueWorking :items="workingItems" />
-        <div class="theme-board-context__divider" />
-        <ThemeCoverage :items="coverageItems" />
+        <p class="theme-board-context__note">Technical project facts stay here so the creative board can remain focused on the world itself.</p>
       </div>
     </template>
   </ThemeBuilderShell>
@@ -286,15 +291,19 @@ function syncSnapshot(): void {
 </script>
 
 <style scoped>
-.theme-board { display: grid; width: min(100%, 1110px); min-height: 100%; padding: 26px 28px 36px; align-content: start; gap: 20px; }
+.theme-board { display: grid; width: min(100%, 1240px); min-height: 100%; margin: 0 auto; padding: 40px 40px 64px; align-content: start; gap: 32px; }
 .theme-board__heading, .theme-board__metadata, .theme-board__state, .theme-board-details { display: grid; gap: 8px; }
+.theme-board__hero-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 24px; align-items: stretch; }
+.theme-board__hero-side { display: grid; grid-template-rows: auto 1fr; gap: 18px; min-width: 0; }
 .theme-board__title-row { display: flex; align-items: center; gap: 14px; }
 .theme-board h1, .theme-board h2, .theme-board-details h2 { margin: 0; color: var(--builder-text); }
 .theme-board h1 { font-size: clamp(2rem, 2.55vw, 2.7rem); line-height: 1; letter-spacing: -0.025em; }
 .theme-board h2, .theme-board-details h2 { font-size: 1.06rem; }
 .theme-board__title-row > span { padding: 3px 7px; border: 1px solid var(--builder-border-strong); border-radius: 5px; color: var(--builder-muted); font-size: 0.65rem; }
 .theme-board p { margin: 0; color: var(--builder-muted); font-size: 0.78rem; }
-.theme-board__metadata { padding: 18px; border: 1px solid var(--builder-border); border-radius: var(--builder-radius-card); }
+.theme-board__metadata { padding: 0; border-top: 1px solid var(--builder-border); border-radius: 0; }
+.theme-board__metadata summary { width: fit-content; padding: 18px 0 12px; color: var(--builder-muted); font-size: .76rem; cursor: pointer; }
+.theme-board__metadata[open] { padding-bottom: 18px; }
 .theme-board__projects{display:grid;width:min(100%,620px);gap:8px}.theme-board__projects button{display:grid;padding:10px 12px;border:1px solid var(--builder-border);border-radius:8px;background:rgba(255,255,255,.015);color:var(--builder-text);text-align:left;gap:3px}.theme-board__projects span{color:var(--builder-muted);font-size:.68rem}.theme-board__form { display: grid; width: min(100%, 620px); gap: 12px; }
 .theme-board__form--metadata { grid-template-columns: 1fr 1.3fr 1fr; width: 100%; }
 .theme-board__form label { display: grid; color: var(--builder-muted); font-size: 0.69rem; gap: 6px; }
@@ -308,11 +317,12 @@ function syncSnapshot(): void {
 .theme-board__eyebrow { color: var(--builder-faint) !important; text-transform: uppercase; letter-spacing: 0.12em; }
 .theme-board-context { display: grid; padding: 46px 24px 40px; align-content: start; gap: 24px; }
 .theme-board-context__divider { height: 1px; background: linear-gradient(90deg, var(--builder-border), transparent); }
+.theme-board-context__note { max-width: 28ch; color: var(--builder-faint); font-size: .7rem; line-height: 1.55; }
 .theme-board-details dl { display: grid; margin: 0; gap: 9px; }
 .theme-board-details dl > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; }
 .theme-board-details dt { color: var(--builder-faint); font-size: 0.66rem; }
 .theme-board-details dd { overflow-wrap: anywhere; margin: 0; color: var(--builder-muted); font-size: 0.68rem; }
 @keyframes pulse { 50% { opacity: 0.35; transform: scale(0.8); } }
 @media (prefers-reduced-motion: reduce) { .theme-board__pulse { animation: none; } }
-@media (max-width: 1280px) { .theme-board { padding-inline: 22px; } .theme-board-context { padding-inline: 18px; } }
+@media (max-width: 1280px) { .theme-board { padding: 30px 24px 48px; } .theme-board__hero-grid { grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr); gap: 18px; } .theme-board-context { padding-inline: 18px; } }
 </style>

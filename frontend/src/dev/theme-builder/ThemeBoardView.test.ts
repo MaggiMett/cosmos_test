@@ -49,6 +49,8 @@ describe("Theme Board vertical slice", () => {
     expect(source).toContain("<ThemeBoardAssets");
     expect(source).toContain("<BuilderAssetPicker");
     expect(source).toContain('studio-label="Theme Board"');
+    expect(source).toContain('class="theme-board__hero-grid"');
+    expect(source).toContain("<details class=\"theme-board__metadata\">");
   });
 
   it("keeps the Builder shell separate from Runtime navigation and state", () => {

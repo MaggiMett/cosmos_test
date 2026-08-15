@@ -26,12 +26,12 @@ withDefaults(defineProps<{ unavailable?: boolean }>(), { unavailable: false });
 <style scoped>
 .hero-card {
   position: relative;
-  min-height: 360px;
+  min-height: 390px;
   overflow: hidden;
-  border: 1px solid var(--builder-border);
+  border: 1px solid rgba(154, 174, 191, .16);
   border-radius: var(--builder-radius-hero);
   background: #11161b;
-  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.3), inset 0 1px rgba(255,255,255,.025);
 }
 
 .hero-card__placeholder {
@@ -40,16 +40,18 @@ withDefaults(defineProps<{ unavailable?: boolean }>(), { unavailable: false });
   display: grid;
   place-items: center;
   background:
-    linear-gradient(90deg, transparent 49.8%, rgba(220, 226, 230, 0.035) 50%, transparent 50.2%),
-    linear-gradient(180deg, #151b21, #0e1318);
+    radial-gradient(circle at 67% 32%, rgba(111, 143, 169, .16), transparent 24%),
+    radial-gradient(circle at 25% 72%, rgba(126, 103, 77, .1), transparent 28%),
+    linear-gradient(125deg, #172029 0%, #0d1319 48%, #15191b 100%);
   color: var(--builder-faint);
 }
 
 .hero-card__placeholder > span {
   position: absolute;
-  inset: 12% 10% 22%;
-  border: 1px solid rgba(212, 220, 225, 0.06);
-  border-radius: 45% 45% 18px 18px;
+  inset: 13% 11% 20%;
+  border: 1px solid rgba(212, 220, 225, 0.08);
+  border-radius: 48% 48% 20px 20px;
+  box-shadow: inset 0 -60px 100px rgba(0,0,0,.12), 0 0 80px rgba(120,149,177,.025);
 }
 
 .hero-card__placeholder > i {

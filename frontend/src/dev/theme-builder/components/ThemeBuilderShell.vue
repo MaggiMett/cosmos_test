@@ -49,11 +49,12 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
   height: 100%;
   min-width: 1024px;
   min-height: 720px;
-  grid-template-columns: 72px minmax(0, 1fr) 370px;
-  grid-template-rows: 64px minmax(0, 1fr);
+  grid-template-columns: 84px minmax(0, 1fr) 348px;
+  grid-template-rows: 72px minmax(0, 1fr);
   overflow: hidden;
   background:
-    radial-gradient(circle at 88% 22%, rgba(120, 149, 177, 0.035), transparent 30%),
+    radial-gradient(circle at 72% 12%, rgba(120, 149, 177, 0.075), transparent 28%),
+    radial-gradient(circle at 20% 82%, rgba(74, 93, 112, 0.045), transparent 34%),
     var(--builder-bg);
 }
 
@@ -76,14 +77,15 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
   overflow: auto;
   border-left: 1px solid var(--builder-border);
   background:
-    linear-gradient(180deg, rgba(13, 18, 23, 0.52), rgba(8, 12, 16, 0.18)),
-    transparent;
+    linear-gradient(180deg, rgba(17, 23, 29, 0.78), rgba(8, 12, 16, 0.3)),
+    rgba(8, 12, 16, 0.22);
+  box-shadow: inset 18px 0 36px rgba(0, 0, 0, 0.08);
   scrollbar-color: rgba(154, 164, 172, 0.18) transparent;
 }
 
 @media (max-width: 1280px) {
   .builder-shell {
-    grid-template-columns: 72px minmax(0, 1fr) 320px;
+    grid-template-columns: 76px minmax(0, 1fr) 310px;
   }
 }
 </style>

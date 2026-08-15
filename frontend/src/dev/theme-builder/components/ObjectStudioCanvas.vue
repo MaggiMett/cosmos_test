@@ -43,9 +43,9 @@ const modes = ["Art", "Structure", "Responsive"] as const;
   display: grid;
   min-width: 0;
   min-height: 0;
-  padding: 8px 12px 6px;
-  grid-template-rows: 46px minmax(0, 1fr);
-  background: rgba(5, 9, 12, 0.24);
+  padding: 12px 16px 14px;
+  grid-template-rows: 50px minmax(0, 1fr);
+  background: radial-gradient(circle at 50% 18%, rgba(120,149,177,.045), transparent 32%), rgba(5, 9, 12, 0.24);
 }
 
 .object-studio-canvas__toolbar {
@@ -90,9 +90,10 @@ const modes = ["Art", "Structure", "Responsive"] as const;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--builder-border);
-  border-radius: var(--builder-radius-card);
+  border: 1px solid rgba(154,174,191,.15);
+  border-radius: var(--builder-radius-panel);
   background: rgba(13, 18, 23, 0.52);
+  box-shadow: var(--builder-shadow-card), inset 0 1px rgba(255,255,255,.02);
 }
 
 .object-studio-canvas__stage > :deep(.neutral-visual) {

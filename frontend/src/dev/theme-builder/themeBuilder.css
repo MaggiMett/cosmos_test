@@ -10,10 +10,23 @@
   --builder-faint: #5f6367;
   --builder-accent: #7895b1;
   --builder-accent-soft: rgba(120, 149, 177, 0.14);
-  --builder-radius-control: 8px;
-  --builder-radius-card: 12px;
-  --builder-radius-panel: 16px;
-  --builder-radius-hero: 20px;
+  --builder-radius-control: 9px;
+  --builder-radius-card: 14px;
+  --builder-radius-panel: 18px;
+  --builder-radius-hero: 22px;
+  --builder-space-1: 4px;
+  --builder-space-2: 8px;
+  --builder-space-3: 12px;
+  --builder-space-4: 16px;
+  --builder-space-5: 20px;
+  --builder-space-6: 24px;
+  --builder-space-8: 32px;
+  --builder-space-10: 40px;
+  --builder-text-xs: .64rem;
+  --builder-text-sm: .72rem;
+  --builder-text-md: .82rem;
+  --builder-text-lg: 1.06rem;
+  --builder-shadow-card: 0 14px 34px rgba(0, 0, 0, .16);
   --builder-control-transition: 160ms ease;
   --builder-panel-transition: 220ms ease;
   color: var(--builder-text);
@@ -23,8 +36,42 @@
     sans-serif;
 }
 
-.theme-builder-surface button {
+.theme-builder-surface button,
+.theme-builder-surface input,
+.theme-builder-surface textarea,
+.theme-builder-surface select {
   font: inherit;
+}
+
+.theme-builder-surface button {
+  transition:
+    border-color var(--builder-control-transition),
+    background var(--builder-control-transition),
+    color var(--builder-control-transition),
+    box-shadow var(--builder-control-transition),
+    transform var(--builder-control-transition);
+}
+
+.theme-builder-surface button:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--builder-accent) 38%, var(--builder-border-strong));
+}
+
+.theme-builder-surface button:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.theme-builder-surface input,
+.theme-builder-surface textarea,
+.theme-builder-surface select {
+  border-color: var(--builder-border);
+  background: rgba(7, 11, 15, .72);
+  color: var(--builder-text);
+}
+
+.theme-builder-surface ::selection {
+  background: rgba(120, 149, 177, .3);
+  color: #fff;
 }
 
 .theme-builder-surface button:focus-visible,
@@ -37,6 +84,20 @@
   font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino,
     Georgia, serif;
   font-weight: 400;
+  letter-spacing: -.012em;
+}
+
+.theme-builder-surface h1.builder-serif {
+  text-wrap: balance;
+}
+
+.theme-builder-surface h2.builder-serif {
+  color: #ddd8cf;
+  letter-spacing: -.008em;
+}
+
+.theme-builder-surface small {
+  letter-spacing: .01em;
 }
 
 .builder-visually-hidden {

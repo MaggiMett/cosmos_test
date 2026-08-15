@@ -42,15 +42,15 @@ defineEmits<{ add: []; remove: [reference: Readonly<ExactVersionedRef>] }>();
 </script>
 
 <style scoped>
-.theme-assets { display: grid; gap: 12px; }
+.theme-assets { display: grid; gap: 16px; padding-top: 4px; }
 .theme-assets > header { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .theme-assets h2, .theme-assets p { margin: 0; }
 .theme-assets h2 { font-size: 1.06rem; }
 .theme-assets p { margin-top: 3px; color: var(--builder-faint); font-size: 0.68rem; }
 .theme-assets button { min-height: 34px; padding: 0 12px; border: 1px solid var(--builder-border-strong); border-radius: var(--builder-radius-control); background: rgba(120, 149, 177, 0.1); color: var(--builder-text); cursor: pointer; }
-.theme-assets__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.theme-assets__grid article { display: grid; min-width: 0; padding: 9px; grid-template-columns: 76px minmax(0, 1fr); border: 1px solid var(--builder-border); border-radius: var(--builder-radius-card); background: var(--builder-surface); gap: 10px; }
-.theme-assets__preview { display: grid; min-height: 70px; overflow: hidden; place-items: center; border-radius: 8px; background: #11171c; color: var(--builder-faint); }
+.theme-assets__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.theme-assets__grid article { display: grid; min-width: 0; padding: 11px; grid-template-columns: 86px minmax(0, 1fr); border: 1px solid rgba(154,174,191,.14); border-radius: var(--builder-radius-card); background: linear-gradient(145deg, rgba(23,30,36,.88), rgba(13,18,23,.74)); box-shadow: inset 0 1px rgba(255,255,255,.018); gap: 12px; }
+.theme-assets__preview { display: grid; min-height: 82px; overflow: hidden; place-items: center; border:1px solid rgba(255,255,255,.025); border-radius: 10px; background: radial-gradient(circle at 60% 30%,rgba(120,149,177,.08),transparent 38%),#10161b; color: var(--builder-faint); }
 .theme-assets__preview img { width: 100%; height: 100%; object-fit: contain; }
 .theme-assets__copy { display: grid; min-width: 0; align-content: center; gap: 3px; }
 .theme-assets__copy strong, .theme-assets__copy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

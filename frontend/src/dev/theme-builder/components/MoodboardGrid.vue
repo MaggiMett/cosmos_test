@@ -30,7 +30,7 @@ defineProps<{ items: readonly MoodboardItem[] }>();
 <style scoped>
 .moodboard {
   display: grid;
-  gap: 10px;
+  gap: 14px;
 }
 
 .moodboard h2 {
@@ -39,11 +39,12 @@ defineProps<{ items: readonly MoodboardItem[] }>();
 }
 
 .moodboard__empty {
-  min-height: 70px;
+  min-height: 112px;
   margin: 0;
-  padding: 22px;
-  border: 1px solid var(--builder-border);
+  padding: 30px;
+  border: 1px dashed rgba(154,174,191,.18);
   border-radius: var(--builder-radius-card);
+  background: linear-gradient(135deg, rgba(120,149,177,.025), rgba(255,255,255,.008));
   color: var(--builder-faint);
   font-size: 0.74rem;
 }
@@ -56,9 +57,9 @@ defineProps<{ items: readonly MoodboardItem[] }>();
 
 .moodboard__card {
   position: relative;
-  min-height: 142px;
+  min-height: 164px;
   overflow: hidden;
-  border: 1px solid var(--builder-border);
+  border: 1px solid rgba(154,174,191,.14);
   border-radius: var(--builder-radius-card);
   background: var(--builder-surface);
 }

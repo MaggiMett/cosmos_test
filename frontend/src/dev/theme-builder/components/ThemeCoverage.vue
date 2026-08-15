@@ -43,7 +43,11 @@ function statusLabel(status: CoverageStatus): string {
 <style scoped>
 .coverage {
   display: grid;
-  gap: 16px;
+  padding: 20px;
+  border: 1px solid rgba(154,174,191,.12);
+  border-radius: var(--builder-radius-card);
+  background: linear-gradient(145deg, rgba(21,28,34,.72), rgba(10,15,19,.52));
+  gap: 18px;
 }
 
 .coverage h2 {
@@ -54,7 +58,7 @@ function statusLabel(status: CoverageStatus): string {
 .coverage__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 28px;
+  gap: 14px 22px;
 }
 
 .coverage__item {

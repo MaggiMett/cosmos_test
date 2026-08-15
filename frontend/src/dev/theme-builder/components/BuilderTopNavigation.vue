@@ -79,12 +79,15 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
   z-index: 5;
   display: grid;
   min-width: 0;
-  min-height: 64px;
-  padding: 0 24px 0 30px;
+  min-height: 72px;
+  padding: 0 28px 0 34px;
   grid-template-columns: minmax(260px, 1fr) auto minmax(300px, 1fr);
   align-items: center;
   border-bottom: 1px solid var(--builder-border);
-  background: color-mix(in srgb, var(--builder-bg-deep) 96%, transparent);
+  background:
+    linear-gradient(90deg, rgba(16,22,28,.98), rgba(10,15,20,.94)),
+    color-mix(in srgb, var(--builder-bg-deep) 96%, transparent);
+  box-shadow: 0 10px 32px rgba(0,0,0,.1);
 }
 
 .builder-topbar__orientation,
@@ -99,14 +102,16 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
 .builder-topbar__orientation {
   min-width: 0;
   color: var(--builder-muted);
-  font-size: 0.88rem;
-  gap: 13px;
+  font-size: 0.78rem;
+  letter-spacing: .015em;
+  gap: 12px;
 }
 
 .builder-topbar__orientation strong {
   overflow: hidden;
   color: var(--builder-text);
-  font-weight: 500;
+  font-weight: 560;
+  font-size: .9rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -183,8 +188,8 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
 }
 
 .builder-topbar__button {
-  min-height: 40px;
-  padding: 0 17px;
+  min-height: 42px;
+  padding: 0 18px;
   border-color: var(--builder-border);
   color: var(--builder-text);
   font-size: 0.82rem;
@@ -198,7 +203,8 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
 
 .builder-topbar__button--primary {
   border-color: rgba(120, 149, 177, 0.42);
-  background: linear-gradient(180deg, rgba(120, 149, 177, 0.18), rgba(120, 149, 177, 0.09));
+  background: linear-gradient(180deg, rgba(120, 149, 177, 0.24), rgba(120, 149, 177, 0.1));
+  box-shadow: inset 0 1px rgba(255,255,255,.035), 0 8px 22px rgba(0,0,0,.12);
 }
 
 @media (max-width: 1280px) {

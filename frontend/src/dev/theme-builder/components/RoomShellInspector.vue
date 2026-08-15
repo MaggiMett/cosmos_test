@@ -41,12 +41,13 @@ import BuilderAccordionSection from "./BuilderAccordionSection.vue";
 <style scoped>
 .room-shell-inspector {
   min-height: 100%;
-  padding: 22px 20px 36px;
+  padding: 28px 24px 40px;
+  background: linear-gradient(180deg, rgba(16,22,27,.42), rgba(8,12,16,.18));
 }
 
 .room-shell-inspector__heading {
   display: grid;
-  padding: 0 4px 15px;
+  padding: 0 2px 20px;
   border-bottom: 1px solid var(--builder-border);
   gap: 7px;
 }
@@ -54,8 +55,9 @@ import BuilderAccordionSection from "./BuilderAccordionSection.vue";
 .room-shell-inspector__heading h1 {
   margin: 0;
   color: var(--builder-text);
-  font-size: 1.55rem;
-  line-height: 1.1;
+  font-size: 1.7rem;
+  line-height: 1.06;
+  letter-spacing: -.018em;
 }
 
 .room-shell-inspector__heading p {
