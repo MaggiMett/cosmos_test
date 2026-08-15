@@ -136,11 +136,8 @@ const variants = [
     background var(--builder-control-transition);
 }
 
-.object-template-card:hover,
-.object-template-card--active {
-  border-color: rgba(120, 149, 177, 0.5);
-  background: rgba(18, 24, 30, 0.62);
-}
+.object-template-card:hover { border-color:rgba(120,149,177,.34); background:rgba(18,24,30,.62); }
+.object-template-card--active { border-color:rgba(159,187,211,.58); background:linear-gradient(145deg,rgba(120,149,177,.16),rgba(18,24,30,.7)); box-shadow:inset 0 0 0 1px rgba(159,187,211,.06),0 10px 24px rgba(0,0,0,.13); }
 
 .object-template-card > span {
   display: flex;
@@ -250,10 +247,8 @@ const variants = [
   gap: 7px;
 }
 
-.variant-list button:hover,
-.variant-list__active {
-  border-color: rgba(120, 149, 177, 0.5) !important;
-}
+.variant-list button:hover { border-color:rgba(120,149,177,.34)!important; background:rgba(120,149,177,.045); }
+.variant-list__active { border-color:rgba(159,187,211,.58)!important; background:linear-gradient(180deg,rgba(120,149,177,.13),rgba(13,18,23,.34))!important; box-shadow:inset 0 0 0 1px rgba(159,187,211,.06),0 8px 20px rgba(0,0,0,.12); }
 
 .variant-list button > span {
   display: block;

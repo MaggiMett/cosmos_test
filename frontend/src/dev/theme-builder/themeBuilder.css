@@ -56,6 +56,11 @@
   border-color: color-mix(in srgb, var(--builder-accent) 38%, var(--builder-border-strong));
 }
 
+.theme-builder-surface button:not(:disabled):active {
+  transform: translateY(1px);
+  transition-duration: 70ms;
+}
+
 .theme-builder-surface button:disabled {
   cursor: not-allowed;
   opacity: .48;
@@ -75,9 +80,14 @@
 }
 
 .theme-builder-surface button:focus-visible,
+.theme-builder-surface input:focus-visible,
+.theme-builder-surface textarea:focus-visible,
+.theme-builder-surface select:focus-visible,
+.theme-builder-surface summary:focus-visible,
 .theme-builder-surface [tabindex]:focus-visible {
-  outline: 1px solid color-mix(in srgb, var(--builder-accent) 78%, white);
+  outline: 2px solid color-mix(in srgb, var(--builder-accent) 78%, white);
   outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(120, 149, 177, .1);
 }
 
 .builder-serif {

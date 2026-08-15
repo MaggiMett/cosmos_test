@@ -58,7 +58,7 @@ defineEmits<{ add: []; remove: [reference: Readonly<ExactVersionedRef>] }>();
 .theme-assets__copy span, .theme-assets__copy small { color: var(--builder-muted); font-size: 0.64rem; }
 .theme-assets__copy small[data-status="missing"], .theme-assets__copy small[data-status="unavailable"] { color: #c69b76; }
 .theme-assets__grid article > button { min-height: 26px; padding: 0; grid-column: 1 / -1; border-color: transparent; background: transparent; color: var(--builder-muted); font-size: 0.65rem; }
-.theme-assets__empty { display: flex; min-height: 86px; padding: 16px; align-items: center; border: 1px dashed var(--builder-border-strong); border-radius: var(--builder-radius-card); color: var(--builder-faint); gap: 14px; }
+.theme-assets__empty { display: flex; min-height: 104px; padding: 22px 24px; align-items: center; border: 1px dashed rgba(154,174,191,.2); border-radius: var(--builder-radius-card); background:linear-gradient(135deg,rgba(120,149,177,.03),rgba(255,255,255,.006)); color: var(--builder-faint); gap: 16px; }
 .theme-assets__empty > span { font-size: 1.4rem; }
 .theme-assets__empty > div { min-width: 0; flex: 1; }
 .theme-assets__empty strong { color: var(--builder-text); font-size: 0.8rem; }

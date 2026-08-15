@@ -52,12 +52,13 @@ defineEmits<{ change: [option: string] }>();
 }
 
 .builder-segmented-control button:hover {
+  background: rgba(255,255,255,.018);
   color: var(--builder-text);
 }
 
 .builder-segmented-control__option--active {
-  background: var(--builder-accent-soft) !important;
-  box-shadow: inset 0 0 0 1px rgba(120, 149, 177, 0.45);
+  background: linear-gradient(180deg, rgba(120,149,177,.2), rgba(120,149,177,.1)) !important;
+  box-shadow: inset 0 0 0 1px rgba(120, 149, 177, 0.45), 0 5px 16px rgba(0,0,0,.12);
   color: var(--builder-text) !important;
 }
 </style>

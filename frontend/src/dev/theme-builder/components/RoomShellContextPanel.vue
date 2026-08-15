@@ -125,11 +125,8 @@ const perspectives = [
     background var(--builder-control-transition);
 }
 
-.room-shell-card:hover,
-.room-shell-card--active {
-  border-color: rgba(120, 149, 177, 0.45);
-  background: rgba(18, 24, 30, 0.62);
-}
+.room-shell-card:hover { border-color:rgba(120,149,177,.32); background:rgba(18,24,30,.62); }
+.room-shell-card--active { border-color:rgba(159,187,211,.56); background:linear-gradient(145deg,rgba(120,149,177,.15),rgba(18,24,30,.68)); box-shadow:inset 0 0 0 1px rgba(159,187,211,.06),0 9px 22px rgba(0,0,0,.12); }
 
 .room-shell-card__copy {
   display: grid;

@@ -213,8 +213,19 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
     grid-template-columns: minmax(220px, 1fr) auto minmax(280px, 1fr);
   }
 
-  .builder-topbar__saved {
-    margin-right: 8px;
-  }
+  .builder-topbar__saved { margin-right: 8px; }
+}
+
+@media (max-width: 1040px) {
+  .builder-topbar { min-height: 68px; padding-inline: 16px; grid-template-columns: minmax(180px, 1fr) auto; }
+  .builder-topbar__tabs { display: none; }
+  .builder-topbar__actions { gap: 6px; }
+  .builder-topbar__saved { display: none; }
+}
+
+@media (max-width: 720px) {
+  .builder-topbar__context span[aria-hidden="true"],
+  .builder-topbar__context strong { display: none; }
+  .builder-topbar__button { padding-inline: 12px; }
 }
 </style>

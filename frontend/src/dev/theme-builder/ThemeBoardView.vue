@@ -325,4 +325,6 @@ function syncSnapshot(): void {
 @keyframes pulse { 50% { opacity: 0.35; transform: scale(0.8); } }
 @media (prefers-reduced-motion: reduce) { .theme-board__pulse { animation: none; } }
 @media (max-width: 1280px) { .theme-board { padding: 30px 24px 48px; } .theme-board__hero-grid { grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr); gap: 18px; } .theme-board-context { padding-inline: 18px; } }
+@media (max-width: 980px) { .theme-board { padding: 24px 20px 40px; gap: 24px; } .theme-board__hero-grid { grid-template-columns: 1fr; } .theme-board__hero-side { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: auto; } }
+@media (max-width: 680px) { .theme-board { padding-inline: 16px; } .theme-board__hero-side { grid-template-columns: 1fr; } .theme-board__form--metadata { grid-template-columns: 1fr; } }
 </style>

@@ -88,4 +88,23 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
     grid-template-columns: 76px minmax(0, 1fr) 310px;
   }
 }
+
+@media (max-width: 1040px) {
+  .builder-shell {
+    grid-template-columns: 68px minmax(0, 1fr) 272px;
+    grid-template-rows: 68px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .builder-shell {
+    height: auto;
+    min-height: 100dvh;
+    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-rows: 68px minmax(620px, auto) auto;
+  }
+  .builder-shell__topbar { grid-column: 2; }
+  .builder-shell__canvas { grid-column: 2; grid-row: 2; min-height: 620px; }
+  .builder-shell__context { grid-column: 2; grid-row: 3; max-height: none; border-top: 1px solid var(--builder-border); border-left: 0; }
+}
 </style>

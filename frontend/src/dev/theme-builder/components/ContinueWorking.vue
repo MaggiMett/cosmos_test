@@ -58,13 +58,21 @@ defineProps<{ items: readonly WorkingItem[] }>();
   text-align: left;
   transition:
     border-color var(--builder-control-transition),
-    background var(--builder-control-transition);
+    background var(--builder-control-transition),
+    box-shadow var(--builder-control-transition),
+    transform var(--builder-control-transition);
   gap: 13px;
 }
 
 .working-card:hover {
-  border-color: var(--builder-border);
-  background: rgba(255, 255, 255, 0.018);
+  border-color: rgba(120,149,177,.26);
+  background: linear-gradient(90deg, rgba(120,149,177,.055), rgba(255,255,255,.012));
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+  transform: translateY(-1px);
+}
+
+.working-card:focus-visible {
+  border-color: rgba(120,149,177,.42);
 }
 
 .working-card__placeholder {

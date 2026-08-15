@@ -69,14 +69,16 @@ function addSelected(): void {
 .asset-picker__drawer header button { width: 34px; height: 34px; }
 .asset-picker__grid { display: grid; min-height: 0; padding-right: 5px; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; overflow: auto; gap: 10px; }
 .asset-picker__grid > button { display: grid; min-width: 0; padding: 8px; text-align: left; gap: 4px; }
-.asset-picker__grid > button[aria-selected="true"] { border-color: var(--builder-accent); background: rgba(120, 149, 177, 0.12); }
-.asset-picker__grid > button:disabled { cursor: default; opacity: 0.45; }
+.asset-picker__grid > button:hover:not(:disabled) { border-color:rgba(120,149,177,.34); background:rgba(120,149,177,.045); }
+.asset-picker__grid > button[aria-selected="true"] { border-color:rgba(159,187,211,.62); background:linear-gradient(145deg,rgba(120,149,177,.17),rgba(15,21,27,.72)); box-shadow:inset 0 0 0 1px rgba(159,187,211,.06),0 8px 20px rgba(0,0,0,.12); }
+.asset-picker__grid > button:disabled { cursor: default; opacity: 0.36; filter:saturate(.55); }
 .asset-picker__preview { display: grid; height: 112px; overflow: hidden; place-items: center; border-radius: 7px; background: #11171c; }
 .asset-picker__preview img { width: 100%; height: 100%; object-fit: contain; }
 .asset-picker__grid strong, .asset-picker__grid small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .asset-picker__grid strong { margin-top: 4px; font-size: 0.75rem; font-weight: 500; }
 .asset-picker__grid small, .asset-picker__grid em { color: var(--builder-muted); font-size: 0.61rem; font-style: normal; }
-.asset-picker__state { display:grid;align-self:center;justify-items:center;color:var(--builder-muted);text-align:center;gap:12px; }
+.asset-picker__state { display:grid;align-self:center;min-width:min(360px,80%);padding:26px 28px;justify-self:center;justify-items:center;border:1px dashed rgba(154,174,191,.18);border-radius:var(--builder-radius-card);background:linear-gradient(145deg,rgba(120,149,177,.035),rgba(255,255,255,.008));color:var(--builder-muted);text-align:center;gap:12px; }
+.asset-picker__state[role="alert"]{border-color:rgba(190,112,112,.24);background:rgba(110,44,44,.08);color:#c9a5a5}
 .asset-picker__state p{margin:0}.asset-picker__state button{min-height:38px;padding:0 14px;background:rgba(120,149,177,.14)}
 .asset-picker__drawer footer p { max-width: 380px; color: var(--builder-faint); font-size: 0.66rem; }
 .asset-picker__drawer footer button { min-height: 38px; padding: 0 16px; background: rgba(120, 149, 177, 0.16); }
