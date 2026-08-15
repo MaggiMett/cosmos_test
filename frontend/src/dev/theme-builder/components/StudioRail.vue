@@ -93,10 +93,10 @@ function go(id: StudioId): void {
 .studio-rail__brand :deep(.builder-icon) { width:1.65rem;height:1.65rem;stroke-width:1.15; }
 .studio-rail__divider { width:40px;height:1px;margin:0 0 14px;background:var(--builder-border); }
 .studio-rail__studios { display:flex;flex-direction:column;gap:10px; }
-.studio-rail__item { position:relative;width:54px;height:54px;border:1px solid transparent;border-radius:14px;color:#9c9da0;transition:color var(--builder-control-transition),border-color var(--builder-control-transition),background var(--builder-control-transition),box-shadow var(--builder-control-transition); }
+.studio-rail__item { position:relative;width:54px;height:54px;border:1px solid transparent;border-radius:14px;color:#9c9da0;transition:color var(--builder-control-transition),border-color var(--builder-control-transition),background var(--builder-control-transition),box-shadow var(--builder-control-transition),transform var(--builder-control-transition); }
 .studio-rail__item:disabled { opacity:.28;cursor:default; }
 .studio-rail__item > span { position:absolute;left:calc(100% + 11px);z-index:10;width:max-content;padding:6px 8px;border:1px solid var(--builder-border);border-radius:6px;background:#14191e;box-shadow:0 8px 24px rgba(0,0,0,.28);color:var(--builder-text);font-size:.72rem;opacity:0;pointer-events:none;transform:translateX(-3px);transition:opacity var(--builder-control-transition),transform var(--builder-control-transition); }
-.studio-rail__item:hover:not(:disabled),.studio-rail__item:focus-visible { color:var(--builder-text); }
+.studio-rail__item:hover:not(:disabled),.studio-rail__item:focus-visible { color:var(--builder-text);transform:translateY(-1px); }
 .studio-rail__item:hover:not(:disabled) > span,.studio-rail__item:focus-visible > span { opacity:1;transform:translateX(0); }
 .studio-rail__item--active { border-color:rgba(120,149,177,.58);background:linear-gradient(145deg,rgba(120,149,177,.2),rgba(120,149,177,.055));box-shadow:inset 0 0 22px rgba(120,149,177,.1),0 8px 28px rgba(0,0,0,.2),0 0 20px rgba(120,149,177,.08);color:var(--builder-text); }
 .studio-rail__item--active::before { content:"";position:absolute;left:-16px;width:2px;height:24px;border-radius:2px;background:rgba(178,201,221,.82);box-shadow:0 0 12px rgba(120,149,177,.42); }

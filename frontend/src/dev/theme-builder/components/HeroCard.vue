@@ -108,7 +108,7 @@ withDefaults(defineProps<{ unavailable?: boolean }>(), { unavailable: false });
 .hero-card__actions {
   display: flex;
   opacity: 0;
-  transform: translateY(5px);
+  transform: translateY(7px) scale(.985);
   transition:
     opacity var(--builder-panel-transition),
     transform var(--builder-panel-transition);
@@ -118,7 +118,7 @@ withDefaults(defineProps<{ unavailable?: boolean }>(), { unavailable: false });
 .hero-card:hover .hero-card__actions,
 .hero-card:focus-within .hero-card__actions {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .hero-card__actions button {

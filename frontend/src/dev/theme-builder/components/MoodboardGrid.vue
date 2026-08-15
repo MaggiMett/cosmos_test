@@ -62,6 +62,13 @@ defineProps<{ items: readonly MoodboardItem[] }>();
   border: 1px solid rgba(154,174,191,.14);
   border-radius: var(--builder-radius-card);
   background: var(--builder-surface);
+  transition: border-color var(--builder-control-transition), box-shadow var(--builder-panel-transition), transform var(--builder-control-transition);
+}
+
+.moodboard__card:hover {
+  border-color: rgba(120,149,177,.25);
+  box-shadow: var(--builder-shadow-card);
+  transform: translateY(-2px);
 }
 
 .moodboard__placeholder {

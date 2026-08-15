@@ -27,8 +27,10 @@
   --builder-text-md: .82rem;
   --builder-text-lg: 1.06rem;
   --builder-shadow-card: 0 14px 34px rgba(0, 0, 0, .16);
-  --builder-control-transition: 160ms ease;
-  --builder-panel-transition: 220ms ease;
+  --builder-ease-out: cubic-bezier(.2, .72, .24, 1);
+  --builder-ease-smooth: cubic-bezier(.4, 0, .2, 1);
+  --builder-control-transition: 160ms var(--builder-ease-out);
+  --builder-panel-transition: 240ms var(--builder-ease-smooth);
   color: var(--builder-text);
   color-scheme: dark;
   font-family:
@@ -106,6 +108,11 @@
   letter-spacing: -.008em;
 }
 
+@keyframes builder-disclosure-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .theme-builder-surface small {
   letter-spacing: .01em;
 }
@@ -124,6 +131,8 @@
   .theme-builder-surface *::before,
   .theme-builder-surface *::after {
     scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
