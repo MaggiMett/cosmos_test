@@ -132,4 +132,13 @@ defineProps<{ items: readonly ReleaseValidationItem[] }>();
     display: none;
   }
 }
+
+@media (max-width: 1040px) {
+  .release-validation-grid { height:auto; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .release-validation-card { min-height:84px; }
+}
+
+@media (max-width: 620px) {
+  .release-validation-grid { grid-template-columns:1fr; }
+}
 </style>

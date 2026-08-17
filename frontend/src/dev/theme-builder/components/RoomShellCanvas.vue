@@ -48,6 +48,12 @@ const modes = ["Art", "Structure", "Responsive"] as const;
   gap: 20px;
 }
 
+@media (max-width: 760px) {
+  .room-shell-canvas { padding-inline: 10px; grid-template-rows: auto minmax(0,1fr); }
+  .room-shell-canvas__toolbar { min-height: 50px; flex-wrap: wrap; gap: 6px 12px; }
+  .room-shell-canvas__zoom { margin-left: auto; }
+}
+
 .room-shell-canvas__zoom {
   display: flex;
   align-items: center;

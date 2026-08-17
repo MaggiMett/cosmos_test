@@ -38,9 +38,10 @@ const options = [
   left: 50%;
   z-index: 5;
   display: grid;
-  min-width: 570px;
+  width: min(570px, calc(100% - 32px));
+  min-width: 0;
   padding: 11px 18px 10px;
-  grid-template-columns: repeat(5, minmax(88px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   border: 1px solid var(--builder-border-strong);
   border-radius: 999px;
   background: rgba(12, 17, 21, 0.88);
@@ -94,5 +95,11 @@ const options = [
 .showcase-preview-controls :deep(.builder-icon) {
   width: 1.1rem;
   height: 1.1rem;
+}
+
+@media (max-width: 680px) {
+  .showcase-preview-controls { bottom: 18px; padding: 8px 10px; }
+  .showcase-preview-controls button { padding-inline: 4px; font-size: .58rem; }
+  .showcase-preview-controls button > span { width: 32px; height: 32px; }
 }
 </style>

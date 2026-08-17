@@ -85,6 +85,12 @@ const modes = ["Art", "Structure", "Responsive"] as const;
   text-align: center;
 }
 
+@media (max-width: 760px) {
+  .object-studio-canvas { padding-inline: 10px; grid-template-rows: auto minmax(0,1fr); }
+  .object-studio-canvas__toolbar { min-height: 50px; flex-wrap: wrap; gap: 6px 12px; }
+  .object-studio-canvas__zoom { margin-left: auto; }
+}
+
 .object-studio-canvas__stage {
   position: relative;
   min-width: 0;

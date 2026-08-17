@@ -88,4 +88,17 @@ defineProps<{ items: readonly ReleaseContentItem[] }>();
   color: var(--builder-muted);
   font-size: 0.66rem;
 }
+
+@media (max-width: 1120px) {
+  .release-content-grid { height:auto; grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .release-content-card__visual { min-height:96px; }
+}
+
+@media (max-width: 680px) {
+  .release-content-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 440px) {
+  .release-content-grid { grid-template-columns:1fr; }
+}
 </style>
