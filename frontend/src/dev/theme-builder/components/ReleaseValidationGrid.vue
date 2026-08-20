@@ -16,7 +16,7 @@
         <strong class="builder-serif">{{ item.label }}</strong>
         <span>{{ item.description }}</span>
       </div>
-      <button v-if="item.action" type="button">Go to <span aria-hidden="true">→</span></button>
+      <button v-if="item.action" type="button" @click="emit('open', item)">Go to <span aria-hidden="true">→</span></button>
     </article>
   </div>
 </template>
@@ -29,10 +29,12 @@ export interface ReleaseValidationItem {
   label: string;
   description: string;
   action: boolean;
+  target?: "board" | "library" | "looks";
   clear?: boolean;
 }
 
 defineProps<{ items: readonly ReleaseValidationItem[] }>();
+const emit = defineEmits<{ open: [item: ReleaseValidationItem] }>();
 </script>
 
 <style scoped>
