@@ -57,7 +57,7 @@
         <section class="theme-board__hero-grid" aria-label="Theme overview">
           <HeroCard unavailable />
           <div class="theme-board__hero-side">
-            <ContinueWorking :items="workingItems" />
+            <ContinueWorking :items="workingItems" @open="continueProject" />
             <ThemeCoverage :items="coverageItems" />
           </div>
         </section>
@@ -212,6 +212,12 @@ async function loadCatalog(): Promise<void> {
 
 function openProject(builderProjectId: string): void {
   void router.push({ name: "theme-builder", query: { builderProjectId } });
+}
+
+function continueProject(): void {
+  const builderProjectId = snapshot.value?.project.builderProjectId;
+  if (!builderProjectId) return;
+  void router.push({ name: "theme-builder-looks", query: { builderProjectId } });
 }
 
 async function createProject(): Promise<void> {

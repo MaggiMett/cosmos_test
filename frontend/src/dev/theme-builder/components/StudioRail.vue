@@ -38,9 +38,9 @@ const router = useRouter();
 const studios = [
   { id: "board", label: "Theme Board", icon: "board", requiresProject: false },
   { id: "library", label: "Asset Library", icon: "library", requiresProject: false },
-  { id: "room", label: "Room Shell", icon: "room", requiresProject: true },
-  { id: "object", label: "Object Studio", icon: "object", requiresProject: true },
   { id: "looks", label: "Looks", icon: "looks", requiresProject: true },
+  { id: "object", label: "Object Studio", icon: "object", requiresProject: true },
+  { id: "room", label: "Room Shell", icon: "room", requiresProject: true },
   { id: "showcase", label: "Showcase", icon: "showcase", requiresProject: true },
   { id: "release", label: "Release", icon: "release", requiresProject: true },
 ] as const;

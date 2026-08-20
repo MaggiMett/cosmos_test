@@ -2,7 +2,7 @@
   <section class="context-section" aria-labelledby="continue-working-title" data-testid="continue-working">
     <h2 id="continue-working-title" class="builder-serif">Continue Working</h2>
     <div class="working-list">
-      <button v-for="item in items" :key="item.name" type="button" class="working-card">
+      <button v-for="item in items" :key="item.name" type="button" class="working-card" @click="emit('open', item)">
         <span class="working-card__placeholder" aria-hidden="true" />
         <span class="working-card__copy">
           <strong>{{ item.name }}</strong>
@@ -25,6 +25,7 @@ export interface WorkingItem {
 }
 
 defineProps<{ items: readonly WorkingItem[] }>();
+const emit = defineEmits<{ open: [item: WorkingItem] }>();
 </script>
 
 <style scoped>
