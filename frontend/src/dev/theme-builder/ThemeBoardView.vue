@@ -6,10 +6,13 @@
     :interactive="phase === 'success'"
     :dirty="snapshot?.dirty"
     :saving="snapshot?.saving"
+    :save-conflict="Boolean(snapshot?.saveConflict)"
+    :save-error="snapshot?.saveError?.message"
     :can-save="Boolean(snapshot?.dirty && form.name.trim())"
     :can-undo="snapshot?.canUndo"
     :can-redo="snapshot?.canRedo"
     @save="save"
+    @reload="loadFromRoute"
     @undo="undo"
     @redo="redo"
   >

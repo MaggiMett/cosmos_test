@@ -2,8 +2,8 @@
   <ThemeBuilderShell
     class="release-shell" active-studio="release" studio-label="Release"
     :builder-project-id="projectId" :interactive="phase==='success'"
-    :dirty="snapshot?.dirty" :saving="snapshot?.saving" :can-save="Boolean(snapshot?.dirty)"
-    :can-undo="snapshot?.canUndo" :can-redo="snapshot?.canRedo" @save="save" @undo="undo" @redo="redo"
+    :dirty="snapshot?.dirty" :saving="snapshot?.saving" :save-conflict="Boolean(snapshot?.saveConflict)" :save-error="snapshot?.saveError?.message" :can-save="Boolean(snapshot?.dirty)"
+    :can-undo="snapshot?.canUndo" :can-redo="snapshot?.canRedo" @save="save" @reload="controller.reload" @undo="undo" @redo="redo"
   >
     <section v-if="phase!=='success'" class="release-state"><h1 class="builder-serif">{{ phase==='loading'?'Loading release data…':phase==='error'?'Release unavailable':'No Builder Project selected' }}</h1><p>{{ phase==='error'?loadError:'Open a Theme Builder Project first.' }}</p><RouterLink v-if="phase!=='loading'" :to="{name:'theme-builder'}">Back to Theme Board</RouterLink></section>
     <div v-else-if="snapshot" class="release-studio" data-testid="release-studio-view">

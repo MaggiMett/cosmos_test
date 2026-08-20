@@ -11,7 +11,7 @@
         v-if="interactive"
         type="button"
         class="builder-topbar__save"
-        :disabled="!canSave || saving"
+        :disabled="!canSave || saving || saveConflict"
         @click="$emit('save')"
       >
         {{ saving ? "Saving…" : dirty ? "Save" : "Saved" }}
@@ -20,6 +20,8 @@
         <BuilderIcon name="check" />
         Saved
       </span>
+      <button v-if="saveConflict" type="button" class="builder-topbar__save-status builder-topbar__save-status--conflict" @click="$emit('reload')">Revision conflict · Reload</button>
+      <span v-else-if="saveError" class="builder-topbar__save-status builder-topbar__save-status--error" role="alert" :title="saveError">Save failed</span>
       <button type="button" class="builder-topbar__icon-button" aria-label="Undo" :disabled="interactive && !canUndo" @click="$emit('undo')">
         <BuilderIcon name="undo" />
       </button>
@@ -53,6 +55,8 @@ const props = withDefaults(defineProps<{
   interactive?: boolean;
   dirty?: boolean;
   saving?: boolean;
+  saveError?: string;
+  saveConflict?: boolean;
   canSave?: boolean;
   canUndo?: boolean;
   canRedo?: boolean;
@@ -71,7 +75,7 @@ function exitBuilder(): void { void router.push({ name: "theme-library" }); }
 function openRelease(): void { if (props.builderProjectId) void router.push({ name: "theme-builder-release", query: { builderProjectId: props.builderProjectId } }); }
 function openPreview(): void { if (props.builderProjectId) void router.push({ name: "theme-builder-preview", query: { builderProjectId: props.builderProjectId } }); }
 
-defineEmits<{ save: []; undo: []; redo: [] }>();
+defineEmits<{ save: []; reload: []; undo: []; redo: [] }>();
 </script>
 
 <style scoped>
@@ -139,6 +143,17 @@ defineEmits<{ save: []; undo: []; redo: [] }>();
   height: 1.1rem;
   color: var(--builder-text);
 }
+
+.builder-topbar__save-status {
+  max-width: 150px;
+  overflow: hidden;
+  font-size: .7rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.builder-topbar__save-status--conflict { color: #d7b27b; }
+.builder-topbar__save-status--error { color: #c99a9a; }
 
 .builder-topbar__icon-button,
 .builder-topbar__button,

@@ -6,10 +6,13 @@
     :interactive="phase === 'success'"
     :dirty="snapshot?.dirty"
     :saving="snapshot?.saving"
+    :save-conflict="Boolean(snapshot?.saveConflict)"
+    :save-error="snapshot?.saveError?.message"
     :can-save="Boolean(snapshot?.dirty)"
     :can-undo="snapshot?.canUndo"
     :can-redo="snapshot?.canRedo"
     @save="save"
+    @reload="loadProject"
     @undo="undo"
     @redo="redo"
   >

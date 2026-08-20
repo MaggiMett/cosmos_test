@@ -65,6 +65,10 @@ describe("Theme Board vertical slice", () => {
     expect(source).not.toContain("ApplicationShell");
     expect(source).not.toContain("CosmosNavigation");
     expect(source).not.toContain("useCosmosRuntime");
+    expect(source).toContain("onBeforeRouteLeave");
+    expect(source).toContain('window.addEventListener("beforeunload", handleBeforeUnload)');
+    expect(topbarSource).toContain("Revision conflict · Reload");
+    expect(topbarSource).toContain("!canSave || saving || saveConflict");
   });
 
   it("loads an explicit persistent project and contains no fixture artifacts", () => {

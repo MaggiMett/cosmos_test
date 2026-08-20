@@ -6,10 +6,12 @@
     :interactive="phase === 'success'"
     :dirty="snapshot?.dirty"
     :saving="snapshot?.saving"
+    :save-conflict="Boolean(snapshot?.saveConflict)"
+    :save-error="snapshot?.saveError?.message"
     :can-save="Boolean(snapshot?.dirty)"
     :can-undo="snapshot?.canUndo"
     :can-redo="snapshot?.canRedo"
-    @save="save" @undo="undo" @redo="redo"
+    @save="save" @reload="controller.reload" @undo="undo" @redo="redo"
   >
     <section v-if="phase !== 'success'" class="artifact-state">
       <p>Object Studio</p><h1 class="builder-serif">{{ phase === 'loading' ? 'Loading Builder Draft…' : phase === 'error' ? 'Builder Draft unavailable' : 'No Builder Project selected' }}</h1><span>{{ phase === 'error' ? loadError : 'Return to Theme Board and open an explicit project.' }}</span><RouterLink v-if="phase !== 'loading'" :to="{name:'theme-builder',query:{builderProjectId:projectId||undefined}}">Back to Theme Board</RouterLink>

@@ -6,11 +6,14 @@
       :interactive="interactive"
       :dirty="dirty"
       :saving="saving"
+      :save-error="saveError"
+      :save-conflict="saveConflict"
       :can-save="canSave"
       :can-undo="canUndo"
       :can-redo="canRedo"
       :builder-project-id="builderProjectId"
       @save="$emit('save')"
+      @reload="$emit('reload')"
       @undo="$emit('undo')"
       @redo="$emit('redo')"
     />
@@ -24,22 +27,40 @@
 </template>
 
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 import BuilderTopNavigation from "./BuilderTopNavigation.vue";
 import StudioRail from "./StudioRail.vue";
 
-defineProps<{
+const props = defineProps<{
   activeStudio: string;
   studioLabel: string;
   interactive?: boolean;
   dirty?: boolean;
   saving?: boolean;
+  saveError?: string;
+  saveConflict?: boolean;
   canSave?: boolean;
   canUndo?: boolean;
   canRedo?: boolean;
   builderProjectId?: string;
 }>();
 
-defineEmits<{ save: []; undo: []; redo: [] }>();
+defineEmits<{ save: []; reload: []; undo: []; redo: [] }>();
+
+function confirmDiscard(): boolean {
+  return !props.dirty || window.confirm("You have unsaved Theme Builder changes. Leave without saving?");
+}
+
+function handleBeforeUnload(event: BeforeUnloadEvent): void {
+  if (!props.dirty) return;
+  event.preventDefault();
+  event.returnValue = "";
+}
+
+onBeforeRouteLeave(() => confirmDiscard());
+onMounted(() => window.addEventListener("beforeunload", handleBeforeUnload));
+onBeforeUnmount(() => window.removeEventListener("beforeunload", handleBeforeUnload));
 </script>
 
 <style scoped>
