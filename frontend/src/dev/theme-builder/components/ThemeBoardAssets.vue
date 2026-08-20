@@ -20,9 +20,10 @@
             {{ item.status === "available" ? `Catalog · ${item.reference.version}` : item.status === "missing" ? "Missing catalog entry" : "Unavailable resource" }}
           </small>
         </div>
-        <button type="button" :aria-label="`Remove ${item.name} from theme`" @click="$emit('remove', item.reference)">
-          Remove
-        </button>
+        <div class="theme-assets__actions">
+          <button v-if="item.status !== 'available'" type="button" @click="$emit('repair', item.reference)">Find replacement</button>
+          <button type="button" :aria-label="`Remove ${item.name} from theme`" @click="$emit('remove', item.reference)">Remove</button>
+        </div>
       </article>
     </div>
     <div v-else class="theme-assets__empty">
@@ -38,7 +39,7 @@ import type { ExactVersionedRef } from "../../../theme-engine";
 import type { BuilderAssetPresentation } from "../themeBuilderAssetReferences";
 
 defineProps<{ items: readonly Readonly<BuilderAssetPresentation>[] }>();
-defineEmits<{ add: []; remove: [reference: Readonly<ExactVersionedRef>] }>();
+defineEmits<{ add: []; repair: [reference: Readonly<ExactVersionedRef>]; remove: [reference: Readonly<ExactVersionedRef>] }>();
 </script>
 
 <style scoped>
@@ -58,7 +59,9 @@ defineEmits<{ add: []; remove: [reference: Readonly<ExactVersionedRef>] }>();
 .theme-assets__copy strong { font-size: 0.78rem; font-weight: 500; }
 .theme-assets__copy span, .theme-assets__copy small { color: var(--builder-muted); font-size: 0.64rem; }
 .theme-assets__copy small[data-status="missing"], .theme-assets__copy small[data-status="unavailable"] { color: #c69b76; }
-.theme-assets__grid article > button { min-height: 26px; padding: 0; grid-column: 1 / -1; border-color: transparent; background: transparent; color: var(--builder-muted); font-size: 0.65rem; }
+.theme-assets__actions { display:flex; grid-column:1/-1; justify-content:flex-end; gap:8px; }
+.theme-assets__actions button { min-height: 26px; padding: 0 8px; border-color: transparent; background: transparent; color: var(--builder-muted); font-size: 0.65rem; }
+.theme-assets__actions button:first-child:not(:last-child) { border-color:rgba(198,155,118,.24); color:#c69b76; }
 .theme-assets__empty { display: flex; min-height: 104px; padding: 22px 24px; align-items: center; border: 1px dashed rgba(154,174,191,.2); border-radius: var(--builder-radius-card); background:linear-gradient(135deg,rgba(120,149,177,.03),rgba(255,255,255,.006)); color: var(--builder-faint); gap: 16px; }
 .theme-assets__empty > span { font-size: 1.4rem; }
 .theme-assets__empty > div { min-width: 0; flex: 1; }

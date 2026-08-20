@@ -23,7 +23,7 @@
         class="asset-library__return"
         @click="returnToBuilder"
       >
-        ← Return to Theme Builder
+        ← {{ returnBuilderLabel }}
       </button>
       <button
         type="button"
@@ -753,9 +753,16 @@ const router = useRouter();
 const returnBuilderProjectId = computed(() =>
   typeof route.query.returnBuilderProjectId === "string" ? route.query.returnBuilderProjectId.trim() : "",
 );
+const returnBuilderRoute = computed(() => {
+  const requested = typeof route.query.returnBuilderRoute === "string" ? route.query.returnBuilderRoute : "";
+  return ["theme-builder", "theme-builder-looks", "theme-builder-object", "theme-builder-room", "theme-builder-showcase", "theme-builder-release"].includes(requested)
+    ? requested
+    : "theme-builder";
+});
+const returnBuilderLabel = computed(() => returnBuilderRoute.value === "theme-builder-release" ? "Return to Release" : "Return to Theme Builder");
 function returnToBuilder(): void {
   if (!returnBuilderProjectId.value) return;
-  void router.push({ name: "theme-builder", query: { builderProjectId: returnBuilderProjectId.value } });
+  void router.push({ name: returnBuilderRoute.value, query: { builderProjectId: returnBuilderProjectId.value } });
 }
 
 interface CatalogMetadataForm {

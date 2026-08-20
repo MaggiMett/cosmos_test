@@ -53,6 +53,23 @@ describe("Theme Board vertical slice", () => {
     expect(source).toContain("<details class=\"theme-board__metadata\">");
   });
 
+  it("refreshes the persistent catalog whenever the asset picker opens", () => {
+    const source = sourceFor("./ThemeBoardView.vue");
+    expect(source).toContain("function openAssetPicker(): void");
+    expect(source).toContain("void loadCatalog();");
+    expect(source).toContain('type: "add-asset-reference"');
+  });
+
+  it("offers repair for unavailable references by replacing them through the fresh picker", () => {
+    const source = sourceFor("./ThemeBoardView.vue");
+    const assets = sourceFor("./components/ThemeBoardAssets.vue");
+    expect(assets).toContain("Find replacement");
+    expect(assets).toContain("item.status !== 'available'");
+    expect(source).toContain("function repairAsset");
+    expect(source).toContain('type: "remove-asset-reference"');
+    expect(source).toContain("openAssetPicker();");
+  });
+
   it("keeps the Builder shell separate from Runtime navigation and state", () => {
     const source = sourceFor("./components/ThemeBuilderShell.vue");
     const railSource = sourceFor("./components/StudioRail.vue");

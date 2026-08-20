@@ -52,6 +52,13 @@ describe("Asset Library development rendering", () => {
     expect(viewSource).toContain('data-testid="filter-status"');
   });
 
+  it("returns Builder-originated library work to the exact calling studio", () => {
+    expect(viewSource).toContain("returnBuilderRoute");
+    expect(viewSource).toContain('"theme-builder-release"');
+    expect(viewSource).toContain("name: returnBuilderRoute.value");
+    expect(viewSource).toContain("builderProjectId: returnBuilderProjectId.value");
+  });
+
   it("renders status as icon and text rather than color alone", () => {
     expect(viewSource).toContain("statusDetails(item.status).icon");
     expect(viewSource).toContain("statusDetails(item.status).label");

@@ -67,7 +67,7 @@
 
         <MoodboardGrid :items="[]" />
 
-        <ThemeBoardAssets :items="assetItems" @add="openAssetPicker" @remove="removeAsset" />
+        <ThemeBoardAssets :items="assetItems" @add="openAssetPicker" @repair="repairAsset" @remove="removeAsset" />
         <p v-if="assetCommandError" class="theme-board__error" role="alert">{{ assetCommandError }}</p>
 
         <CoreTemplateKit />
@@ -244,14 +244,14 @@ function updateMetadata(): void {
 function openAssetPicker(): void {
   assetCommandError.value = "";
   pickerOpen.value = true;
-  if (catalogError.value) void loadCatalog();
+  void loadCatalog();
 }
 
 function openAssetLibrary(): void {
   const id = snapshot.value?.project.builderProjectId;
   if (!id) return;
   pickerOpen.value = false;
-  void router.push({ name: "theme-builder-assets", query: { returnBuilderProjectId: id } });
+  void router.push({ name: "theme-builder-assets", query: { returnBuilderProjectId: id, returnBuilderRoute: "theme-builder" } });
 }
 
 function addAsset(assetId: string): void {
@@ -264,6 +264,13 @@ function addAsset(assetId: string): void {
   } catch (error) {
     assetCommandError.value = error instanceof BuilderAssetReferenceError ? error.message : "The Asset could not be referenced.";
   }
+}
+
+function repairAsset(reference: Readonly<ExactVersionedRef>): void {
+  if (!session) return;
+  session.execute({ type: "remove-asset-reference", reference });
+  syncSnapshot();
+  openAssetPicker();
 }
 
 function removeAsset(reference: Readonly<ExactVersionedRef>): void {
