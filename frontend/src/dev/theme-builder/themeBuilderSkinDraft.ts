@@ -16,6 +16,7 @@ import type { BuilderAssetCatalogIndex } from "./themeBuilderAssetReferences";
 
 export type SkinDraftCommand =
   | Readonly<{ type: "create-skin-draft"; targetTemplateId: string; name?: string }>
+  | Readonly<{ type: "duplicate-skin-draft"; skinId: string; name?: string }>
   | Readonly<{
       type: "assign-skin-slot-asset";
       skinId: string;
@@ -78,6 +79,7 @@ export function applySkinDraftCommand(
   catalog?: BuilderAssetCatalogIndex,
 ): Readonly<ThemeBuilderProject> {
   if (command.type === "create-skin-draft") return createSkinDraft(project, command, templates);
+  if (command.type === "duplicate-skin-draft") return duplicateSkinDraft(project, command, templates);
   const resolved = resolveSkinDraft(project, command.skinId, templates);
   if (command.type === "assign-skin-slot-asset") {
     assertSlotAndState(resolved, command.slotId, command.stateId);
@@ -208,6 +210,27 @@ function createSkinDraft(
       skinPacks: [...project.artifacts.skinPacks, pack],
     },
   });
+}
+
+function duplicateSkinDraft(
+  project: Readonly<ThemeBuilderProject>,
+  command: Extract<SkinDraftCommand, { type: "duplicate-skin-draft" }>,
+  templates: TemplateRegistry,
+): Readonly<ThemeBuilderProject> {
+  const resolved = resolveSkinDraft(project, command.skinId, templates);
+  const ordinal = project.artifacts.skinPacks.reduce((count, pack) => count + pack.skins.length, 0) + 1;
+  const suffix = project.builderProjectId.split(".").at(-1) ?? "draft";
+  const skinId = `user.skin.${suffix}.${ordinal}`;
+  const packId = `user.skin-pack.${suffix}.${ordinal}`;
+  const displayName = command.name?.trim() || `${resolved.skin.displayName} Copy`;
+  const skin = cloneAndFreeze({ ...resolved.skin, skinId, displayName });
+  const pack = validateSkinPack({
+    ...resolved.pack,
+    packId,
+    displayName,
+    skins: [skin],
+  });
+  return cloneAndFreeze({ ...project, artifacts: { ...project.artifacts, skinPacks: [...project.artifacts.skinPacks, pack] } });
 }
 
 function presentationGroupFor(template: RegisteredTemplate): SkinDefinition["target"]["presentationGroup"] {

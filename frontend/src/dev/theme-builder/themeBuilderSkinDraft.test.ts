@@ -33,6 +33,21 @@ describe("persistent Skin draft commands", () => {
     expect(Object.isFrozen(session.snapshot.project)).toBe(true);
   });
 
+  it("duplicates a Skin Draft as an independent variant with new identities", () => {
+    const session = skinSession();
+    const original = currentSkin(session).skin;
+    session.execute({ type: "duplicate-skin-draft", skinId: original.skinId });
+    const packs = session.snapshot.project.artifacts.skinPacks;
+    const duplicate = packs.flatMap((pack) => pack.skins).find((skin) => skin.skinId !== original.skinId)!;
+    expect(duplicate.skinId).not.toBe(original.skinId);
+    expect(duplicate.displayName).toBe(`${original.displayName} Copy`);
+    expect(duplicate.target).toEqual(original.target);
+    expect(duplicate.assetBindings).toEqual(original.assetBindings);
+    expect(duplicate.materials).toEqual(original.materials);
+    expect(packs.at(-1)?.packId).not.toBe(packs[0]?.packId);
+    expect(Object.isFrozen(duplicate)).toBe(true);
+  });
+
   it("rejects unknown templates and keeps the working snapshot unchanged", () => {
     const session = createSession();
     const before = session.snapshot.project;

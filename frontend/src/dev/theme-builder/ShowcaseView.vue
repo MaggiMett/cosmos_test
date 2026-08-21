@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import "./themeBuilder.css";
 import { computed, ref, shallowRef, watch } from "vue";
+import { useRoute } from "vue-router";
 import { assetCatalogApi, type PersistedAssetCatalogRecord } from "../../runtime/assetCatalogApi";
 import { baseMainRoomTemplate, TemplateRegistry, type JsonValue } from "../../theme-engine";
 import ThemeBuilderShell from "./components/ThemeBuilderShell.vue";
@@ -38,12 +39,13 @@ import { projectBuilderAssets } from "./themeBuilderAssetReferences";
 import { projectLooksSlots, projectLooksStates } from "./looksStudioProjection";
 import { resolveSkinDraft, type ResolvedSkinDraft } from "./themeBuilderSkinDraft";
 const templates=new TemplateRegistry();templates.register(baseMainRoomTemplate);
+const route=useRoute();const requestedSkinId=computed(()=>typeof route.query.skinId==="string"?route.query.skinId.trim():"");
 const controller=useThemeBuilderSession(templates);const{projectId,phase,loadError,snapshot}=controller;const catalog=shallowRef<readonly Readonly<PersistedAssetCatalogRecord>[]>([]);const catalogLoaded=shallowRef(false);const resolved=shallowRef<Readonly<ResolvedSkinDraft>>();const activeStateId=ref("default");const selectedSlotId=ref("");
 const skinCount=computed(()=>snapshot.value?.project.artifacts.skinPacks.reduce((n,p)=>n+p.skins.length,0)??0);
 const assets=computed(()=>snapshot.value?projectBuilderAssets(snapshot.value.project,catalog.value,catalogLoaded.value):[]);
 const slots=computed(()=>resolved.value?projectLooksSlots(resolved.value.skin,resolved.value.template,assets.value,activeStateId.value):[]);const states=computed(()=>resolved.value?projectLooksStates(resolved.value.template):[]);
 const material=computed(()=>resolved.value?.skin.materials.find((item)=>item.channelId==="core.material.dom-surface"));const materialFill=computed(()=>color(material.value?.parameters["core.material.fill"],"#30343a"));const materialStroke=computed(()=>color(material.value?.parameters["core.material.stroke"],"#8b929c"));const materialOpacity=computed(()=>typeof material.value?.parameters["core.material.opacity"]==="number"?material.value.parameters["core.material.opacity"]:1);const materialTextureId=computed(()=>typeof material.value?.parameters["core.material.texture-ref"]==="string"?material.value.parameters["core.material.texture-ref"]:"");const materialTextureUrl=computed(()=>assets.value.find((item)=>item.reference.id===materialTextureId.value&&item.status==="available")?.previewUrl??"");
-watch(()=>snapshot.value?.project,async(project)=>{resolved.value=undefined;if(!project)return;const first=project.artifacts.skinPacks.flatMap((pack)=>pack.skins)[0];if(first){try{resolved.value=resolveSkinDraft(project,first.skinId,templates);activeStateId.value=resolved.value.template.states[0]?.stateId??"default";selectedSlotId.value=resolved.value.slots[0]?.slotId??""}catch{resolved.value=undefined}}const result=await assetCatalogApi.list();if(result.ok){catalog.value=result.data;catalogLoaded.value=true}},{immediate:true});
+watch([()=>snapshot.value?.project,requestedSkinId],async([project])=>{resolved.value=undefined;if(!project)return;const skins=project.artifacts.skinPacks.flatMap((pack)=>pack.skins);const selected=skins.find((skin)=>skin.skinId===requestedSkinId.value)??skins[0];if(selected){try{resolved.value=resolveSkinDraft(project,selected.skinId,templates);activeStateId.value=resolved.value.template.states[0]?.stateId??"default";selectedSlotId.value=resolved.value.slots[0]?.slotId??""}catch{resolved.value=undefined}}const result=await assetCatalogApi.list();if(result.ok){catalog.value=result.data;catalogLoaded.value=true}},{immediate:true});
 function color(value:JsonValue|undefined,fallback:string):string{return typeof value==="string"&&/^#[0-9a-f]{6}$/i.test(value)?value:fallback}
 </script>
 <style scoped>

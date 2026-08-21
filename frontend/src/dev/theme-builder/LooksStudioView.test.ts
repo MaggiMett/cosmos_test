@@ -71,6 +71,16 @@ describe("Looks Studio vertical slice", () => {
     expect(inspector).toContain("Coming later");
   });
 
+  it("closes the authoring flow from a saved Look into Showcase preview", () => {
+    const source = sourceFor("./LooksStudioView.vue");
+    expect(source).toContain("Create Look");
+    expect(source).toContain("set-skin-material-channel");
+    expect(source).toContain("Save this Look before previewing it in context.");
+    expect(source).toContain("Preview in Showcase");
+    expect(source).toContain("theme-builder-showcase");
+    expect(source).toContain("skinId: resolved.skin.skinId");
+  });
+
   it("provides dedicated comparisons for every implemented visual family", () => {
     const view = sourceFor("./LooksStudioView.vue");
     const canvas = sourceFor("./components/LooksStudioCanvas.vue");
